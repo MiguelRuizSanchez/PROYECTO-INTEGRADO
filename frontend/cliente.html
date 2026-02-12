@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Area de Cliente</title>
+</head>
+<body>
+    <header>
+        <h1>Mi Perfil Fitness</h1>
+    </header>
+
+    <div class="contenedor">
+        <div class="seccion">
+            <h3>Mis Datos de Usuario</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <label>Peso actual (kg):</label>
+                    <input type="number" value="78">
+                    <label>Edad:</label>
+                    <input type="number" value="28">
+                </div>
+                <div>
+                    <label>Direccion / Calle:</label>
+                    <input type="text" value="Calle Mayor 15">
+                    <label>Foto de perfil:</label>
+                    <input type="file">
+                </div>
+            </div>
+            <button class="btn">Actualizar perfil</button>
+        </div>
+
+        <div class="seccion">
+            <h3>Registro de Entrenamiento (Hoy)</h3>
+            <p><strong>Ejercicio: Press Militar</strong></p>
+            <table>
+                <tr>
+                    <th>Serie</th>
+                    <th>Peso (kg)</th>
+                    <th>Reps</th>
+                    <th>Comentarios</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><input type="number" placeholder="0" style="width: 60px;"></td>
+                    <td><input type="number" placeholder="0" style="width: 60px;"></td>
+                    <td><input type="text" placeholder="Muy pesado..."></td>
+                </tr>
+            </table>
+            <br>
+            <button class="btn">Guardar entrenamiento</button>
+        </div>
+
+        <div class="seccion">
+            <h3>Mis Rutinas y Horarios</h3>
+            <p>Horario del gimnasio: 07:00 a 23:00</p>
+            <button class="btn">Solicitar nueva rutina</button>
+            <button class="btn" style="background: #9b59b6;">Generar rutina inteligente</button>
+        </div>
+
+        <div class="seccion">
+            <h3>Estado de Pagos</h3>
+            <p>Mes actual: <span style="color: red; font-weight: bold;">Pendiente (35,00 euros)</span></p>
+            <button class="btn btn-rojo">Ir a pasarela de pago</button>
+        </div>
+
+        <a href="index.html" style="color: grey;">Cerrar sesion</a>
+    </div>
+</body>
+</html>
