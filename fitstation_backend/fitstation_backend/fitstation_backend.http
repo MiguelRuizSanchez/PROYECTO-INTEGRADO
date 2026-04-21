@@ -1,0 +1,6 @@
+@fitstation_backend_HostAddress = http://localhost:5038
+
+GET {{fitstation_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
