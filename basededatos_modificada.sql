@@ -212,7 +212,20 @@ CREATE TABLE IF NOT EXISTS `worker_services` (
   KEY `id_service` (`id_service`),
   CONSTRAINT `worker_services_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE,
   CONSTRAINT `worker_services_ibfk_2` FOREIGN KEY (`id_service`) REFERENCES `services` (`id_service`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=LATIN1_SWEDISH_CI;
+
+
+-- Nueva tabla para horarios
+CREATE TABLE IF NOT EXISTS `availabilities` (
+  `id_availability` int(11) NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) NOT NULL,
+  `day_of_week` tinyint(4) NOT NULL COMMENT '1:Lunes, 7:Domingo',
+  `start_time` time NOT NULL,
+  `is_taken` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id_availability`),
+  KEY `id_user` (`id_user`),
+  CONSTRAINT `fk_availability_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
