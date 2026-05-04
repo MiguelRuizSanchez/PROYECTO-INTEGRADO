@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Versión del servidor:         11.4.9-MariaDB - MariaDB Server
+-- Versión del servidor:         12.2.2-MariaDB - MariaDB Server
 -- SO del servidor:              Win64
--- HeidiSQL Versión:             12.11.0.7065
+-- HeidiSQL Versión:             12.14.0.7165
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -16,8 +16,22 @@
 
 
 -- Volcando estructura de base de datos para fitstation
-CREATE DATABASE IF NOT EXISTS `fitstation` /*!40100 DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci */;
+CREATE DATABASE IF NOT EXISTS `fitstation` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci */;
 USE `fitstation`;
+
+-- Volcando estructura para tabla fitstation.availabilities
+CREATE TABLE IF NOT EXISTS `availabilities` (
+  `id_availability` int(11) NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) NOT NULL,
+  `day_of_week` tinyint(4) NOT NULL COMMENT '1:Lunes, 7:Domingo',
+  `start_time` time NOT NULL,
+  `is_taken` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id_availability`),
+  KEY `id_user` (`id_user`),
+  CONSTRAINT `fk_availability_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla fitstation.bookings
 CREATE TABLE IF NOT EXISTS `bookings` (
@@ -48,18 +62,6 @@ CREATE TABLE IF NOT EXISTS `classes` (
 
 -- La exportación de datos fue deseleccionada.
 
--- Volcando estructura para tabla fitstation.clients
-CREATE TABLE IF NOT EXISTS `clients` (
-  `id_client` int(11) NOT NULL AUTO_INCREMENT,
-  `id_user` int(11) NOT NULL,
-  `goal` text DEFAULT NULL,
-  PRIMARY KEY (`id_client`),
-  UNIQUE KEY `id_user` (`id_user`),
-  CONSTRAINT `clients_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- La exportación de datos fue deseleccionada.
-
 -- Volcando estructura para tabla fitstation.client_routines
 CREATE TABLE IF NOT EXISTS `client_routines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -74,11 +76,22 @@ CREATE TABLE IF NOT EXISTS `client_routines` (
 
 -- La exportación de datos fue deseleccionada.
 
--- Volcando estructura para tabla fitstation.conversations
-CREATE TABLE IF NOT EXISTS `conversations` (
-  `id_conversation` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id_conversation`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+-- Volcando estructura para tabla fitstation.clients
+CREATE TABLE IF NOT EXISTS `clients` (
+  `id_client` int(11) NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) NOT NULL,
+  `goal` text DEFAULT NULL,
+  `objectives` varchar(255) DEFAULT NULL,
+  `experience_level` varchar(50) DEFAULT NULL,
+  `modality` varchar(50) DEFAULT NULL,
+  `medical_notes` text DEFAULT NULL,
+  `equipment` varchar(255) DEFAULT NULL,
+  `pref_day` enum('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') DEFAULT NULL,
+  `pref_time` time DEFAULT NULL,
+  PRIMARY KEY (`id_client`),
+  UNIQUE KEY `id_user` (`id_user`),
+  CONSTRAINT `clients_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -92,7 +105,16 @@ CREATE TABLE IF NOT EXISTS `conversation_users` (
   KEY `id_user` (`id_user`),
   CONSTRAINT `conversation_users_ibfk_1` FOREIGN KEY (`id_conversation`) REFERENCES `conversations` (`id_conversation`) ON DELETE CASCADE,
   CONSTRAINT `conversation_users_ibfk_2` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- La exportación de datos fue deseleccionada.
+
+-- Volcando estructura para tabla fitstation.conversations
+CREATE TABLE IF NOT EXISTS `conversations` (
+  `id_conversation` int(11) NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_conversation`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -112,27 +134,17 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `id_message` int(11) NOT NULL AUTO_INCREMENT,
   `id_conversation` int(11) NOT NULL,
   `id_sender` int(11) NOT NULL,
-  `message` text NOT NULL,
+  `content` text NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_message`),
   KEY `id_conversation` (`id_conversation`),
   KEY `id_sender` (`id_sender`),
+  CONSTRAINT `fk_msg_conversation` FOREIGN KEY (`id_conversation`) REFERENCES `conversations` (`id_conversation`),
+  CONSTRAINT `fk_msg_sender` FOREIGN KEY (`id_sender`) REFERENCES `users` (`id_user`),
   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`id_conversation`) REFERENCES `conversations` (`id_conversation`) ON DELETE CASCADE,
   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`id_sender`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- La exportación de datos fue deseleccionada.
-
--- Volcando estructura para tabla fitstation.routines
-CREATE TABLE IF NOT EXISTS `routines` (
-  `id_routine` int(11) NOT NULL AUTO_INCREMENT,
-  `id_worker` int(11) DEFAULT NULL,
-  `name` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL,
-  PRIMARY KEY (`id_routine`),
-  KEY `id_worker` (`id_worker`),
-  CONSTRAINT `routines_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -152,6 +164,19 @@ CREATE TABLE IF NOT EXISTS `routine_exercises` (
 
 -- La exportación de datos fue deseleccionada.
 
+-- Volcando estructura para tabla fitstation.routines
+CREATE TABLE IF NOT EXISTS `routines` (
+  `id_routine` int(11) NOT NULL AUTO_INCREMENT,
+  `id_worker` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  PRIMARY KEY (`id_routine`),
+  KEY `id_worker` (`id_worker`),
+  CONSTRAINT `routines_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- La exportación de datos fue deseleccionada.
+
 -- Volcando estructura para tabla fitstation.services
 CREATE TABLE IF NOT EXISTS `services` (
   `id_service` int(11) NOT NULL AUTO_INCREMENT,
@@ -159,6 +184,24 @@ CREATE TABLE IF NOT EXISTS `services` (
   `description` text DEFAULT NULL,
   PRIMARY KEY (`id_service`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- La exportación de datos fue deseleccionada.
+
+-- Volcando estructura para tabla fitstation.sessions
+CREATE TABLE IF NOT EXISTS `sessions` (
+  `id_session` int(11) NOT NULL AUTO_INCREMENT,
+  `id_request` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL,
+  `id_worker` int(11) NOT NULL,
+  `scheduled_date` datetime DEFAULT NULL,
+  `duration_minutes` int(11) DEFAULT 60,
+  `day_of_week` enum('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') NOT NULL,
+  `start_time` time NOT NULL,
+  `status` varchar(20) DEFAULT 'Scheduled',
+  PRIMARY KEY (`id_session`),
+  KEY `FK_session_request` (`id_request`),
+  CONSTRAINT `FK_session_request` FOREIGN KEY (`id_request`) REFERENCES `worker_requests` (`id_request`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -172,19 +215,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- La exportación de datos fue deseleccionada.
-
--- Volcando estructura para tabla fitstation.workers
-CREATE TABLE IF NOT EXISTS `workers` (
-  `id_worker` int(11) NOT NULL AUTO_INCREMENT,
-  `id_user` int(11) NOT NULL,
-  `specialty` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id_worker`),
-  UNIQUE KEY `id_user` (`id_user`),
-  CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -202,6 +233,24 @@ CREATE TABLE IF NOT EXISTS `worker_classes` (
 
 -- La exportación de datos fue deseleccionada.
 
+-- Volcando estructura para tabla fitstation.worker_requests
+CREATE TABLE IF NOT EXISTS `worker_requests` (
+  `id_request` int(11) NOT NULL AUTO_INCREMENT,
+  `id_client` int(11) NOT NULL,
+  `id_worker` int(11) NOT NULL,
+  `request_date` datetime DEFAULT current_timestamp(),
+  `status` varchar(50) DEFAULT 'Pending',
+  `requested_day` enum('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') DEFAULT NULL,
+  `requested_time` time DEFAULT NULL,
+  PRIMARY KEY (`id_request`),
+  KEY `FK_client_request` (`id_client`),
+  KEY `FK_worker_request` (`id_worker`),
+  CONSTRAINT `FK_client_request` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_user`),
+  CONSTRAINT `FK_worker_request` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- La exportación de datos fue deseleccionada.
+
 -- Volcando estructura para tabla fitstation.worker_services
 CREATE TABLE IF NOT EXISTS `worker_services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -212,20 +261,23 @@ CREATE TABLE IF NOT EXISTS `worker_services` (
   KEY `id_service` (`id_service`),
   CONSTRAINT `worker_services_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE,
   CONSTRAINT `worker_services_ibfk_2` FOREIGN KEY (`id_service`) REFERENCES `services` (`id_service`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=LATIN1_SWEDISH_CI;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+-- La exportación de datos fue deseleccionada.
 
--- Nueva tabla para horarios
-CREATE TABLE IF NOT EXISTS `availabilities` (
-  `id_availability` int(11) NOT NULL AUTO_INCREMENT,
+-- Volcando estructura para tabla fitstation.workers
+CREATE TABLE IF NOT EXISTS `workers` (
+  `id_worker` int(11) NOT NULL AUTO_INCREMENT,
   `id_user` int(11) NOT NULL,
-  `day_of_week` tinyint(4) NOT NULL COMMENT '1:Lunes, 7:Domingo',
-  `start_time` time NOT NULL,
-  `is_taken` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`id_availability`),
-  KEY `id_user` (`id_user`),
-  CONSTRAINT `fk_availability_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `specialty` varchar(100) DEFAULT NULL,
+  `specialization` varchar(255) DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `price_per_session` decimal(10,2) DEFAULT NULL,
+  `max_capacity` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_worker`),
+  UNIQUE KEY `id_user` (`id_user`),
+  CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- La exportación de datos fue deseleccionada.
 
