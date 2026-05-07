@@ -245,8 +245,9 @@ CREATE TABLE IF NOT EXISTS `worker_requests` (
   PRIMARY KEY (`id_request`),
   KEY `FK_client_request` (`id_client`),
   KEY `FK_worker_request` (`id_worker`),
-  CONSTRAINT `FK_client_request` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_user`),
-  CONSTRAINT `FK_worker_request` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`)
+  -- CORRECCION DE UN LEVE ERROR - ANA
+  CONSTRAINT `FK_client_request` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE,
+  CONSTRAINT `FK_worker_request` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- La exportación de datos fue deseleccionada.
