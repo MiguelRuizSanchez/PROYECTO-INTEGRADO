@@ -12,6 +12,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+// --- AÑADIDO PARA CORS (PASO A) ---
+// Definimos la política de confianza para tu Angular
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // 2. CONFIGURACIÓN DE SEGURIDAD (JWT)
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
@@ -35,14 +47,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// 3. SERVICIOS BASE Y CONFIGURACIÓN DE SWAGGER (EL CANDADO)
+// 3. SERVICIOS BASE Y CONFIGURACIÓN DE SWAGGER
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FitStation API", Version = "v1" });
-
-    // Definimos CÓMO se entra (Bearer Token)
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Escribe: 'Bearer {tu_token}'",
@@ -51,8 +61,6 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-
-    // Definimos QUE se aplique a todos los endpoints
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -78,7 +86,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// --- AÑADIDO PARA CORS (PASO B) ---
+// IMPORTANTE: Debe ir ANTES de Authentication y Authorization
+app.UseCors("AllowAngular");
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

@@ -6,13 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  // AJUSTE: Verifica si el puerto de .NET es 5000 o 5100
-  private apiUrl = 'http://localhost:5000/api/auth'; 
+  // Ajusta el puerto si tu compañero lo cambió en el Program.cs
+  private apiUrl = 'http://localhost:5038/api/auth'; 
 
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<any> {
-    // El Backend espera un objeto con "Email" y "Password"
     const datos = {
       Email: email,
       Password: password
@@ -20,7 +19,17 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, datos);
   }
 
-  // Función para guardar el token de seguridad en el navegador
+  // NUEVA FUNCIÓN: Envía los datos de registro al backend
+  registrar(nombre: string, email: string, clave: string, rol: string): Observable<any> {
+    const datos = {
+      Name: nombre,
+      Email: email,
+      Password: clave,
+      Role: rol // 'client' o 'worker'
+    };
+    return this.http.post(`${this.apiUrl}/register`, datos);
+  }
+
   guardarSesion(token: string, role: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);

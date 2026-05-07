@@ -2,29 +2,39 @@
   <div class="login-box">
     <div class="logo">
       <h1>FIT<span>STATION</span></h1>
-      <p>SISTEMA DE GESTIÓN DEPORTIVA</p>
+      <p>ENTRENAMIENTO INTELIGENTE</p>
     </div>
 
-    <form (submit)="entrar()">
+    <form (submit)="$event.preventDefault(); realizarLogin()">
       <div class="input-group">
         <label>CORREO ELECTRÓNICO</label>
-        <input type="email" name="email" [(ngModel)]="email" placeholder="tu@email.com" required>
+        <input 
+          type="email" 
+          name="email" 
+          [(ngModel)]="email" 
+          placeholder="ejemplo@fitstation.com" 
+          required>
       </div>
 
       <div class="input-group">
         <label>CONTRASEÑA</label>
-        <input type="password" name="password" [(ngModel)]="password" placeholder="••••••••" required>
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="password" 
+          placeholder="••••••••" 
+          required>
       </div>
 
-      <p *ngIf="errorLogin" style="color: #ff4757; font-size: 12px; margin-top: 10px; text-align: center;">
-        Credenciales incorrectas. Revisa tu email o contraseña.
-      </p>
+      <div *ngIf="mensajeError" class="error-msg">
+        {{ mensajeError }}
+      </div>
 
-      <button type="submit" class="btn-login">ENTRAR AL BOX</button>
+      <button type="submit" class="btn-login">ENTRAR</button>
     </form>
 
     <div class="footer-links">
-      <a href="#">Soporte Técnico ASIR</a>
+      <a routerLink="/register">¿No tienes cuenta? Regístrate aquí</a>
     </div>
   </div>
 </div>

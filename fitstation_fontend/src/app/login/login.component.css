@@ -1,98 +1,79 @@
-/* Contenedor que ocupa toda la pantalla negra */
 .login-container {
-  height: 100vh;
-  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000000; /* Negro puro */
-  margin: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-/* La tarjeta del login */
-.login-box {
-  background: #111111; /* Negro un poco más claro */
-  padding: 40px;
-  border-radius: 10px;
-  border: 2px solid #2ecc71; /* Verde Neón */
-  box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
-  width: 350px;
-  text-align: center;
+  height: 100vh;
+  background-color: #0a0a0a;
   color: white;
   font-family: 'Segoe UI', sans-serif;
 }
 
-.logo h1 {
-  margin: 0;
-  font-weight: 900;
-  letter-spacing: 2px;
+.login-box {
+  background: #111;
+  padding: 40px;
+  border-radius: 15px;
+  border: 1px solid #2ecc71;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.logo span {
-  color: #2ecc71; /* El verde de tu empresa */
-}
+.logo h1 { font-size: 32px; margin-bottom: 5px; letter-spacing: 1px; }
+.logo span { color: #2ecc71; }
+.logo p { color: #555; font-size: 11px; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; }
 
-.logo p {
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: #888;
-  margin-top: 5px;
-}
+.input-group { text-align: left; margin-bottom: 20px; }
+.input-group label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; font-weight: bold; }
 
-.input-group {
-  text-align: left;
-  margin-top: 25px;
-}
-
-.input-group label {
-  display: block;
-  font-size: 11px;
-  color: #2ecc71;
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-.input-group input {
+input {
   width: 100%;
   padding: 12px;
-  background: #222;
+  background: #1a1a1a;
   border: 1px solid #333;
-  border-radius: 5px;
   color: white;
+  border-radius: 8px;
   box-sizing: border-box;
+  outline: none;
+  transition: border 0.3s;
 }
 
-.input-group input:focus {
-  outline: none;
-  border-color: #2ecc71;
-}
+input:focus { border-color: #2ecc71; }
 
 .btn-login {
   width: 100%;
-  padding: 15px;
-  margin-top: 30px;
-  background-color: #2ecc71;
-  color: #000;
+  padding: 14px;
+  background: #2ecc71;
   border: none;
-  border-radius: 5px;
+  color: black;
   font-weight: bold;
+  border-radius: 8px;
   cursor: pointer;
-  text-transform: uppercase;
-  transition: 0.3s;
+  margin-top: 10px;
+  font-size: 16px;
+  transition: transform 0.2s;
 }
 
-.btn-login:hover {
-  background-color: #fff;
-  transform: scale(1.05);
+.btn-login:active { transform: scale(0.98); }
+
+/* Estilo del mensaje de error */
+.error-msg {
+  background-color: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  animation: shake 0.3s ease-in-out;
 }
 
-.footer-links a {
-  display: block;
-  margin-top: 20px;
-  color: #555;
-  text-decoration: none;
-  font-size: 12px;
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
 }
+
+.footer-links { margin-top: 25px; }
+.footer-links a { color: #555; text-decoration: none; font-size: 13px; transition: color 0.3s; }
+.footer-links a:hover { color: #2ecc71; }
