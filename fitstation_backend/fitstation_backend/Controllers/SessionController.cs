@@ -3,14 +3,14 @@ using fitstation_backend.Data;
 using fitstation_backend.Models;
 using fitstation_backend.DTOs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization; // Importante para que funcione el [Authorize]
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace fitstation_backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize] // <--- ESTE ES EL CAMBIO: Ahora todo este controlador está protegido
+[Authorize]
 public class SessionController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -24,18 +24,32 @@ public class SessionController : ControllerBase
     [HttpGet("worker/{workerId}")]
     public IActionResult GetWorkerSessions(int workerId)
     {
+        // CAMBIO - comprueba que el que pide la agenda es dueño de la misma
+        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
+        var userId = int.Parse(claimValue);
+
+        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+        if (workerProfile == null || workerProfile.IdWorker != workerId)
+            return Forbid();
+        // FIN DEL CAMBIO
+
         var sessions = _context.Sessions
             .Where(s => s.IdWorker == workerId)
-            .Join(_context.Users,
+            .Join(_context.Clients,
                 session => session.IdClient,
+                client => client.IdClient,
+                (session, client) => new { session, client })
+            .Join(_context.Users,
+                sc => sc.client.IdUser,
                 user => user.IdUser,
-                (session, user) => new SessionDetailsDto
+                (sc, user) => new SessionDetailsDto
                 {
-                    SessionId = session.IdSession,
+                    SessionId = sc.session.IdSession,
                     ClientName = user.Name,
-                    DayOfWeek = session.DayOfWeek,
-                    StartTime = session.StartTime,
-                    Status = session.Status
+                    DayOfWeek = sc.session.DayOfWeek,
+                    StartTime = sc.session.StartTime,
+                    Status = sc.session.Status
                 })
             .ToList();
 
@@ -46,10 +60,20 @@ public class SessionController : ControllerBase
     [HttpPut("update-status/{sessionId}")]
     public IActionResult UpdateSessionStatus(int sessionId, [FromBody] string newStatus)
     {
+        // CAMBIO - antes cualquiera podía actualizar cualquier sesión
+
+        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
+        var userId = int.Parse(claimValue);
+
         var session = _context.Sessions.Find(sessionId);
         if (session == null) return NotFound("Sesión no encontrada");
 
-        // Lista de estados permitidos para mantener el orden en la DB
+        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+        if (workerProfile == null || session.IdWorker != workerProfile.IdWorker)
+            return Forbid("No tienes permiso para modificar esta sesión");
+        // FIN DEL CAMBIO
+
         var validStatuses = new List<string> { "Scheduled", "Completed", "Cancelled", "Absent" };
 
         if (!validStatuses.Contains(newStatus))
@@ -65,26 +89,32 @@ public class SessionController : ControllerBase
 
         return Ok(new { message = $"Sesión {sessionId} marcada como: {newStatus}" });
     }
+
     [HttpGet("client/{clientId}")]
     [Authorize]
     public IActionResult GetClientSessions(int clientId)
     {
         var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
-
         var userId = int.Parse(claimValue);
 
-        if (userId != clientId) return Forbid();
+        // CAMBIO: Comparar clientId de la URL con el IdClient real del usuario
+        var clientProfile = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
+        if (clientProfile == null || clientProfile.IdClient != clientId)
+            return Forbid();
+        // FIN DEL CAMBIO
 
         var sessions = _context.Sessions
-            .Where(s => s.IdClient == clientId) // Usamos IdClient según tu modelo
+            .Where(s => s.IdClient == clientId)
             .Select(s => new {
                 s.IdSession,
                 s.IdWorker,
-                WorkerName = _context.Users
-                    .Where(u => u.IdUser == s.IdWorker) // Usamos IdUser según tu modelo
-                    .Select(u => u.Name)
+                // CAMBIO - arreglado el salto para buscar el nombre del trabajador correctamente
+                WorkerName = _context.Workers
+                    .Where(w => w.IdWorker == s.IdWorker)
+                    .Join(_context.Users, w => w.IdUser, u => u.IdUser, (w, u) => u.Name)
                     .FirstOrDefault(),
+                // FIN DEL CAMBIO
                 s.DayOfWeek,
                 s.StartTime
             })
@@ -92,6 +122,7 @@ public class SessionController : ControllerBase
 
         return Ok(sessions);
     }
+
     [HttpPut("cancel/{sessionId}")]
     public IActionResult CancelSession(int sessionId)
     {
@@ -102,11 +133,18 @@ public class SessionController : ControllerBase
         var session = _context.Sessions.Find(sessionId);
         if (session == null) return NotFound("Sesión no encontrada");
 
-        // SEGURIDAD: Solo el cliente o el trabajador de ESA sesión pueden cancelarla
-        if (session.IdClient != userId && session.IdWorker != userId)
+        // CAMBIO - no comparar IdUser contra IdClient/IdWorker para ver la sesion 
+        var clientProfile = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
+        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+
+        bool isClientOwner = clientProfile != null && session.IdClient == clientProfile.IdClient;
+        bool isWorkerOwner = workerProfile != null && session.IdWorker == workerProfile.IdWorker;
+
+        if (!isClientOwner && !isWorkerOwner)
         {
             return Forbid("No tienes permiso para cancelar esta sesión");
         }
+        // FIN DEL CAMBIO
 
         session.Status = "Cancelled";
         _context.SaveChanges();

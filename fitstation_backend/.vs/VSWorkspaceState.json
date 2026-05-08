@@ -3,10 +3,9 @@
     "",
     "\\fitstation_backend",
     "\\fitstation_backend\\Controllers",
-    "\\fitstation_backend\\Data",
     "\\fitstation_backend\\DTOs",
     "\\fitstation_backend\\Models"
   ],
-  "SelectedNode": "\\fitstation_backend\\Models\\Message.cs",
+  "SelectedNode": "\\fitstation_backend\\Controllers\\AuthController.cs",
   "PreviewInSolutionExplorer": false
 }

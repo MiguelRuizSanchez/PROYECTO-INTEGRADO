@@ -25,7 +25,6 @@ public class WorkerRequest
     [Column("status")]
     public string Status { get; set; } = "Pending";
 
-    // AÑADIDO: Fecha de la solicitud (Obligatoria para el Controller)
     [Column("request_date")]
     public DateTime RequestDate { get; set; } = DateTime.Now;
 }

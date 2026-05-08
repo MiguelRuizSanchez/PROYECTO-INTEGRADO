@@ -6,9 +6,11 @@ namespace fitstation_backend.Models;
 [Table("client_routines")]
 public class ClientRoutine
 {
+    // CAMBIO - coincide exactamente con la columna de la BD
     [Key]
-    [Column("id_client_routine")]
-    public int IdClientRoutine { get; set; }
+    [Column("id")] 
+    public int Id { get; set; } 
+    // FIN DEL CAMBIO
 
     [Column("id_client")]
     public int IdClient { get; set; }

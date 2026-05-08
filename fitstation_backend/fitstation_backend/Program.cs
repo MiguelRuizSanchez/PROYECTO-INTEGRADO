@@ -7,12 +7,12 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. CONFIGURACIÓN DE LA BASE DE DATOS
+//CONFIGURACIÓN DE LA BASE DE DATOS
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// 2. CONFIGURACIÓN DE SEGURIDAD (JWT)
+//  CONFIGURACIÓN DE SEGURIDAD (JWT)
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 
@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// 3. SERVICIOS BASE Y CONFIGURACIÓN DE SWAGGER (EL CANDADO)
+//SERVICIOS BASE, SWAGGER Y CORS
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -52,7 +52,6 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 
-    // Definimos QUE se aplique a todos los endpoints
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -69,14 +68,27 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
-// 4. CONFIGURACIÓN DEL PIPELINE
+// CONFIGURACIÓN DEL PIPELINE
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// USAMOS CORS AQUÍ
+app.UseCors("AllowAngular");
 
 app.UseAuthentication();
 app.UseAuthorization();

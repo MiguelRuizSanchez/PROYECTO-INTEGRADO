@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations; // <--- FALTA ESTO
-using System.ComponentModel.DataAnnotations.Schema; // <--- Y ESTO
+using System.ComponentModel.DataAnnotations; 
+using System.ComponentModel.DataAnnotations.Schema; 
 
 namespace fitstation_backend.Models;
 
