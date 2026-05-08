@@ -1,118 +1,130 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\",
+  "WorkspaceRootPath": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\conversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\conversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\AuthController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\AuthController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\conversationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\conversationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Properties\\launchSettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Properties\\launchSettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\WorkerRequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\WorkerRequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\dtos\\sendmessagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\dtos\\sendmessagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\Worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\User.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\User.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Session.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\Session.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\RoutineExercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\RoutineExercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\controllers\\requestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\controllers\\requestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Routine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\Routine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\controllers\\sessioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\controllers\\sessioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\Message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\session.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\session.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Exercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\Exercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\ConversationUser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\ConversationUser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\fitstation_backend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Conversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\Conversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\dtos\\loginresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\dtos\\loginresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\ClientRoutine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\ClientRoutine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Models\\Client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\UserProfileDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\UserProfileDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\dtos\\sessiondetailsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\dtos\\sessiondetailsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\UpdateProfileDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\UpdateProfileDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\workerrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\workerrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\SessionDetailsDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\SessionDetailsDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\dtos\\updateprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\dtos\\updateprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\RegisterDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\RegisterDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\controllers\\matchingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\controllers\\matchingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\LoginResponseDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\LoginResponseDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\LoginDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\LoginDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\routine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\routine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\CreateRoutineDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\CreateRoutineDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\routineexercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\routineexercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\AddExerciseDto.cs||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\DTOs\\AddExerciseDto.cs||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\SessionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\SessionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\RoutineController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\RoutineController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\RequestController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\RequestController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|c:\\users\\mrste\\onedrive\\escritorio\\carpeta proyecto final\\fitstation_backend\\fitstation_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{21979138-763F-E4ED-62FE-95B14268CE51}|fitstation_backend\\fitstation_backend.csproj|solutionrelative:fitstation_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ProfileController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\ProfileController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\MatchingController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\MatchingController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ExerciseController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\ExerciseController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ChatController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:fitstation_backend\\Controllers\\ChatController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -122,344 +134,410 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 21,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ChatController.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\ChatController.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\ChatController.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\ChatController.cs",
-              "RelativeToolTip": "fitstation_backend\\Controllers\\ChatController.cs",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFcAAAABAAAAAAAAAA==",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Program.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Program.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Program.cs",
+              "RelativeToolTip": "fitstation_backend\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-04T15:44:13.64Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Message.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Message.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Message.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Message.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\Message.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAiwBoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-04T15:41:02.498Z"
+              "WhenOpened": "2026-05-08T00:10:00.497Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "ConversationUser.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\ConversationUser.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\ConversationUser.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\ConversationUser.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\ConversationUser.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-04T15:40:39.75Z"
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "fitstation_backend\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Properties\\launchSettings.json",
+              "RelativeToolTip": "fitstation_backend\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-08T00:09:42.53Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\appsettings.json",
+              "RelativeDocumentMoniker": "fitstation_backend\\appsettings.json",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\appsettings.json",
+              "RelativeToolTip": "fitstation_backend\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-08T00:09:18.9Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "fitstation_backend\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Title": "WorkerRequest.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\WorkerRequest.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\WorkerRequest.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\WorkerRequest.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\WorkerRequest.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T15:22:28.513Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Conversation.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Conversation.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Conversation.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Conversation.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\Conversation.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-04T15:40:17.376Z",
+              "WhenOpened": "2026-05-08T00:08:37.901Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "SendMessageDto.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\SendMessageDto.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\SendMessageDto.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\SendMessageDto.cs",
-              "RelativeToolTip": "fitstation_backend\\DTOs\\SendMessageDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Title": "Worker.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Worker.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Worker.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Worker.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\Worker.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-04T15:43:36.888Z"
+              "WhenOpened": "2026-05-08T00:08:34.71Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "UserProfileDto.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\UserProfileDto.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\UserProfileDto.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\UserProfileDto.cs",
-              "RelativeToolTip": "fitstation_backend\\DTOs\\UserProfileDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\User.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\User.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\User.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-03T18:39:32.793Z"
+              "WhenOpened": "2026-05-08T00:08:14.912Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "ProfileController.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\ProfileController.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\ProfileController.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\ProfileController.cs",
-              "RelativeToolTip": "fitstation_backend\\Controllers\\ProfileController.cs",
-              "ViewState": "AgIAAGQAAAAAAAAAAAAiwHoAAAABAAAAAAAAAA==",
+              "Title": "Session.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Session.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Session.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Session.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\Session.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T15:26:05.844Z"
+              "WhenOpened": "2026-05-08T00:08:12.628Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "Client.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Client.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Client.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Client.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\Client.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAABAAAAAAAAAA==",
+              "Title": "RoutineExercise.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\RoutineExercise.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\RoutineExercise.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\RoutineExercise.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\RoutineExercise.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T15:21:12.419Z"
+              "WhenOpened": "2026-05-08T00:08:11.656Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "RequestController.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\RequestController.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\RequestController.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\RequestController.cs",
-              "RelativeToolTip": "fitstation_backend\\Controllers\\RequestController.cs",
-              "ViewState": "AgIAAIsAAAAAAAAAAAAiwKEAAAABAAAAAAAAAA==",
+              "Title": "Routine.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Routine.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Routine.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Routine.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\Routine.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-02T13:23:18.159Z"
+              "WhenOpened": "2026-05-08T00:08:10.459Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "SessionController.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\SessionController.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\SessionController.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\SessionController.cs",
-              "RelativeToolTip": "fitstation_backend\\Controllers\\SessionController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
+              "Title": "Message.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Message.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Message.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Message.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\Message.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-02T14:49:13.151Z"
+              "WhenOpened": "2026-05-08T00:08:08.39Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "Session.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Session.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Session.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Session.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\Session.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAkwCMAAAABAAAAAAAAAA==",
+              "Title": "Exercise.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Exercise.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Exercise.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Exercise.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\Exercise.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-02T14:25:07.552Z"
+              "WhenOpened": "2026-05-08T00:08:07.423Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 12,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Program.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Program.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Program.cs",
-              "RelativeToolTip": "fitstation_backend\\Program.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAiwFMAAAAKAAAAAAAAAA==",
+              "Title": "ConversationUser.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\ConversationUser.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\ConversationUser.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\ConversationUser.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\ConversationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-03T15:09:02.514Z"
+              "WhenOpened": "2026-05-08T00:08:05.411Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 13,
-              "Title": "fitstation_backend.csproj",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
-              "RelativeDocumentMoniker": "fitstation_backend\\fitstation_backend.csproj",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
-              "RelativeToolTip": "fitstation_backend\\fitstation_backend.csproj",
-              "ViewState": "AgIAABEAAAAAAAAAAAD4vx0AAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-03T16:16:10.16Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "LoginResponseDto.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\LoginResponseDto.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\LoginResponseDto.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\LoginResponseDto.cs",
-              "RelativeToolTip": "fitstation_backend\\DTOs\\LoginResponseDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Title": "Conversation.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Conversation.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Conversation.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Conversation.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\Conversation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-03T15:27:02.583Z"
+              "WhenOpened": "2026-05-08T00:07:57.405Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 15,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\appsettings.json",
-              "RelativeDocumentMoniker": "fitstation_backend\\appsettings.json",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\appsettings.json",
-              "RelativeToolTip": "fitstation_backend\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-03T15:06:30.865Z"
+              "Title": "Client.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Client.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Client.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\Client.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\Client.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAAAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-08T00:07:38.559Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 16,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "fitstation_backend\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAEkAAAAAAAAAAAAmwF0AAAABAAAAAAAAAA==",
+              "Title": "UserProfileDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\UserProfileDto.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\UserProfileDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\UserProfileDto.cs",
+              "RelativeToolTip": "fitstation_backend\\DTOs\\UserProfileDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T09:22:19.615Z"
+              "WhenOpened": "2026-05-08T00:07:35.846Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 17,
-              "Title": "SessionDetailsDto.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\SessionDetailsDto.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\SessionDetailsDto.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\SessionDetailsDto.cs",
-              "RelativeToolTip": "fitstation_backend\\DTOs\\SessionDetailsDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Title": "UpdateProfileDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\UpdateProfileDto.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\UpdateProfileDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\UpdateProfileDto.cs",
+              "RelativeToolTip": "fitstation_backend\\DTOs\\UpdateProfileDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-02T14:48:47.187Z"
+              "WhenOpened": "2026-05-08T00:07:34.238Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 18,
-              "Title": "WorkerRequest.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\WorkerRequest.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\WorkerRequest.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\WorkerRequest.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\WorkerRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAABAAAAAAAAAA==",
+              "Title": "SessionDetailsDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\SessionDetailsDto.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\SessionDetailsDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\SessionDetailsDto.cs",
+              "RelativeToolTip": "fitstation_backend\\DTOs\\SessionDetailsDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-02T13:21:36.116Z"
+              "WhenOpened": "2026-05-08T00:07:31.469Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 19,
-              "Title": "UpdateProfileDto.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\UpdateProfileDto.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\UpdateProfileDto.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\UpdateProfileDto.cs",
-              "RelativeToolTip": "fitstation_backend\\DTOs\\UpdateProfileDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAArAAAAAAAAAA==",
+              "Title": "RegisterDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\RegisterDto.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\RegisterDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\RegisterDto.cs",
+              "RelativeToolTip": "fitstation_backend\\DTOs\\RegisterDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T15:25:18.849Z"
+              "WhenOpened": "2026-05-08T00:06:59.467Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 20,
-              "Title": "MatchingController.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\MatchingController.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\MatchingController.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Controllers\\MatchingController.cs",
-              "RelativeToolTip": "fitstation_backend\\Controllers\\MatchingController.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAkwDIAAAABAAAAAAAAAA==",
+              "Title": "LoginResponseDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\LoginResponseDto.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\LoginResponseDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\LoginResponseDto.cs",
+              "RelativeToolTip": "fitstation_backend\\DTOs\\LoginResponseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-30T07:14:18.022Z"
+              "WhenOpened": "2026-05-08T00:06:58.69Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 21,
-              "Title": "Worker.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Worker.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Worker.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Worker.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\Worker.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAiwB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T15:21:35.259Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "Routine.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Routine.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\Routine.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\Routine.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\Routine.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAkwBQAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T15:40:03.545Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "RoutineExercise.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\RoutineExercise.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\RoutineExercise.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\RoutineExercise.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\RoutineExercise.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAkwBcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T15:40:59.047Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
               "Title": "LoginDto.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\LoginDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\LoginDto.cs",
               "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\LoginDto.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\LoginDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\LoginDto.cs",
               "RelativeToolTip": "fitstation_backend\\DTOs\\LoginDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T14:27:42.971Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\User.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\Models\\User.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Models\\User.cs",
-              "RelativeToolTip": "fitstation_backend\\Models\\User.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAiwBoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T09:23:34.117Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "RegisterDto.cs",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\RegisterDto.cs",
-              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\RegisterDto.cs",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\DTOs\\RegisterDto.cs",
-              "RelativeToolTip": "fitstation_backend\\DTOs\\RegisterDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T09:21:40.121Z"
+              "WhenOpened": "2026-05-08T00:06:57.703Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 27,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "fitstation_backend\\Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\Properties\\launchSettings.json",
-              "RelativeToolTip": "fitstation_backend\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-04-23T17:38:57.513Z"
+              "Title": "ProfileController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ProfileController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\ProfileController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ProfileController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\ProfileController.cs",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T23:53:50.317Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAD0AAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T23:49:53.229Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "ExerciseController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ExerciseController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\ExerciseController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ExerciseController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\ExerciseController.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABcAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T23:15:34.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "AddExerciseDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\AddExerciseDto.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\AddExerciseDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\AddExerciseDto.cs",
+              "RelativeToolTip": "fitstation_backend\\DTOs\\AddExerciseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T23:13:45.822Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "CreateRoutineDto.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\CreateRoutineDto.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\DTOs\\CreateRoutineDto.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\DTOs\\CreateRoutineDto.cs",
+              "RelativeToolTip": "fitstation_backend\\DTOs\\CreateRoutineDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T23:13:35.1Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "RoutineController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\RoutineController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\RoutineController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\RoutineController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\RoutineController.cs",
+              "ViewState": "AgIAAAMAAACAnZrLDQIiwFwAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T23:07:41.884Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "ChatController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ChatController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\ChatController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\ChatController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\ChatController.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAAAF4AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T22:51:47.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "MatchingController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\MatchingController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\MatchingController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\MatchingController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\MatchingController.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAC8AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T22:47:39.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ClientRoutine.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\ClientRoutine.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Models\\ClientRoutine.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Models\\ClientRoutine.cs",
+              "RelativeToolTip": "fitstation_backend\\Models\\ClientRoutine.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T21:24:16.993Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "SessionController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\SessionController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\SessionController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\SessionController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\SessionController.cs",
+              "ViewState": "AgIAAI8AAAAAAAAAAAAAwIcAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T21:19:01.865Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "RequestController.cs",
+              "DocumentMoniker": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\RequestController.cs",
+              "RelativeDocumentMoniker": "fitstation_backend\\Controllers\\RequestController.cs",
+              "ToolTip": "C:\\Users\\anabe\\Desktop\\12\\fitstation_backend\\fitstation_backend\\Controllers\\RequestController.cs",
+              "RelativeToolTip": "fitstation_backend\\Controllers\\RequestController.cs",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAAAKEAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T20:57:40.427Z",
+              "EditorCaption": ""
             }
           ]
         }

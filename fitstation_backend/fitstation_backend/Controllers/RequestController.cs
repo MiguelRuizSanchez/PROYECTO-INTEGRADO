@@ -19,29 +19,28 @@ public class RequestController : ControllerBase
         _context = context;
     }
 
+    // CAMBIO - fuera int clientId de los parametros porque lo sacamos del token para identificar el user
     [HttpPost("send")]
-    public IActionResult SendRequest(int clientId, int workerId)
+    public IActionResult SendRequest(int workerId)
     {
         var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
         var userId = int.Parse(claimValue);
 
-        if (userId != clientId)
-            return Forbid();
-
-        var client = _context.Clients.FirstOrDefault(c => c.IdUser == clientId);
+        // CAMBIO - busca si existe al cliente a partir del userId
+        var client = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
         if (client == null)
             return NotFound(new { message = "No se encontró el perfil del cliente." });
 
         var existing = _context.WorkerRequests.FirstOrDefault(r =>
-            r.IdClient == clientId && r.IdWorker == workerId && r.Status == "Pending");
+            r.IdClient == client.IdClient && r.IdWorker == workerId && r.Status == "Pending");
 
         if (existing != null)
             return BadRequest(new { message = "Ya tienes una solicitud pendiente con este entrenador." });
 
         var newRequest = new WorkerRequest
         {
-            IdClient = clientId,
+            IdClient = client.IdClient, // habia otra entidad
             IdWorker = workerId,
             RequestDate = DateTime.Now,
             Status = "Pending",
@@ -66,22 +65,29 @@ public class RequestController : ControllerBase
         if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
         var userId = int.Parse(claimValue);
 
-        if (userId != workerId)
+        // CAMBIO - busca el perfil del trabajador para comparar IdWorker real
+        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+        if (workerProfile == null || workerProfile.IdWorker != workerId)
             return Forbid();
 
+        // CAMBIO - hace el Doble Join (Requests -> Clients -> Users) para evitar el error de BD
         var requestsWithNames = _context.WorkerRequests
             .Where(r => r.IdWorker == workerId)
-            .Join(_context.Users,
+            .Join(_context.Clients,
                 request => request.IdClient,
+                c => c.IdClient,
+                (request, c) => new { request, c.IdUser }) 
+            .Join(_context.Users,
+                rc => rc.IdUser,
                 user => user.IdUser,
-                (request, user) => new {
-                    RequestId = request.IdRequest,
-                    ClientId = request.IdClient,
+                (rc, user) => new {                        // Saltamos a la tabla Users
+                    RequestId = rc.request.IdRequest,
+                    ClientId = rc.request.IdClient,
                     ClientName = user.Name,
-                    Date = request.RequestDate,
-                    Status = request.Status,
-                    DayRequested = request.RequestedDay,
-                    TimeRequested = request.RequestedTime
+                    Date = rc.request.RequestDate,
+                    Status = rc.request.Status,
+                    DayRequested = rc.request.RequestedDay,
+                    TimeRequested = rc.request.RequestedTime
                 })
             .ToList();
 
@@ -95,7 +101,9 @@ public class RequestController : ControllerBase
         if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
         var userId = int.Parse(claimValue);
 
-        if (userId != clientId)
+        // CAMBIO - busca el perfil del cliente para comparar IdClient real
+        var clientProfile = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
+        if (clientProfile == null || clientProfile.IdClient != clientId)
             return Forbid();
 
         var requests = _context.WorkerRequests
@@ -116,20 +124,30 @@ public class RequestController : ControllerBase
         var request = _context.WorkerRequests.Find(requestId);
         if (request == null) return NotFound("Solicitud no encontrada");
 
-        if (request.IdWorker != userId) return Forbid();
+        // CAMBIO - busca si existe el IdWorker del perfil del trabajador
+        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+        if (workerProfile == null || request.IdWorker != workerProfile.IdWorker)
+            return Forbid();
 
         request.Status = newStatus;
 
         if (newStatus == "Accepted")
         {
-            // LOGICA DE SERVIDOR: Generar calendario para las próximas 4 semanas
             DateTime startDate = DateTime.Today;
 
-            // Buscamos el primer día que coincida con lo que pidió el cliente (ej: próximo lunes)
+            // CAMBIO - extrae targetTime para poder validar la fecha
             DayOfWeek targetDay = Enum.Parse<DayOfWeek>(request.RequestedDay ?? "Monday", true);
+            TimeSpan targetTime = request.RequestedTime ?? new TimeSpan(10, 0, 0);
+
             while (startDate.DayOfWeek != targetDay)
             {
                 startDate = startDate.AddDays(1);
+            }
+
+            // CAMBIO - evita que se genere la primera sesión en el pasado si ya ha pasado la hora de hoy
+            if (startDate == DateTime.Today && DateTime.Now.TimeOfDay > targetTime)
+            {
+                startDate = startDate.AddDays(7);
             }
 
             for (int i = 0; i < 4; i++)
@@ -141,10 +159,10 @@ public class RequestController : ControllerBase
                     IdRequest = request.IdRequest,
                     IdClient = request.IdClient,
                     IdWorker = request.IdWorker,
-                    ScheduledDate = sessionDate.Date.Add(request.RequestedTime ?? new TimeSpan(10, 0, 0)),
+                    ScheduledDate = sessionDate.Date.Add(targetTime), 
                     DurationMinutes = 60,
                     DayOfWeek = request.RequestedDay ?? "Monday",
-                    StartTime = request.RequestedTime ?? new TimeSpan(10, 0, 0),
+                    StartTime = targetTime, 
                     Status = "Scheduled"
                 };
 

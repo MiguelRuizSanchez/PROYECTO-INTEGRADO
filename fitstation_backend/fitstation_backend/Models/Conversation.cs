@@ -7,9 +7,9 @@ namespace fitstation_backend.Models;
 public class Conversation
 {
     [Key]
-    [Column("id_conversation")] // <--- Añade esto para que coincida con Heidi
+    [Column("id_conversation")] 
     public int IdConversation { get; set; }
 
-    [Column("created_at")] // <--- Añade esto también para la fecha
+    [Column("created_at")] 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

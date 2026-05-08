@@ -23,15 +23,25 @@ public class ChatController : ControllerBase
     [HttpPost("send")]
     public IActionResult SendMessage(SendMessageDto dto)
     {
-        var senderId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        // CAMBIO -  lectura del token
+        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
+        var senderId = int.Parse(claimValue);
+        // FIN DEL CAMBIO
 
         // 1. Buscar si ya existe una conversación entre estos dos usuarios
+
+        // CAMBIO
+        // OPTIMIZACIÓN EF CORE: Usamos Contains en lugar de Intersect para evitar errores de traducción SQL
+        var receiverConversations = _context.ConversationUsers
+            .Where(cu => cu.IdUser == dto.ReceiverId)
+            .Select(cu => cu.IdConversation);
+
         var conversationId = _context.ConversationUsers
-            .Where(cu => cu.IdUser == senderId || cu.IdUser == dto.ReceiverId)
-            .GroupBy(cu => cu.IdConversation)
-            .Where(g => g.Count() > 1)
-            .Select(g => g.Key)
+            .Where(cu => cu.IdUser == senderId && receiverConversations.Contains(cu.IdConversation))
+            .Select(cu => cu.IdConversation)
             .FirstOrDefault();
+        // FIN DEL CAMBIO
 
         // 2. Si no existe, la creamos
         if (conversationId == 0)
@@ -39,6 +49,7 @@ public class ChatController : ControllerBase
             var newConversation = new Conversation();
             _context.Conversations.Add(newConversation);
             _context.SaveChanges();
+
             conversationId = newConversation.IdConversation;
 
             _context.ConversationUsers.AddRange(
@@ -66,15 +77,23 @@ public class ChatController : ControllerBase
     [HttpGet("history/{receiverId}")]
     public IActionResult GetChatHistory(int receiverId)
     {
-        var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        // CAMBIO -  lectura del token
+        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
+        var currentUserId = int.Parse(claimValue);
+        // FIN DEL CAMBIO
 
-        // Buscamos la conversación común
+        // CAMBIO
+        // busca la conversacion comun con Contains
+        var receiverConversations = _context.ConversationUsers
+            .Where(cu => cu.IdUser == receiverId)
+            .Select(cu => cu.IdConversation);
+
         var conversationId = _context.ConversationUsers
-            .Where(cu => cu.IdUser == currentUserId || cu.IdUser == receiverId)
-            .GroupBy(cu => cu.IdConversation)
-            .Where(g => g.Count() > 1)
-            .Select(g => g.Key)
+            .Where(cu => cu.IdUser == currentUserId && receiverConversations.Contains(cu.IdConversation))
+            .Select(cu => cu.IdConversation)
             .FirstOrDefault();
+        // FIN DEL CAMBIO
 
         if (conversationId == 0) return Ok(new List<Message>());
 

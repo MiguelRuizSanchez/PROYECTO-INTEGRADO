@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
             return Unauthorized("Credenciales incorrectas.");
         }
 
-        // --- GENERACIÓN DEL TOKEN JWT ---
+        //  GENERACIÓN DEL TOKEN JWT 
         var jwtSettings = _config.GetSection("Jwt");
         var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 
