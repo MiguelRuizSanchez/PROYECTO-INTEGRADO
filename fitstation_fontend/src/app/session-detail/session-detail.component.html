@@ -1,0 +1,45 @@
+<div class="session-wrapper">
+  <header class="chat-header">
+    <div class="header-info">
+      <button routerLink="/dashboard" class="back-btn">←</button>
+      <div class="user-meta">
+        <h2>{{ receiverName }}</h2>
+        <span class="online-status">Chat de sesión</span>
+      </div>
+    </div>
+    <div class="session-badge">{{ modalidad }}</div>
+  </header>
+
+  <div class="main-layout">
+    <section class="chat-section">
+      <div class="messages-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <div *ngFor="let msg of mensajes" 
+             [ngClass]="{'sent': msg.idSender == myId, 'received': msg.idSender != myId}" 
+             class="message-row">
+          <div class="bubble">
+            <p>{{ msg.text }}</p> <span class="time">{{ msg.time | date:'HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <input type="text" [(ngModel)]="nuevoMensaje" (keyup.enter)="enviar()" placeholder="Escribe un mensaje...">
+        <button (click)="enviar()" [disabled]="!nuevoMensaje.trim()">
+          <svg viewBox="0 0 24 24" width="24" height="24"><path fill="#2ecc71" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+        </button>
+      </div>
+    </section>
+
+    <aside class="details-panel">
+      <h3>📅 Info Sesión</h3>
+      <div class="detail-card">
+        <label>Especialidad</label>
+        <div class="value">{{ especialidadEntrenador }}</div>
+      </div>
+      <div class="detail-card">
+        <label>Objetivos</label>
+        <div class="value" style="font-size: 0.9rem; font-style: italic;">"{{ objetivosPaco }}"</div>
+      </div>
+    </aside>
+  </div>
+</div>

@@ -7,6 +7,7 @@ namespace fitstation_backend.Models;
 public class ConversationUser
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("id")]
     public int Id { get; set; }
 

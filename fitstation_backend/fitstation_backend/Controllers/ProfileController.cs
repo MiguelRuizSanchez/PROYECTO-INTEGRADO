@@ -19,105 +19,84 @@ public class ProfileController : ControllerBase
         _context = context;
     }
 
-    // NUEVO: El endpoint "estrella" para el Frontend
     [HttpGet("me")]
     public IActionResult GetMyProfile()
     {
+        // Extraemos el ID del Token
         var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
         var userId = int.Parse(claimValue);
 
-        return GetProfileLogic(userId);
-    }
-
-    [HttpGet("{userId}")]
-    public IActionResult GetProfile(int userId)
-    {
-        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (currentUserId != userId.ToString())
-        {
-            return Forbid();
-        }
-
-        return GetProfileLogic(userId);
-    }
-
-    // Centralizamos la lógica para no repetir código
-    private IActionResult GetProfileLogic(int userId)
-    {
         var user = _context.Users.Find(userId);
-        if (user == null) return NotFound("Usuario no encontrado");
+        if (user == null) return NotFound();
 
-        if (user.Role == "client")
-        {
-            var client = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
-            return Ok(new
-            {
-                user.IdUser,
-                user.Name,
-                user.Email,
-                user.Role,
-                Details = client
-            });
-        }
-        else
-        {
-            var worker = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
-            return Ok(new
-            {
-                user.IdUser,
-                user.Name,
-                user.Email,
-                user.Role,
-                Details = worker
-            });
-        }
+        object? details = null;
+        if (user.Role.ToLower() == "client")
+            details = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
+        else if (user.Role.ToLower() == "worker")
+            details = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+
+        return Ok(new { name = user.Name, role = user.Role, details });
     }
 
     [HttpPost("update")]
-    public IActionResult UpdateProfile(UpdateProfileDto dto)
+    public IActionResult UpdateProfile([FromBody] UpdateProfileDto dto)
     {
-        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (currentUserId != dto.UserId.ToString())
-        {
-            return Forbid();
-        }
+        // Identidad segura desde el Token JWT
+        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
+        var userIdFromToken = int.Parse(claimValue);
 
-        var user = _context.Users.Find(dto.UserId);
-        if (user == null) return NotFound("Usuario no encontrado");
+        var user = _context.Users.Find(userIdFromToken);
+        if (user == null) return NotFound("Usuario no existe");
 
-        if (user.Role == "client")
+        try 
         {
-            var client = _context.Clients.FirstOrDefault(c => c.IdUser == dto.UserId);
-            if (client == null)
+            if (user.Role.ToLower() == "client")
             {
-                client = new Client { IdUser = dto.UserId };
-                _context.Clients.Add(client);
-            }
-            // Mapeo de datos
-            client.Objectives = dto.Objectives;
-            client.ExperienceLevel = dto.ExperienceLevel;
-            client.Modality = dto.Modality;
-            client.MedicalNotes = dto.MedicalNotes;
-            client.Equipment = dto.Equipment;
-            client.PrefDay = dto.PrefDay;
-            client.PrefTime = dto.PrefTime;
-        }
-        else if (user.Role == "worker")
-        {
-            var worker = _context.Workers.FirstOrDefault(w => w.IdUser == dto.UserId);
-            if (worker == null)
-            {
-                worker = new Worker { IdUser = dto.UserId };
-                _context.Workers.Add(worker);
-            }
-            worker.Specialization = dto.Specialization;
-            worker.Bio = dto.Bio;
-            worker.PricePerSession = dto.PricePerSession;
-            worker.MaxCapacity = dto.MaxCapacity;
-        }
+                var client = _context.Clients.FirstOrDefault(c => c.IdUser == userIdFromToken);
+                if (client == null) {
+                    client = new Client { IdUser = userIdFromToken };
+                    _context.Clients.Add(client);
+                }
 
-        _context.SaveChanges();
-        return Ok(new { message = "Perfil actualizado correctamente" });
+                client.Goal = dto.Objectives;
+                client.Objectives = dto.Objectives;
+                client.ExperienceLevel = dto.ExperienceLevel;
+                client.Modality = dto.Modality;
+                client.MedicalNotes = dto.MedicalNotes;
+                client.Equipment = dto.Equipment;
+                client.PrefDay = dto.PrefDay;
+
+                // Convertimos el string de la hora a TimeSpan para MySQL
+                if (TimeSpan.TryParse(dto.PrefTime, out var t)) {
+                    client.PrefTime = t;
+                }
+            }
+            else if (user.Role.ToLower() == "worker")
+            {
+                var worker = _context.Workers.FirstOrDefault(w => w.IdUser == userIdFromToken);
+                if (worker == null) {
+                    worker = new Worker { IdUser = userIdFromToken };
+                    _context.Workers.Add(worker);
+                }
+
+                worker.Specialization = dto.Specialization;
+                worker.Specialty = dto.Specialization;
+                worker.Bio = dto.Bio;
+                worker.PricePerSession = dto.PricePerSession ?? 0;
+                worker.MaxCapacity = dto.MaxCapacity ?? 10;
+            }
+
+            _context.SaveChanges();
+            return Ok(new { message = "¡Perfil guardado con éxito!" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { 
+                error = "Error al guardar en base de datos", 
+                detalle = ex.InnerException?.Message ?? ex.Message 
+            });
+        }
     }
 }

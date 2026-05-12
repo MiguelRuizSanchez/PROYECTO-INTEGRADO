@@ -1,12 +1,18 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { RegisterComponent } from './register/register.component'; // Importamos el nuevo componente
+import { CuestionarioComponent } from './cuestionario/cuestionario.component';
+import { BuscadorComponent } from './buscador/buscador.component';
+import { SessionDetailComponent } from './session-detail/session-detail.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent }, // <-- Ruta para crear cuenta
+  { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: '**', redirectTo: 'login' } // Si alguien escribe cualquier cosa, al login
+  { path: 'cuestionario', component: CuestionarioComponent },
+  { path: 'buscador', component: BuscadorComponent },
+  { path: 'session/:id', component: SessionDetailComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];

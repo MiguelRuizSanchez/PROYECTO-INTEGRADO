@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations; 
-using System.ComponentModel.DataAnnotations.Schema; 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fitstation_backend.Models;
 
@@ -31,9 +31,9 @@ public class Client
     [Column("equipment")]
     public string? Equipment { get; set; }
 
-    [Column("pref_day")]
+    [Column("pref_day")] // 👈 Mapeo exacto para evitar el Error 500
     public string? PrefDay { get; set; }
 
-    [Column("pref_time")]
+    [Column("pref_time")] // 👈 Mapeo exacto
     public TimeSpan? PrefTime { get; set; }
 }

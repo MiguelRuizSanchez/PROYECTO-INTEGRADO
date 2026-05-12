@@ -1,0 +1,101 @@
+<div class="cuestionario-main">
+  <div class="form-container">
+    <h1>Configura tu Perfil en FitStation ⚡</h1>
+    <p>Estás configurando tu cuenta como: <strong>{{ rol | uppercase }}</strong></p>
+
+    <form *ngIf="questForm" [formGroup]="questForm" (ngSubmit)="enviar()">
+      
+      <div *ngIf="rol === 'worker'" class="role-section">
+        <h3>Información Profesional</h3>
+        <div class="form-group">
+          <label>Especialidad Principal</label>
+          <select formControlName="Specialization" class="form-control">
+            <option value="">Selecciona tu especialidad...</option>
+            <option value="Musculación e Hipertrofia">Musculación e Hipertrofia</option>
+            <option value="Pérdida de Peso">Pérdida de Peso</option>
+            <option value="Yoga y Flexibilidad">Yoga y Flexibilidad</option>
+            <option value="Crossfit y Alta Intensidad">Crossfit y Alta Intensidad</option>
+            <option value="Entrenamiento Funcional">Entrenamiento Funcional</option>
+            <option value="Preparación de Oposiciones">Preparación de Oposiciones</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Biografía Profesional (Mín. 10 caracteres)</label>
+          <textarea formControlName="Bio" class="form-control" rows="4" placeholder="Describe tu metodología..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio por Sesión (€)</label>
+            <input type="number" formControlName="PricePerSession" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Capacidad Máxima</label>
+            <input type="number" formControlName="MaxCapacity" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="rol === 'client'" class="role-section">
+        <h3>Tus Metas Fitness</h3>
+        <div class="form-group">
+          <label>¿Cuál es tu objetivo principal?</label>
+          <select formControlName="Objectives" class="form-control">
+            <option value="">Selecciona tu objetivo...</option>
+            <option value="Musculación e Hipertrofia">Musculación e Hipertrofia</option>
+            <option value="Pérdida de Peso">Pérdida de Peso</option>
+            <option value="Yoga y Flexibilidad">Yoga y Flexibilidad</option>
+            <option value="Crossfit y Alta Intensidad">Crossfit y Alta Intensidad</option>
+            <option value="Entrenamiento Funcional">Entrenamiento Funcional</option>
+            <option value="Preparación de Oposiciones">Preparación de Oposiciones</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nivel Actual</label>
+            <select formControlName="ExperienceLevel" class="form-control">
+              <option value="principiante">Principiante</option>
+              <option value="intermedio">Intermedio</option>
+              <option value="avanzado">Avanzado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Modalidad</label>
+            <select formControlName="Modality" class="form-control">
+              <option value="presencial">Presencial</option>
+              <option value="online">Online</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="common-section">
+        <h3>Tu Disponibilidad</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Día Preferido</label>
+            <select formControlName="PrefDay" class="form-control">
+              <option value="Monday">Lunes</option>
+              <option value="Tuesday">Martes</option>
+              <option value="Wednesday">Miércoles</option>
+              <option value="Thursday">Jueves</option>
+              <option value="Friday">Viernes</option>
+              <option value="Saturday">Sábado</option>
+              <option value="Sunday">Domingo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Hora Preferida</label>
+            <input type="time" formControlName="PrefTime" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="questForm.invalid">
+        GUARDAR Y ACTIVAR CUENTA
+      </button>
+    </form>
+  </div>
+</div>

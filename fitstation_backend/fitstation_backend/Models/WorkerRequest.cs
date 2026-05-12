@@ -16,15 +16,15 @@ public class WorkerRequest
     [Column("id_worker")]
     public int IdWorker { get; set; }
 
-    [Column("requested_day")]
-    public string? RequestedDay { get; set; }
-
-    [Column("requested_time")]
-    public TimeSpan? RequestedTime { get; set; }
-
     [Column("status")]
     public string Status { get; set; } = "Pending";
 
     [Column("request_date")]
     public DateTime RequestDate { get; set; } = DateTime.Now;
+
+    [Column("requested_day")]
+    public string? RequestedDay { get; set; }
+
+    [Column("requested_time")]
+    public TimeSpan? RequestedTime { get; set; }
 }

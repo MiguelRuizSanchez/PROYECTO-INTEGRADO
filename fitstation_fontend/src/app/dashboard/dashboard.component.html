@@ -1,1 +1,69 @@
-<p>dashboard works!</p>
+<div class="dashboard-main">
+  
+  <div *ngIf="cargando" class="loader-overlay">
+    <div class="spinner"></div>
+    <p>Cargando tu energía...</p>
+  </div>
+
+  <div class="content-wrapper" *ngIf="!cargando">
+    
+    <header class="top-nav">
+      <div class="brand">FIT<span>STATION</span></div>
+      <div class="user-area">
+        <span class="badge">{{ (datosUsuario?.role || datosUsuario?.Role) | uppercase }}</span>
+        
+        <button *ngIf="(datosUsuario?.role?.toLowerCase() === 'client' || datosUsuario?.Role?.toLowerCase() === 'client') && !perfilIncompleto" 
+                class="btn-match-nav" 
+                (click)="irAlBuscador()">
+          🔍 Buscar Coach
+        </button>
+
+        <button class="btn-exit" (click)="logout()">Salir</button>
+      </div>
+    </header>
+
+    <main class="dashboard-body">
+      <h1>Hola, {{ datosUsuario?.name || datosUsuario?.Name || 'Usuario' }} 👋</h1>
+
+      <section class="agenda-section" *ngIf="!perfilIncompleto">
+        <h2>📅 Mi Agenda de Entrenamiento</h2>
+        <div *ngIf="sesiones.length === 0" class="empty-card">No tienes sesiones programadas.</div>
+        
+        <div class="sessions-grid" *ngIf="sesiones.length > 0">
+          <div class="session-card" *ngFor="let sesion of sesiones" [routerLink]="['/session', sesion.idSession || sesion.IdSession]">
+            <div class="session-info">
+              <h3>{{ sesion.workerName || sesion.worker_name || sesion.clientName || 'Sesión de Entrenamiento' }}</h3>
+              <p>Día: {{ sesion.scheduledDate || sesion.ScheduledDate | date:'dd/MM/yyyy' }}</p>
+              <p>Hora: {{ sesion.startTime || sesion.StartTime }}</p>
+              <span class="status-tag">{{ sesion.status || sesion.Status }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="requests-section" *ngIf="(datosUsuario?.role?.toLowerCase() === 'worker' || datosUsuario?.Role?.toLowerCase() === 'worker') && !perfilIncompleto">
+        <h2>🔔 Peticiones de Clientes</h2>
+        <div *ngIf="solicitudes.length === 0" class="empty-card">Sin peticiones pendientes.</div>
+        
+        <div class="request-item" *ngFor="let req of solicitudes">
+          <p><strong>{{ req.clientName || req.ClientName }}</strong> quiere entrenar contigo.</p>
+          <div class="actions">
+            <button class="btn-ok" (click)="gestionarSolicitud(req.requestId || req.RequestId, 'Accepted')">Aceptar</button>
+            <button class="btn-no" (click)="gestionarSolicitud(req.requestId || req.RequestId, 'Rejected')">Rechazar</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="overlay-lock" *ngIf="perfilIncompleto">
+      <div class="modal-lock">
+        <div class="alert-icon">⚠️</div>
+        <h2>Configuración necesaria</h2>
+        <p>Tu perfil está incompleto. Necesitamos conocer tus objetivos antes de empezar.</p>
+        <button class="btn-cuestionario" (click)="irAlCuestionario()">RELLENAR CUESTIONARIO</button>
+        <button class="btn-logout-small" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+
+  </div>
+</div>

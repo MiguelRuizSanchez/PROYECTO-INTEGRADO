@@ -11,11 +11,14 @@ public class Routine
     public int IdRoutine { get; set; }
 
     [Column("id_worker")]
-    public int? IdWorker { get; set; }
+    public int IdWorker { get; set; }
 
     [Column("name")]
-    public string Name { get; set; } = null!;
+    public string Name { get; set; } = string.Empty;
 
     [Column("description")]
     public string? Description { get; set; }
+
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

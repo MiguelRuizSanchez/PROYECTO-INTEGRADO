@@ -1,42 +1,54 @@
-import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    HttpClientModule, 
+    RouterModule
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  mensajeError: string = '';
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  mensaje: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder, 
+    private http: HttpClient, 
+    private router: Router
+  ) {}
 
-  realizarLogin() {
-    this.mensajeError = ''; // Limpiar errores previos
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
+  }
 
-    this.authService.login(this.email, this.password).subscribe({
-      next: (data) => {
-        console.log('Login exitoso:', data);
-        this.authService.guardarSesion(data.token, data.role);
-        this.router.navigate(['/dashboard']);
+  realizarLogin(): void {
+    if (this.loginForm.invalid) return;
+
+    this.http.post<any>('http://localhost:5038/api/Auth/login', this.loginForm.value).subscribe({
+      next: (res) => {
+        // Guardamos los datos que vienen del backend
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('userId', (res.userId || res.UserId).toString());
+        localStorage.setItem('userRole', (res.userRole || res.UserRole).toLowerCase());
+
+        this.mensaje = '¡Bienvenido a FitStation!';
+        setTimeout(() => this.router.navigate(['/dashboard']), 1000);
       },
       error: (err) => {
-        console.error('Error en la autenticación:', err);
-        // Manejo de errores basado en códigos de estado HTTP
-        if (err.status === 401 || err.status === 400) {
-          this.mensajeError = 'Usuario o contraseña incorrectos.';
-        } else if (err.status === 0) {
-          this.mensajeError = 'No se pudo conectar con el servidor. ¿Está el backend encendido?';
-        } else {
-          this.mensajeError = 'Ha ocurrido un error inesperado. Inténtalo de nuevo.';
-        }
+        console.error(err);
+        this.mensaje = 'Correo o contraseña incorrectos.';
       }
     });
   }

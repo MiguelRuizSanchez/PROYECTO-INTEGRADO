@@ -1,0 +1,27 @@
+<div class="buscador-container">
+  <header>
+    <h1>Encuentra tu Match Perfecto ⚡</h1>
+    <p>Entrenadores recomendados según tus objetivos</p>
+  </header>
+
+  <div *ngIf="cargando" class="loading">Buscando perfiles compatibles...</div>
+
+  <div class="grid" *ngIf="!cargando">
+    <div class="card" *ngFor="let coach of coaches">
+      <h3>{{ coach.name || coach.Name }}</h3>
+      <span class="specialty">{{ coach.specialty || coach.Specialty || 'Fitness' }}</span>
+      <p>{{ coach.bio || coach.Bio || 'Sin biografía.' }}</p>
+      
+      <div class="footer-card">
+        <span class="price">{{ coach.price || coach.Price || 0 }}€/sesión</span>
+        <button (click)="enviarSolicitud(coach.workerId || coach.WorkerId)">
+          SOLICITAR
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && coaches.length === 0" class="empty">
+    No hemos encontrado entrenadores que coincidan con tus objetivos todavía.
+  </div>
+</div>

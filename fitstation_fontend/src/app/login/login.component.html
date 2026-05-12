@@ -5,32 +5,28 @@
       <p>ENTRENAMIENTO INTELIGENTE</p>
     </div>
 
-    <form (submit)="$event.preventDefault(); realizarLogin()">
+    <form [formGroup]="loginForm" (ngSubmit)="realizarLogin()">
       <div class="input-group">
         <label>CORREO ELECTRÓNICO</label>
         <input 
           type="email" 
-          name="email" 
-          [(ngModel)]="email" 
-          placeholder="ejemplo@fitstation.com" 
-          required>
+          formControlName="email" 
+          placeholder="ejemplo@fitstation.com">
       </div>
 
       <div class="input-group">
         <label>CONTRASEÑA</label>
         <input 
           type="password" 
-          name="password" 
-          [(ngModel)]="password" 
-          placeholder="••••••••" 
-          required>
+          formControlName="password" 
+          placeholder="••••••••">
       </div>
 
-      <div *ngIf="mensajeError" class="error-msg">
-        {{ mensajeError }}
+      <div *ngIf="mensaje" class="mensaje-info" [style.color]="mensaje.includes('¡') ? '#2ecc71' : '#e74c3c'">
+        {{ mensaje }}
       </div>
 
-      <button type="submit" class="btn-login">ENTRAR</button>
+      <button type="submit" class="btn-login" [disabled]="loginForm.invalid">ENTRAR</button>
     </form>
 
     <div class="footer-links">

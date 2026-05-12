@@ -1,0 +1,103 @@
+.buscador-container {
+  padding: 40px 20px;
+  background: #0f0f0f;
+  min-height: 100vh;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #2ecc71;
+}
+
+header span {
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #1a1a1a;
+  border-radius: 15px;
+  padding: 25px;
+  border: 1px solid #333;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #2ecc71;
+}
+
+.card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.4rem;
+}
+
+.specialty {
+  background: rgba(46, 204, 113, 0.1);
+  color: #2ecc71;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #aaa;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.footer-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #333;
+  padding-top: 15px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+button {
+  background: #2ecc71;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #27ae60;
+  transform: scale(1.05);
+}
+
+.loading, .empty {
+  text-align: center;
+  padding: 50px;
+  color: #888;
+}
