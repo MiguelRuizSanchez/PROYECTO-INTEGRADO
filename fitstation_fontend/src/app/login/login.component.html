@@ -1,0 +1,40 @@
+<div class="login-container">
+  <div class="login-box">
+    <div class="logo">
+      <h1>FIT<span>STATION</span></h1>
+      <p>ENTRENAMIENTO INTELIGENTE</p>
+    </div>
+
+    <form (submit)="$event.preventDefault(); realizarLogin()">
+      <div class="input-group">
+        <label>CORREO ELECTRÓNICO</label>
+        <input 
+          type="email" 
+          name="email" 
+          [(ngModel)]="email" 
+          placeholder="ejemplo@fitstation.com" 
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>CONTRASEÑA</label>
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="password" 
+          placeholder="••••••••" 
+          required>
+      </div>
+
+      <div *ngIf="mensajeError" class="error-msg">
+        {{ mensajeError }}
+      </div>
+
+      <button type="submit" class="btn-login">ENTRAR</button>
+    </form>
+
+    <div class="footer-links">
+      <a routerLink="/register">¿No tienes cuenta? Regístrate aquí</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="login-container">
+  <div class="login-box">
+    <div class="logo">
+      <h1>FIT<span>STATION</span></h1>
+      <p>NUEVO REGISTRO</p>
+    </div>
+
+    <form (submit)="realizarRegistro()">
+      <div class="input-group">
+        <label>NOMBRE COMPLETO</label>
+        <input type="text" name="nombre" [(ngModel)]="nombre" placeholder="Tu nombre real" required>
+      </div>
+
+      <div class="input-group">
+        <label>CORREO ELECTRÓNICO</label>
+        <input type="email" name="email" [(ngModel)]="email" placeholder="ejemplo@fitstation.com" required>
+      </div>
+
+      <div class="input-group">
+        <label>CONTRASEÑA</label>
+        <input type="password" name="clave" [(ngModel)]="clave" placeholder="Mínimo 6 caracteres" required>
+      </div>
+
+      <div class="input-group">
+        <label>TIPO DE PERFIL</label>
+        <select name="rol" [(ngModel)]="rol" class="select-rol">
+          <option value="client">Atleta (Cliente)</option>
+          <option value="worker">Coach (Entrenador)</option>
+        </select>
+      </div>
+
+      <p *ngIf="mensajeError" class="error-msg">{{ mensajeError }}</p>
+
+      <button type="submit" class="btn-login">FINALIZAR REGISTRO</button>
+    </form>
+
+    <div class="footer-links">
+      <a routerLink="/login">¿Ya eres socio? Inicia sesión</a>
+    </div>
+  </div>
+</div>
