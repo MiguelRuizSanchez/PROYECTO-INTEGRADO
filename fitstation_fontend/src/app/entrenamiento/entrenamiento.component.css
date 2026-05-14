@@ -1,0 +1,177 @@
+.entrenamiento-container {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: white;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header-entrenamiento {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #222;
+}
+
+.btn-volver, .btn-atras {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #888;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-volver:hover, .btn-atras:hover {
+  border-color: #2ecc71;
+  color: #2ecc71;
+}
+
+.info-sesion h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.info-sesion p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.info-sesion span {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+/* GRID DE RUTINAS */
+.seccion-rutinas h2 {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  color: #2ecc71;
+}
+
+.grid-rutinas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tarjeta-rutina {
+  background: #111;
+  border: 1px solid #222;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.tarjeta-rutina:hover {
+  border-color: #2ecc71;
+  transform: translateY(-5px);
+}
+
+.icon-rutina {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.tarjeta-rutina h3 {
+  margin: 0 0 10px;
+  font-size: 1.3rem;
+}
+
+.tarjeta-rutina p {
+  color: #777;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.btn-ver {
+  background: #2ecc71;
+  color: black;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* TABLA DE EJERCICIOS */
+.detalle-rutina {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.tabla-contenedor {
+  background: #111;
+  border-radius: 15px;
+  border: 1px solid #222;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.tabla-ejercicios {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabla-ejercicios th {
+  background: #1a1a1a;
+  color: #2ecc71;
+  padding: 15px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border-bottom: 2px solid #222;
+}
+
+.tabla-ejercicios td {
+  padding: 18px 15px;
+  border-bottom: 1px solid #222;
+  font-size: 0.95rem;
+}
+
+.tabla-ejercicios tr:hover {
+  background: #161616;
+}
+
+.nombre-ej {
+  color: #fff;
+}
+
+.badge-musculo {
+  background: #222;
+  color: #aaa;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 50px;
+  color: #555;
+}

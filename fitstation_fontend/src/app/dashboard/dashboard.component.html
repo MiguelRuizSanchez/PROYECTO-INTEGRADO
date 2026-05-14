@@ -7,10 +7,11 @@
   <div class="content-wrapper" *ngIf="!cargando">
     <header class="top-nav">
       <div class="brand">FIT<span>STATION</span></div>
+      
       <div class="user-area">
         <span class="badge">{{ rol | uppercase }}</span>
         
-        <button class="btn-profile" routerLink="/calendario" style="border-color: #2ecc71; color: #2ecc71;">
+        <button class="btn-profile btn-nav-highlight" routerLink="/calendario">
           📅 MI CALENDARIO
         </button>
 
@@ -20,14 +21,13 @@
           ➕ CREAR RUTINA
         </button>
 
-        <button class="btn-profile" routerLink="/perfil">⚙️ MI PERFIL</button>
-
         <button *ngIf="rol === 'client'" 
                 class="btn-match-nav" 
                 (click)="irAlBuscador()">
           🔍 BUSCAR COACH
         </button>
 
+        <button class="btn-profile" routerLink="/perfil">⚙️ MI PERFIL</button>
         <button class="btn-exit" (click)="logout()">SALIR</button>
       </div>
     </header>
@@ -35,7 +35,7 @@
     <main class="dashboard-body">
       <div class="welcome">
         <h1>Bienvenido, {{ datosUsuario?.name || datosUsuario?.Name }} 🦾</h1>
-        <p>Este es el resumen de tu actividad deportiva.</p>
+        <p>Tu centro de control deportivo personalizado.</p>
       </div>
 
       <section class="requests-section" *ngIf="rol === 'worker' && solicitudes.length > 0">
@@ -69,10 +69,10 @@
       </section>
 
       <section class="sessions-section">
-        <h2>📅 Próximas Sesiones</h2>
+        <h2>📅 Mis Sesiones Activas</h2>
         
         <div *ngIf="sesiones.length === 0" class="empty-state-simple">
-          No tienes sesiones programadas actualmente.
+          No tienes sesiones programadas en este momento.
         </div>
 
         <div class="sessions-grid">
@@ -89,15 +89,29 @@
               <p>🗓️ {{ s.dayOfWeek || s.DayOfWeek }}</p>
             </div>
 
-            <div class="card-footer">
-              <button class="btn-chat" [routerLink]="['/session', s.idSession || s.IdSession]">
-                💬 CHAT Y RUTINAS
+            <div class="card-footer-split">
+              <button class="btn-chat-only" 
+                      [routerLink]="['/session', s.idSession || s.IdSession]">
+                💬 CHAT
+              </button>
+              
+              <button *ngIf="rol === 'client'" 
+                      class="btn-train-only" 
+                      [routerLink]="['/entrenamiento', s.idSession || s.IdSession]">
+                🏋️ MI PLAN
+              </button>
+              
+              <button *ngIf="rol === 'worker'" 
+                      class="btn-train-only" 
+                      [routerLink]="['/gestion-rutinas', s.idSession || s.IdSession]">
+                📋 GESTIÓN
               </button>
               
               <button *ngIf="rol === 'worker' && (s.status !== 'Completed' && s.Status !== 'Completed')" 
-                      class="btn-finish" 
+                      class="btn-finish-small" 
+                      title="Marcar como finalizada"
                       (click)="finalizarSesion(s.idSession || s.IdSession)">
-                ✅ FINALIZAR
+                ✅
               </button>
             </div>
           </div>
@@ -109,7 +123,7 @@
       <div class="modal-lock">
         <div class="alert-icon">⚠️</div>
         <h2>¡Perfil Incompleto!</h2>
-        <p>Para poder usar FitStation, necesitamos que termines de configurar tu perfil.</p>
+        <p>Para poder usar todas las funciones de FitStation, necesitamos que termines de configurar tu perfil.</p>
         <button class="btn-confirm" routerLink="/perfil">CONFIGURAR AHORA</button>
       </div>
     </div>

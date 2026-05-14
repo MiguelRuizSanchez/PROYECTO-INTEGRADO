@@ -1,0 +1,64 @@
+<div class="gestion-container">
+  <header class="gestion-header">
+    <div class="header-left">
+      <button routerLink="/dashboard" class="btn-back">← VOLVER</button>
+      <div class="alumno-info">
+        <h1>Gestión de Alumno: <span>{{ nombreAlumno }}</span></h1>
+        <p>Asigna y supervisa el plan de entrenamiento desde aquí.</p>
+      </div>
+    </div>
+    <div class="status-badge">PANEL DE CONTROL</div>
+  </header>
+
+  <main class="gestion-content">
+    <section class="card-gestion assign-section">
+      <div class="card-header">
+        <div class="icon">➕</div>
+        <h2>Asignar Nueva Rutina</h2>
+      </div>
+      <div class="card-body">
+        <p>Selecciona una rutina de tu biblioteca personal para enviársela al alumno.</p>
+        
+        <div class="form-assign">
+          <select [(ngModel)]="rutinaSeleccionadaId" class="select-rutina">
+            <option [value]="0">-- Seleccionar de mi biblioteca --</option>
+            <option *ngFor="let r of bibliotecaRutinas" [value]="r.idRoutine || r.IdRoutine">
+              {{ r.name || r.Name }}
+            </option>
+          </select>
+          
+          <button class="btn-assign" 
+                  (click)="asignarRutina()" 
+                  [disabled]="rutinaSeleccionadaId == 0">
+            ASIGNAR AHORA
+          </button>
+        </div>
+        <p class="hint">¿No ves la rutina? Asegúrate de haberla creado en el apartado "Crear Rutina".</p>
+      </div>
+    </section>
+
+    <section class="card-gestion history-section">
+      <div class="card-header">
+        <div class="icon">🏋️</div>
+        <h2>Rutinas Activas del Alumno</h2>
+      </div>
+      
+      <div class="card-body">
+        <div *ngIf="cargando" class="msg-state">Cargando datos...</div>
+        <div *ngIf="!cargando && rutinasDelAlumno.length === 0" class="msg-state">
+          Este alumno aún no tiene rutinas asignadas.
+        </div>
+
+        <div class="list-rutinas">
+          <div class="item-rutina" *ngFor="let ar of rutinasDelAlumno">
+            <div class="item-info">
+              <span class="item-name">{{ ar.name || ar.Name }}</span>
+              <span class="item-date">Asignada el: {{ (ar.createdAt || ar.CreatedAt) | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <span class="badge-active">EN CURSO</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

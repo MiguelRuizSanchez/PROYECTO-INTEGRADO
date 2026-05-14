@@ -1,0 +1,59 @@
+<div class="entrenamiento-container">
+  <header class="header-entrenamiento">
+    <button routerLink="/dashboard" class="btn-volver">← VOLVER</button>
+    <div class="info-sesion">
+      <h1>MI PLAN DE ENTRENAMIENTO</h1>
+      <p>Coach: <span>{{ nombreCoach }}</span></p>
+    </div>
+  </header>
+
+  <main class="cuerpo-entrenamiento">
+    <section class="seccion-rutinas" *ngIf="!rutinaSeleccionada">
+      <h2>Tus Rutinas Asignadas</h2>
+      <div *ngIf="cargando" class="loading">Cargando tus rutinas...</div>
+      
+      <div *ngIf="!cargando && rutinasAsignadas.length === 0" class="empty-state">
+        Aún no tienes rutinas asignadas por tu coach.
+      </div>
+
+      <div class="grid-rutinas">
+        <div class="tarjeta-rutina" *ngFor="let r of rutinasAsignadas">
+          <div class="icon-rutina">🏋️</div>
+          <h3>{{ r.name || r.Name }}</h3>
+          <p>{{ r.description || r.Description || 'Sin descripción.' }}</p>
+          <button class="btn-ver" (click)="verDetalle(r)">VER EJERCICIOS</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="detalle-rutina" *ngIf="rutinaSeleccionada">
+      <div class="detalle-header">
+        <button (click)="cerrarDetalle()" class="btn-atras">← Ver todas las rutinas</button>
+        <h2>{{ rutinaSeleccionada.name || rutinaSeleccionada.Name }}</h2>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table class="tabla-ejercicios">
+          <thead>
+            <tr>
+              <th>EJERCICIO</th>
+              <th>GRUPO MUSCULAR</th>
+              <th class="text-center">SERIES</th>
+              <th class="text-center">REPETICIONES</th>
+              <th class="text-center">DESCANSO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ej of ejerciciosDeLaRutina">
+              <td class="nombre-ej"><strong>{{ ej.exerciseName }}</strong></td>
+              <td><span class="badge-musculo">{{ ej.muscle || 'General' }}</span></td>
+              <td class="text-center">{{ ej.series }}</td>
+              <td class="text-center">{{ ej.repetitions }}</td>
+              <td class="text-center">{{ ej.rest }}s</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>

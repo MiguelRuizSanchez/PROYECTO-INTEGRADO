@@ -7,8 +7,10 @@ import { BuscadorComponent } from './buscador/buscador.component';
 import { SessionDetailComponent } from './session-detail/session-detail.component';
 import { PerfilComponent } from './perfil/perfil.component'; 
 import { CrearRutinaComponent } from './crear-rutina/crear-rutina.component';
-// 🚀 NUEVA IMPORTACIÓN
 import { CalendarioComponent } from './calendario/calendario.component'; 
+import { EntrenamientoComponent } from './entrenamiento/entrenamiento.component';
+// 🚀 NUEVA IMPORTACIÓN
+import { GestionRutinasComponent } from './gestion-rutinas/gestion-rutinas.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,9 +21,11 @@ export const routes: Routes = [
   { path: 'session/:id', component: SessionDetailComponent },
   { path: 'perfil', component: PerfilComponent },
   { path: 'crear-rutina', component: CrearRutinaComponent },
-  // 🚀 NUEVA RUTA
   { path: 'calendario', component: CalendarioComponent }, 
+  { path: 'entrenamiento/:id', component: EntrenamientoComponent },
+  // 🚀 NUEVA RUTA PARA EL ENTRENADOR
+  { path: 'gestion-rutinas/:id', component: GestionRutinasComponent },
   
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' } // Cualquier otra ruta manda al login
+  { path: '**', redirectTo: '/login' } 
 ];
