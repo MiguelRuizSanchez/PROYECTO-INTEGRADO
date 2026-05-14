@@ -1,64 +1,107 @@
 <div class="gestion-container">
-  <header class="gestion-header">
+  <header class="header-main">
     <div class="header-left">
-      <button routerLink="/dashboard" class="btn-back">← VOLVER</button>
-      <div class="alumno-info">
-        <h1>Gestión de Alumno: <span>{{ nombreAlumno }}</span></h1>
-        <p>Asigna y supervisa el plan de entrenamiento desde aquí.</p>
+      <button routerLink="/dashboard" class="btn-back">← DASHBOARD</button>
+      <div class="titles">
+        <h1>Gestión de Entrenamiento</h1>
+        <p>Alumno: <span>{{ nombreAlumno }}</span></p>
       </div>
     </div>
-    <div class="status-badge">PANEL DE CONTROL</div>
+    <div class="badge-role">MODO ENTRENADOR</div>
   </header>
 
-  <main class="gestion-content">
-    <section class="card-gestion assign-section">
-      <div class="card-header">
-        <div class="icon">➕</div>
-        <h2>Asignar Nueva Rutina</h2>
-      </div>
-      <div class="card-body">
-        <p>Selecciona una rutina de tu biblioteca personal para enviársela al alumno.</p>
-        
-        <div class="form-assign">
-          <select [(ngModel)]="rutinaSeleccionadaId" class="select-rutina">
-            <option [value]="0">-- Seleccionar de mi biblioteca --</option>
-            <option *ngFor="let r of bibliotecaRutinas" [value]="r.idRoutine || r.IdRoutine">
-              {{ r.name || r.Name }}
-            </option>
-          </select>
+  <div class="gestion-grid">
+    <section class="card-glass">
+      <div class="card-icon">📚</div>
+      <h2>Mi Biblioteca de Rutinas</h2>
+      <p class="card-desc">Selecciona una rutina de tu base de datos para asignarla a este alumno.</p>
+
+      <div class="assign-form">
+        <select [(ngModel)]="rutinaParaAsignarId" class="select-dark">
+          <option [value]="0">-- Seleccionar Rutina --</option>
+          <option *ngFor="let r of bibliotecaRutinas" [value]="r.idRoutine || r.id_routine || r.IdRoutine">
+            {{ r.name || r.Name }}
+          </option>
+        </select>
+
+        <div class="action-btns">
+          <button class="btn-outline" 
+                  (click)="verContenidoRutina(rutinaParaAsignarId, 'Vista Previa')"
+                  [disabled]="rutinaParaAsignarId == 0">
+            👁️ PREVISUALIZAR
+          </button>
           
-          <button class="btn-assign" 
-                  (click)="asignarRutina()" 
-                  [disabled]="rutinaSeleccionadaId == 0">
-            ASIGNAR AHORA
+          <button class="btn-primary" 
+                  (click)="asignarRutina()"
+                  [disabled]="rutinaParaAsignarId == 0">
+            ENVIAR ALUMNO
           </button>
         </div>
-        <p class="hint">¿No ves la rutina? Asegúrate de haberla creado en el apartado "Crear Rutina".</p>
       </div>
     </section>
 
-    <section class="card-gestion history-section">
-      <div class="card-header">
-        <div class="icon">🏋️</div>
-        <h2>Rutinas Activas del Alumno</h2>
-      </div>
+    <section class="card-glass">
+      <div class="card-icon">🏋️</div>
+      <h2>Rutinas en Curso</h2>
+      <p class="card-desc">Historial de rutinas que el alumno tiene activas en su perfil.</p>
+
+      <div *ngIf="cargando" class="state-msg">Sincronizando con la base de datos...</div>
       
-      <div class="card-body">
-        <div *ngIf="cargando" class="msg-state">Cargando datos...</div>
-        <div *ngIf="!cargando && rutinasDelAlumno.length === 0" class="msg-state">
-          Este alumno aún no tiene rutinas asignadas.
+      <div class="routines-list" *ngIf="!cargando">
+        <div class="empty-state" *ngIf="rutinasDelAlumno.length === 0">
+          El alumno aún no tiene rutinas asignadas.
         </div>
 
-        <div class="list-rutinas">
-          <div class="item-rutina" *ngFor="let ar of rutinasDelAlumno">
-            <div class="item-info">
-              <span class="item-name">{{ ar.name || ar.Name }}</span>
-              <span class="item-date">Asignada el: {{ (ar.createdAt || ar.CreatedAt) | date:'dd/MM/yyyy' }}</span>
-            </div>
-            <span class="badge-active">EN CURSO</span>
+        <div class="routine-item" *ngFor="let ra of rutinasDelAlumno">
+          <div class="item-info">
+            <strong>{{ ra.name || ra.Name }}</strong>
+            <span>Asignada el: {{ (ra.createdAt || ra.CreatedAt) | date:'dd/MM/yyyy' }}</span>
           </div>
+          <button class="btn-view-small" 
+                  (click)="verContenidoRutina(ra.idRoutine || ra.id_routine || ra.IdRoutine, ra.name || ra.Name)">
+            VER TABLA
+          </button>
         </div>
       </div>
     </section>
-  </main>
+  </div>
+
+  <div class="modal-overlay" *ngIf="mostrandoEjercicios">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Contenido de: {{ nombreRutinaViendo }}</h3>
+        <button class="close-x" (click)="cerrarModal()">×</button>
+      </div>
+
+      <div class="table-container">
+        <table class="exercise-table">
+          <thead>
+            <tr>
+              <th>Ejercicio</th>
+              <th>Músculo</th>
+              <th class="center">Series</th>
+              <th class="center">Reps</th>
+              <th class="center">Peso/Desc</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ej of detallesRutinaSeleccionada">
+              <td><strong>{{ ej.exerciseName || ej.ExerciseName }}</strong></td>
+              <td><span class="m-badge">{{ ej.muscle || ej.Muscle || 'General' }}</span></td>
+              <td class="center">{{ ej.series || ej.Series }}</td>
+              <td class="center">{{ ej.repetitions || ej.Repetitions }}</td>
+              <td class="center">{{ ej.rest || ej.Rest }}s</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="detallesRutinaSeleccionada.length === 0" class="no-data">
+          Esta rutina no tiene ejercicios registrados en la tabla 'routine_exercises'.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" (click)="cerrarModal()">CERRAR VISTA</button>
+      </div>
+    </div>
+  </div>
 </div>

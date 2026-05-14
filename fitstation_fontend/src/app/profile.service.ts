@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProfileService {
-  private apiUrl = 'http://localhost:5038/api';
+  private apiUrl = 'http://localhost:5038/api'; // Mantenemos tu puerto original
 
   constructor(private http: HttpClient) {}
 
@@ -15,7 +15,7 @@ export class ProfileService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  // --- PERFIL ---
+  // --- 1. PERFIL ---
   getMyProfile(): Observable<any> {
     return this.http.get(`${this.apiUrl}/Profile/me`, { headers: this.getHeaders() });
   }
@@ -25,7 +25,7 @@ export class ProfileService {
     return this.http.post(`${this.apiUrl}/Profile/update`, dto, { headers });
   }
 
-  // --- BUSCADOR Y MATCH ---
+  // --- 2. BUSCADOR Y MATCH ---
   getSuggestedWorkers(clientId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Matching/suggested-workers/${clientId}`, { headers: this.getHeaders() });
   }
@@ -34,12 +34,11 @@ export class ProfileService {
     return this.http.post(`${this.apiUrl}/Request/send`, payload, { headers: this.getHeaders() });
   }
 
-  // --- PETICIONES Y SESIONES ---
+  // --- 3. PETICIONES Y SESIONES ---
   getWorkerRequests(workerId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Request/worker/${workerId}`, { headers: this.getHeaders() });
   }
 
-  // 🚀 NUEVO
   getClientRequests(clientId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Request/client/${clientId}`, { headers: this.getHeaders() });
   }
@@ -61,11 +60,15 @@ export class ProfileService {
     return this.http.put(`${this.apiUrl}/Session/finish/${sessionId}`, {}, { headers: this.getHeaders() });
   }
 
-  // --- CHAT Y DETALLES ---
   getSessionDetails(sessionId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/Session/details/${sessionId}`, { headers: this.getHeaders() });
   }
 
+  getOccupiedSlots(workerId: number, day: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/Session/occupied-slots/${workerId}/${day}`, { headers: this.getHeaders() });
+  }
+
+  // --- 4. CHAT ---
   getChatHistory(receiverId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Chat/history/${receiverId}`, { headers: this.getHeaders() });
   }
@@ -74,7 +77,9 @@ export class ProfileService {
     return this.http.post(`${this.apiUrl}/Chat/send`, payload, { headers: this.getHeaders() });
   }
 
-  // --- EJERCICIOS Y RUTINAS ---
+  // --- 5. EJERCICIOS Y RUTINAS (Limpieza de duplicados) ---
+  
+  // Obtiene los ejercicios de tu tabla (Antes tenías dos versiones de esto)
   getExercises(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Exercise`, { headers: this.getHeaders() });
   }
@@ -83,12 +88,18 @@ export class ProfileService {
     return this.http.get<any[]>(`${this.apiUrl}/Routine/worker/${workerId}`, { headers: this.getHeaders() });
   }
 
+  // Función para crear la cabecera de la rutina
   createRoutine(routinePayload: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/Routine`, routinePayload, { headers: this.getHeaders() });
   }
 
-  addExerciseToRoutine(routineExercisePayload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Routine/add-exercise`, routineExercisePayload, { headers: this.getHeaders() });
+  // Para el guardado completo que estamos montando
+  createFullRoutine(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Routine/create-full`, payload, { headers: this.getHeaders() });
+  }
+
+  addExerciseToRoutine(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Routine/add-exercise`, payload, { headers: this.getHeaders() });
   }
 
   assignRoutineToClient(payload: any): Observable<any> {
@@ -102,9 +113,4 @@ export class ProfileService {
   getRoutineDetails(routineId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Routine/${routineId}/details`, { headers: this.getHeaders() });
   }
-
-  // Añade esta función a tu ProfileService
-getOccupiedSlots(workerId: number, day: string): Observable<string[]> {
-  return this.http.get<string[]>(`${this.apiUrl}/Session/occupied-slots/${workerId}/${day}`, { headers: this.getHeaders() });
-}
 }

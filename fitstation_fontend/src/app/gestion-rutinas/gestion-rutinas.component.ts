@@ -17,9 +17,16 @@ export class GestionRutinasComponent implements OnInit {
   idWorker!: number;
   nombreAlumno: string = 'Cargando...';
 
-  bibliotecaRutinas: any[] = []; // Rutinas creadas por el coach
-  rutinasDelAlumno: any[] = []; // Rutinas que el alumno ya tiene asignadas
-  rutinaSeleccionadaId: number = 0;
+  // Datos de tu DB
+  bibliotecaRutinas: any[] = []; // Viene de tabla 'routines'
+  rutinasDelAlumno: any[] = []; // Viene de tabla 'client_routines'
+  
+  // Para el visualizador de ejercicios
+  detallesRutinaSeleccionada: any[] = []; // Viene de 'routine_exercises'
+  mostrandoEjercicios: boolean = false;
+  nombreRutinaViendo: string = '';
+
+  rutinaParaAsignarId: number = 0;
   cargando: boolean = true;
 
   constructor(
@@ -30,11 +37,11 @@ export class GestionRutinasComponent implements OnInit {
 
   ngOnInit() {
     this.sessionId = Number(this.route.snapshot.paramMap.get('id'));
-    this.cargarDatosBase();
+    this.cargarDatosSesion();
   }
 
-  cargarDatosBase() {
-    // 1. Obtenemos detalles de la sesión para identificar al alumno y al coach
+  cargarDatosSesion() {
+    // Obtenemos IDs de la sesión para saber qué cargar
     this.profileService.getSessionDetails(this.sessionId).subscribe({
       next: (res: any) => {
         const s = res.session || res.Session;
@@ -49,7 +56,7 @@ export class GestionRutinasComponent implements OnInit {
   }
 
   cargarBiblioteca() {
-    // 2. Traemos las rutinas que este coach ha creado en su biblioteca
+    // Carga las rutinas que el worker creó (Tabla: routines)
     this.profileService.getWorkerRoutines(this.idWorker).subscribe(res => {
       this.bibliotecaRutinas = res;
       this.cdr.detectChanges();
@@ -57,7 +64,7 @@ export class GestionRutinasComponent implements OnInit {
   }
 
   cargarRutinasAlumno() {
-    // 3. Traemos lo que el alumno ya tiene asignado para no repetirlo
+    // Carga las rutinas que ya tiene el alumno (Tabla: client_routines)
     this.profileService.getClientRoutines(this.idCliente).subscribe(res => {
       this.rutinasDelAlumno = res;
       this.cargando = false;
@@ -65,22 +72,36 @@ export class GestionRutinasComponent implements OnInit {
     });
   }
 
+  verContenidoRutina(id: number, nombre: string) {
+    // Consulta la tabla 'routine_exercises' para ver qué ejercicios tiene
+    this.nombreRutinaViendo = nombre;
+    this.profileService.getRoutineDetails(id).subscribe(exs => {
+      this.detallesRutinaSeleccionada = exs;
+      this.mostrandoEjercicios = true;
+      this.cdr.detectChanges();
+    });
+  }
+
   asignarRutina() {
-    if (this.rutinaSeleccionadaId == 0) return;
+    if (this.rutinaParaAsignarId == 0) return;
 
     const payload = {
       IdClient: this.idCliente,
-      IdRoutine: Number(this.rutinaSeleccionadaId)
+      IdRoutine: Number(this.rutinaParaAsignarId)
     };
 
-    // 4. Realizamos la asignación en la base de datos
+    // Inserta en la tabla 'client_routines'
     this.profileService.assignRoutineToClient(payload).subscribe({
       next: () => {
-        alert(`✅ Rutina asignada con éxito a ${this.nombreAlumno}`);
-        this.rutinaSeleccionadaId = 0;
-        this.cargarRutinasAlumno(); // Recargamos la lista visual
+        alert("✅ Rutina enviada al alumno correctamente.");
+        this.rutinaParaAsignarId = 0;
+        this.cargarRutinasAlumno();
       },
-      error: (err) => alert("Error al asignar: " + (err.error?.message || "Servidor no responde"))
+      error: () => alert("Error al asignar. Verifica la conexión.")
     });
+  }
+
+  cerrarModal() {
+    this.mostrandoEjercicios = false;
   }
 }

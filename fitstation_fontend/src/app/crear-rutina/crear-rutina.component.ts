@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../profile.service';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-rutina',
@@ -12,117 +12,86 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./crear-rutina.component.css']
 })
 export class CrearRutinaComponent implements OnInit {
-  workerId: number = 0;
-  
-  // Datos Generales de la Rutina
-  routineName: string = '';
-  routineDesc: string = '';
+  nombreRutina: string = '';
+  descripcion: string = '';
+  objetivoSeleccionado: string = 'Hipertrofia (Músculo)';
+  listaObjetivos: string[] = [
+    'Hipertrofia (Músculo)', 
+    'Fuerza Máxima', 
+    'Pérdida de Peso', 
+    'Resistencia / Cardio', 
+    'Salud y Movilidad'
+  ];
 
-  // Ejercicios
-  ejerciciosBase: any[] = []; // Los que vienen de la Base de Datos
-  ejerciciosFiltrados: any[] = [];
-  textoBusqueda: string = '';
+  catalogoEjercicios: any[] = [];
+  ejerciciosEnRutina: any[] = [];
 
-  // Lista temporal que el coach está montando
-  rutinaMontada: any[] = [];
-  guardando: boolean = false;
-
-  constructor(private profileService: ProfileService, private router: Router) {}
+  constructor(
+    private profileService: ProfileService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.profileService.getMyProfile().subscribe({
-      next: (res: any) => {
-        if (res.role !== 'worker') {
-          alert('Solo los entrenadores pueden crear rutinas.');
-          this.router.navigate(['/dashboard']);
-          return;
-        }
-        this.workerId = res.details.idWorker || res.details.IdWorker;
-        this.cargarEjerciciosBase();
-      },
-      error: () => this.router.navigate(['/login'])
-    });
+    this.cargarEjerciciosDeBaseDeDatos();
   }
 
-  cargarEjerciciosBase() {
-    this.profileService.getExercises().subscribe(data => {
-      this.ejerciciosBase = data;
-      this.ejerciciosFiltrados = data;
-    });
-  }
-
-  filtrarEjercicios() {
-    const term = this.textoBusqueda.toLowerCase();
-    this.ejerciciosFiltrados = this.ejerciciosBase.filter(e => 
-      e.name.toLowerCase().includes(term) || 
-      (e.muscleGroup && e.muscleGroup.toLowerCase().includes(term))
-    );
-  }
-
-  anadirARutina(ejercicio: any) {
-    // Añadimos una copia a la lista de montaje con valores por defecto
-    this.rutinaMontada.push({
-      idExercise: ejercicio.idExercise,
-      name: ejercicio.name,
-      muscleGroup: ejercicio.muscleGroup,
-      sets: 4,
-      reps: 12,
-      restSeconds: 90
-    });
-  }
-
-  eliminarDeRutina(index: number) {
-    this.rutinaMontada.splice(index, 1);
-  }
-
-  guardarRutinaCompleta() {
-    if (!this.routineName.trim()) {
-      alert("⚠️ Ponle un nombre a la rutina.");
-      return;
-    }
-    if (this.rutinaMontada.length === 0) {
-      alert("⚠️ Añade al menos un ejercicio.");
-      return;
-    }
-
-    this.guardando = true;
-
-    const payloadRutina = {
-      IdWorker: this.workerId,
-      Name: this.routineName,
-      Description: this.routineDesc
-    };
-
-    // 1. Crear la Rutina Base
-    this.profileService.createRoutine(payloadRutina).subscribe({
-      next: (res: any) => {
-        const idRoutine = res.idRoutine || res.IdRoutine;
-        
-        // 2. Asociarle todos los ejercicios
-        let guardados = 0;
-        this.rutinaMontada.forEach(ej => {
-          const payloadEjercicio = {
-            IdRoutine: idRoutine,
-            IdExercise: ej.idExercise,
-            Sets: ej.sets,
-            Reps: ej.reps,
-            RestSeconds: ej.restSeconds
-          };
-
-          this.profileService.addExerciseToRoutine(payloadEjercicio).subscribe(() => {
-            guardados++;
-            // Cuando acabe el bucle, volvemos al dashboard
-            if (guardados === this.rutinaMontada.length) {
-              alert("✅ ¡Rutina creada y guardada con éxito!");
-              this.guardando = false;
-              this.router.navigate(['/dashboard']);
-            }
-          });
-        });
+  cargarEjerciciosDeBaseDeDatos() {
+    this.profileService.getExercises().subscribe({
+      next: (res: any[]) => {
+        // Mapeo para asegurar que los IDs y nombres se lean correctamente
+        this.catalogoEjercicios = res.map(e => ({
+          id_exercise: e.idExercise || e.id_exercise || e.IdExercise,
+          name: e.name || e.Name,
+          muscle_group: e.muscleGroup || e.muscle_group || e.MuscleGroup
+        }));
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        alert("Error al crear la rutina.");
-        this.guardando = false;
+        console.error("Error al obtener ejercicios:", err);
+      }
+    });
+  }
+
+  agregarFilaEjercicio() {
+    this.ejerciciosEnRutina.push({
+      id_exercise: 0, 
+      series: 3,
+      repetitions: 12,
+      rest: 60
+    });
+  }
+
+  quitarFila(index: number) {
+    this.ejerciciosEnRutina.splice(index, 1);
+  }
+
+  // 🛠️ FUNCIÓN CORREGIDA: Ahora se llama guardarRutina() para coincidir con el HTML
+  guardarRutina() {
+    if (!this.nombreRutina || this.ejerciciosEnRutina.length === 0) {
+      alert("Por favor, completa el nombre y añade ejercicios.");
+      return;
+    }
+
+    const payload = {
+      Name: this.nombreRutina,
+      Description: `[${this.objetivoSeleccionado}] ${this.descripcion}`,
+      Exercises: this.ejerciciosEnRutina.map(e => ({
+        IdExercise: Number(e.id_exercise),
+        Series: e.series,        // Mapeado a 'Sets' en C#
+        Repetitions: e.repetitions, // Mapeado a 'Reps' en C#
+        Rest: e.rest             // Mapeado a 'RestSeconds' en C#
+      }))
+    };
+
+    this.profileService.createFullRoutine(payload).subscribe({
+      next: () => {
+        alert("✅ Rutina guardada correctamente.");
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error("Error al guardar:", err);
+        alert("Error al guardar en la base de datos.");
       }
     });
   }

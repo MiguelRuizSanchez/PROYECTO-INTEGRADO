@@ -18,7 +18,6 @@ public class Exercise
 
     [Column("muscle_group")]
     public string? MuscleGroup { get; set; }
-
-    [Column("video_url")]
-    public string? VideoUrl { get; set; }
+    
+    // ❌ HE ELIMINADO VIDEOURL PORQUE NO EXISTE EN TU SQL
 }

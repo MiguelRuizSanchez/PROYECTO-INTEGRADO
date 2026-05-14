@@ -1,114 +1,101 @@
 using Microsoft.AspNetCore.Mvc;
-using fitstation_backend.Data;
-using fitstation_backend.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+// 🚀 ESTAS LÍNEAS SON LAS QUE ARREGLAN EL ERROR CS0246
+using fitstation_backend.Data;   
+using fitstation_backend.Models; 
 
-namespace fitstation_backend.Controllers;
-
-[Authorize]
-[ApiController]
-[Route("api/[controller]")]
-public class RoutineController : ControllerBase
+namespace fitstation_backend.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public RoutineController(ApplicationDbContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RoutineController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    [HttpGet("worker/{workerId}")]
-    public async Task<ActionResult<IEnumerable<Routine>>> GetWorkerRoutines(int workerId)
-    {
-        return await _context.Routines
-            .Where(r => r.IdWorker == workerId)
-            .OrderByDescending(r => r.CreatedAt)
-            .ToListAsync();
-    }
-
-    // 🚀 NUEVO: Obtener las rutinas asignadas a un cliente específico
-    [HttpGet("client/{clientId}")]
-    public async Task<IActionResult> GetClientRoutines(int clientId)
-    {
-        var routines = await (from cr in _context.ClientRoutines
-                              join r in _context.Routines on cr.IdRoutine equals r.IdRoutine
-                              where cr.IdClient == clientId
-                              select new {
-                                  r.IdRoutine,
-                                  r.Name,
-                                  r.Description,
-                                  r.CreatedAt
-                              }).ToListAsync();
-        return Ok(routines);
-    }
-
-    [HttpPost]
-    public async Task<ActionResult<Routine>> CreateRoutine([FromBody] Routine routine)
-    {
-        _context.Routines.Add(routine);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetWorkerRoutines), new { workerId = routine.IdWorker }, routine);
-    }
-
-    [HttpPost("add-exercise")]
-    public async Task<IActionResult> AddExerciseToRoutine([FromBody] RoutineExercise re)
-    {
-        _context.RoutineExercises.Add(re);
-        await _context.SaveChangesAsync();
-        return Ok(re);
-    }
-
-    [HttpGet("{routineId}/details")]
-    public async Task<IActionResult> GetRoutineDetails(int routineId)
-    {
-        var exercises = await (from re in _context.RoutineExercises
-                              join e in _context.Exercises on re.IdExercise equals e.IdExercise
-                              where re.IdRoutine == routineId
-                              select new {
-                                  re.Id, 
-                                  exerciseName = e.Name,
-                                  series = re.Sets,
-                                  repetitions = re.Reps,
-                                  rest = re.RestSeconds,
-                                  muscle = e.MuscleGroup
-                              }).ToListAsync();
-
-        return Ok(exercises);
-    }
-
-    [HttpDelete("exercise/{id}")]
-    public async Task<IActionResult> RemoveExerciseFromRoutine(int id)
-    {
-        var re = await _context.RoutineExercises.FindAsync(id);
-        if (re == null) return NotFound();
-
-        _context.RoutineExercises.Remove(re);
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
-
-    [HttpPost("assign-to-client")]
-    public IActionResult AssignToClient([FromBody] AssignRoutineDto dto)
-    {
-        var exists = _context.ClientRoutines.Any(cr => cr.IdClient == dto.IdClient && cr.IdRoutine == dto.IdRoutine);
-        if (exists) return BadRequest(new { message = "Esta rutina ya ha sido enviada a este cliente." });
-
-        var relation = new ClientRoutine
+        public RoutineController(ApplicationDbContext context)
         {
-            IdClient = dto.IdClient,
-            IdRoutine = dto.IdRoutine
-        };
+            _context = context;
+        }
 
-        _context.ClientRoutines.Add(relation);
-        _context.SaveChanges();
+        // 1. OBTENER EJERCICIOS (Para el catálogo de Angular)
+        [HttpGet("exercises")]
+        public async Task<ActionResult<IEnumerable<Exercise>>> GetExercises()
+        {
+            try
+            {
+                // Usamos la tabla definida en tu ApplicationDbContext
+                var exercises = await _context.Exercises.ToListAsync();
+                return Ok(exercises);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener ejercicios: {ex.Message}");
+            }
+        }
 
-        return Ok(new { message = "¡Rutina enviada con éxito al cliente!" });
+        // 2. CREAR RUTINA COMPLETA (Cabecera + Ejercicios)
+        [HttpPost("create-full")]
+        public async Task<IActionResult> CreateFullRoutine([FromBody] RoutineCreateDto dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Obtenemos el ID del Coach desde el Token
+                var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(workerIdClaim)) return Unauthorized("Usuario no válido");
+
+                // A. Insertamos la Rutina base
+                var nuevaRutina = new Routine
+                {
+                    IdWorker = int.Parse(workerIdClaim),
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Routines.Add(nuevaRutina);
+                await _context.SaveChangesAsync();
+
+                // B. Insertamos los ejercicios asociados
+                foreach (var ex in dto.Exercises)
+                {
+                    var re = new RoutineExercise
+                    {
+                        IdRoutine = nuevaRutina.IdRoutine,
+                        IdExercise = ex.IdExercise,
+                        Sets = ex.Series,       // Mapeado a 'series' en SQL
+                        Reps = ex.Repetitions, // Mapeado a 'repetitions' en SQL
+                        RestSeconds = ex.Rest  // Mapeado a 'rest_seconds' en SQL
+                    };
+                    _context.RoutineExercises.Add(re);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(new { message = "Rutina guardada con éxito" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
     }
-}
 
-public class AssignRoutineDto 
-{
-    public int IdClient { get; set; }
-    public int IdRoutine { get; set; }
+    // Estructuras de datos para recibir la información desde Angular
+    public class RoutineCreateDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public List<ExerciseDto> Exercises { get; set; } = new();
+    }
+
+    public class ExerciseDto
+    {
+        public int IdExercise { get; set; }
+        public int Series { get; set; }
+        public int Repetitions { get; set; }
+        public int Rest { get; set; }
+    }
 }
