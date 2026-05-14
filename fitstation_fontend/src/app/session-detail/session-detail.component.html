@@ -4,73 +4,73 @@
       <button routerLink="/dashboard" class="back-btn">←</button>
       <div class="user-meta">
         <h2>{{ receiverName }}</h2>
-        <span class="online-status">Chat de sesión</span>
+        <span class="online-status">Chat de sesión ({{ modalidad }})</span>
       </div>
     </div>
-    <div class="session-badge">{{ modalidad }}</div>
+    <div class="session-badge">SESIÓN ACTIVA</div>
   </header>
 
   <div class="main-layout">
     <section class="chat-section">
       <div class="messages-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
         <div *ngFor="let msg of mensajes" 
-             [ngClass]="{'sent': msg.idSender == myId, 'received': msg.idSender != myId}" 
+             [ngClass]="{'sent': (msg.idSender || msg.IdSender) == myId, 'received': (msg.idSender || msg.IdSender) != myId}" 
              class="message-row">
           <div class="bubble">
-            <p>{{ msg.text }}</p> 
-            <span class="time">{{ msg.time | date:'HH:mm' }}</span>
+            <p>{{ msg.message || msg.Content || msg.content }}</p> 
+            <span class="time">{{ (msg.createdAt || msg.CreatedAt) | date:'HH:mm' }}</span>
           </div>
         </div>
       </div>
 
       <div class="input-area">
-        <input type="text" [(ngModel)]="nuevoMensaje" (keyup.enter)="enviar()" placeholder="Escribe un mensaje...">
-        <button (click)="enviar()" [disabled]="!nuevoMensaje.trim()">
-          <svg viewBox="0 0 24 24" width="24" height="24"><path fill="#2ecc71" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+        <input type="text" [(ngModel)]="nuevoMensaje" (keyup.enter)="enviar()" placeholder="Escribe un mensaje para {{ receiverName }}...">
+        <button class="send-btn" (click)="enviar()" [disabled]="!nuevoMensaje.trim()">
+          ENVIAR
         </button>
       </div>
     </section>
 
-    <aside class="details-panel">
-      <h3>📦 Gestión de Alumno</h3>
-      <div class="user-summary">
-        <p><strong>Nivel:</strong> {{ detallesSesion?.experienceLevel || 'Intermedio' }}</p>
-        <p><strong>Modalidad:</strong> {{ modalidad }}</p>
-      </div>
-
-      <div class="routines-box" *ngIf="miRol === 'worker'"> 
-        <h4>Asignar Rutina</h4>
-        <div class="routine-selector">
-          <select [(ngModel)]="rutinaSeleccionadaId" class="form-control">
-            <option [value]="0">Seleccionar rutina...</option>
-            <option *ngFor="let r of misRutinas" [value]="r.idRoutine || r.IdRoutine">{{ r.name || r.Name }}</option>
+    <aside class="routines-panel">
+      <h3>🏋️ Entrenamiento</h3>
+      
+      <div class="assign-box" *ngIf="miRol === 'worker'">
+        <label>Asignar nueva rutina:</label>
+        <div class="assign-form">
+          <select [(ngModel)]="rutinaSeleccionadaId" class="select-routine">
+            <option [value]="0">Selecciona una de tus rutinas...</option>
+            <option *ngFor="let r of misRutinasBase" [value]="r.idRoutine || r.IdRoutine">
+              {{ r.name || r.Name }}
+            </option>
           </select>
-          <button class="btn-send-routine" (click)="enviarRutina()" [disabled]="rutinaSeleccionadaId == 0">
-            ENVIAR
-          </button>
+          <button (click)="enviarRutina()" [disabled]="!rutinaSeleccionadaId">ENVIAR</button>
         </div>
       </div>
 
-      <div class="assigned-routines">
-        <h4>Rutinas Activas</h4>
-        <div *ngIf="rutinasAsignadas.length === 0" style="color: #888; font-size: 0.85rem;">
-          Aún no hay rutinas asignadas.
+      <div class="routines-list">
+        <p class="section-label">Rutinas en curso:</p>
+        <div *ngIf="rutinasAsignadas.length === 0" class="no-routines">
+          No hay rutinas asignadas todavía.
         </div>
+        
         <div *ngFor="let ar of rutinasAsignadas" class="routine-mini-card">
-           <span>🏋️ {{ ar.name || ar.Name }}</span>
-           <button (click)="verDetalleRutina(ar.idRoutine || ar.IdRoutine)">VER</button>
+           <div class="mini-info">
+             <strong>{{ ar.name || ar.Name }}</strong>
+             <span>{{ (ar.createdAt || ar.CreatedAt) | date:'dd/MM' }}</span>
+           </div>
+           <button class="btn-view-routine" (click)="verDetalleRutina(ar.idRoutine || ar.IdRoutine)">VER EJERCICIOS</button>
         </div>
       </div>
     </aside>
   </div>
 
   <div class="modal-overlay" *ngIf="mostrandoModalRutina">
-    <div class="modal-content routine-modal">
+    <div class="routine-modal">
       <div class="modal-header">
         <h2>{{ rutinaViendoInfo?.name || rutinaViendoInfo?.Name }}</h2>
         <button class="btn-close" (click)="cerrarModal()">✖</button>
       </div>
-      <p class="modal-desc">{{ rutinaViendoInfo?.description || rutinaViendoInfo?.Description || 'Sin descripción adicional.' }}</p>
+      <p class="modal-desc">{{ rutinaViendoInfo?.description || rutinaViendoInfo?.Description || 'Instrucciones: Sigue el orden de la tabla.' }}</p>
       
       <div class="table-responsive">
         <table class="routine-table">
@@ -85,14 +85,17 @@
           </thead>
           <tbody>
             <tr *ngFor="let ej of ejerciciosRutinaViendo">
-              <td><strong>{{ ej.exerciseName }}</strong></td>
-              <td><span class="badge-muscle">{{ ej.muscle || 'General' }}</span></td>
+              <td class="ej-name"><strong>{{ ej.exerciseName }}</strong></td>
+              <td><span class="badge-muscle">{{ ej.muscle || 'Fitness' }}</span></td>
               <td class="text-center">{{ ej.series }}</td>
               <td class="text-center">{{ ej.repetitions }}</td>
               <td class="text-center">{{ ej.rest }}s</td>
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-done" (click)="cerrarModal()">ENTENDIDO</button>
       </div>
     </div>
   </div>

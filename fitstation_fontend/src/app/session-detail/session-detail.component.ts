@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../profile.service';
@@ -12,141 +12,134 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   styleUrls: ['./session-detail.component.css']
 })
 export class SessionDetailComponent implements OnInit, OnDestroy {
+  // Identificadores
   sessionId!: number;
   receiverId!: number;
-  receiverName: string = 'Cargando...';
   myId = Number(localStorage.getItem('userId'));
-  miRol = localStorage.getItem('userRole') || '';
+  miRol = (localStorage.getItem('userRole') || '').toLowerCase();
   
+  // Datos de Cabecera
+  receiverName: string = 'Cargando...';
+  modalidad: string = '';
+  detallesSesion: any = null;
+
+  // Chat
   mensajes: any[] = [];
   nuevoMensaje: string = '';
   polling: any;
 
-  detallesSesion: any = null;
-  modalidad: string = '';
-  especialidadEntrenador: string = '';
-  objetivosPaco: string = '';
-
-  // 📦 VARIABLES PARA EL PANEL DE RUTINAS
+  // Rutinas
+  rutinasAsignadas: any[] = []; // Las que el alumno ya tiene
+  misRutinasBase: any[] = [];   // Las que el coach ha creado y puede asignar
   rutinaSeleccionadaId: number = 0;
-  misRutinas: any[] = [];
-  rutinasAsignadas: any[] = [];
 
-  // 🔍 VARIABLES PARA EL MODAL DE DETALLE DE RUTINA
+  // Modal Visualizador
   mostrandoModalRutina: boolean = false;
   rutinaViendoInfo: any = null;
   ejerciciosRutinaViendo: any[] = [];
 
-  constructor(private route: ActivatedRoute, private profileService: ProfileService) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private profileService: ProfileService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.sessionId = Number(this.route.snapshot.paramMap.get('id'));
-    this.cargarDatos();
-    this.polling = setInterval(() => this.cargarChat(), 3000);
+    this.cargarDatosIniciales();
+    
+    // Polling: Miramos si hay mensajes nuevos cada 3 segundos
+    this.polling = setInterval(() => {
+      if (this.receiverId) this.cargarChat();
+    }, 3000);
   }
 
-  ngOnDestroy() { if (this.polling) clearInterval(this.polling); }
-
-  cargarDatos() {
+  cargarDatosIniciales() {
+    // 1. Obtenemos los detalles de la sesión para saber con quién hablamos
     this.profileService.getSessionDetails(this.sessionId).subscribe({
       next: (res: any) => {
-        this.detallesSesion = res.session;
-        this.receiverId = res.otherUserId;
-        this.receiverName = res.otherName;
-        this.modalidad = res.modalidad;
-        this.especialidadEntrenador = res.especialidadEntrenador;
-        this.objetivosPaco = res.objectives;
+        this.detallesSesion = res.session || res.Session;
+        this.receiverId = res.otherUserId || res.OtherUserId;
+        this.receiverName = res.otherName || res.OtherName;
+        this.modalidad = res.modalidad || res.Modalidad;
         
         this.cargarChat();
-        this.cargarRutinas(); // 🚀 Cargamos las rutinas una vez tenemos los IDs de la sesión
+        this.cargarRutinas();
+        this.cdr.detectChanges();
       }
     });
-  }
-
-  cargarRutinas() {
-    const clientId = this.detallesSesion.idClient || this.detallesSesion.IdClient;
-    const workerId = this.detallesSesion.idWorker || this.detallesSesion.IdWorker;
-
-    // 1. Cargar las rutinas que el alumno ya tiene asignadas
-    this.profileService.getClientRoutines(clientId).subscribe(res => {
-      this.rutinasAsignadas = res;
-    });
-
-    // 2. Si yo soy el entrenador, cargo mis rutinas de la biblioteca para poder asignarlas
-    if (this.miRol === 'worker') {
-      this.profileService.getWorkerRoutines(workerId).subscribe(res => {
-        this.misRutinas = res;
-      });
-    }
   }
 
   cargarChat() {
-    if (!this.receiverId) return;
-    this.profileService.getChatHistory(this.receiverId).subscribe({
-      next: (msgs: any[]) => {
-        this.mensajes = msgs.map(m => ({
-          ...m,
-          text: m.message || m.Content || m.content,
-          idSender: m.idSender || m.id_sender,
-          time: m.createdAt || m.created_at || m.SentAt
-        }));
-      }
+    this.profileService.getChatHistory(this.receiverId).subscribe(msgs => {
+      this.mensajes = msgs;
+      this.cdr.detectChanges();
     });
   }
 
   enviar() {
-    if (!this.nuevoMensaje.trim() || !this.receiverId) return;
-    const payload = { receiverId: this.receiverId, content: this.nuevoMensaje };
+    if (!this.nuevoMensaje.trim()) return;
+    
+    const payload = {
+      ReceiverId: this.receiverId,
+      Content: this.nuevoMensaje // 'Content' coincide con tu ChatController
+    };
 
-    this.profileService.sendMessage(payload).subscribe({
-      next: () => {
-        this.nuevoMensaje = '';
-        this.cargarChat();
-      },
-      error: (err) => {
-        const errorMsg = err.error || "Error desconocido";
-        alert("SERVIDOR DICE: " + (typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg)));
-      }
+    this.profileService.sendMessage(payload).subscribe(() => {
+      this.nuevoMensaje = '';
+      this.cargarChat();
     });
   }
 
-  // 🚀 LÓGICA DE ASIGNACIÓN
+  cargarRutinas() {
+    const clientId = this.detallesSesion?.idClient || this.detallesSesion?.IdClient;
+    const workerId = this.detallesSesion?.idWorker || this.detallesSesion?.IdWorker;
+
+    // El alumno ve sus rutinas asignadas
+    this.profileService.getClientRoutines(clientId).subscribe(res => {
+      this.rutinasAsignadas = res;
+      this.cdr.detectChanges();
+    });
+
+    // Si soy el Coach, cargo mis rutinas creadas para poder enviarlas
+    if (this.miRol === 'worker') {
+      this.profileService.getWorkerRoutines(workerId).subscribe(res => {
+        this.misRutinasBase = res;
+        this.cdr.detectChanges();
+      });
+    }
+  }
+
   enviarRutina() {
     if (!this.rutinaSeleccionadaId) return;
     const clientId = this.detallesSesion.idClient || this.detallesSesion.IdClient;
 
-    const payload = {
+    this.profileService.assignRoutineToClient({
       IdClient: clientId,
       IdRoutine: Number(this.rutinaSeleccionadaId)
-    };
-
-    this.profileService.assignRoutineToClient(payload).subscribe({
-      next: (res: any) => {
-        // Recargamos la lista de asignadas para que aparezca al instante
+    }).subscribe({
+      next: () => {
+        alert("✅ Rutina asignada al alumno.");
         this.cargarRutinas();
-        this.rutinaSeleccionadaId = 0; // Reseteamos el selector
-        
-        // (Opcional) Enviar un mensaje automático al chat
-        const msgAutomatico = `¡He añadido una nueva rutina a tu panel! Revísala a la derecha. 🏋️‍♂️`;
-        this.profileService.sendMessage({ receiverId: this.receiverId, content: msgAutomatico }).subscribe(() => this.cargarChat());
-      },
-      error: (err) => alert(err.error?.message || "Error al asignar rutina")
+        this.rutinaSeleccionadaId = 0;
+      }
     });
   }
 
-  // 🚀 LÓGICA DEL VISUALIZADOR (MODAL)
-  verDetalleRutina(idRoutine: number) {
-    const rutina = this.rutinasAsignadas.find(r => r.idRoutine === idRoutine || r.IdRoutine === idRoutine);
-    this.rutinaViendoInfo = rutina;
-    
-    this.profileService.getRoutineDetails(idRoutine).subscribe(res => {
-      this.ejerciciosRutinaViendo = res;
+  verDetalleRutina(id: number) {
+    this.profileService.getRoutineDetails(id).subscribe(exs => {
+      this.ejerciciosRutinaViendo = exs;
+      this.rutinaViendoInfo = this.rutinasAsignadas.find(r => (r.idRoutine || r.IdRoutine) === id);
       this.mostrandoModalRutina = true;
+      this.cdr.detectChanges();
     });
   }
 
   cerrarModal() {
     this.mostrandoModalRutina = false;
-    this.ejerciciosRutinaViendo = [];
+  }
+
+  ngOnDestroy() {
+    if (this.polling) clearInterval(this.polling);
   }
 }

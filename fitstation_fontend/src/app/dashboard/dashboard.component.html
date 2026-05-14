@@ -9,9 +9,22 @@
       <div class="brand">FIT<span>STATION</span></div>
       <div class="user-area">
         <span class="badge">{{ rol | uppercase }}</span>
-        <button *ngIf="rol === 'worker'" class="btn-profile" routerLink="/crear-rutina" style="color:#2ecc71; border-color:#2ecc71;">➕ CREAR RUTINA</button>
+        
+        <button *ngIf="rol === 'worker'" 
+                class="btn-profile" 
+                routerLink="/crear-rutina" 
+                style="color:#2ecc71; border-color:#2ecc71;">
+          ➕ CREAR RUTINA
+        </button>
+
         <button class="btn-profile" routerLink="/perfil">⚙️ MI PERFIL</button>
-        <button *ngIf="rol === 'client'" class="btn-match-nav" (click)="irAlBuscador()">🔍 BUSCAR COACH</button>
+
+        <button *ngIf="rol === 'client'" 
+                class="btn-match-nav" 
+                (click)="irAlBuscador()">
+          🔍 BUSCAR COACH
+        </button>
+
         <button class="btn-exit" (click)="logout()">SALIR</button>
       </div>
     </header>
@@ -24,44 +37,45 @@
 
       <section class="requests-section" *ngIf="rol === 'worker' && solicitudes.length > 0">
         <h2>🔔 Nuevas peticiones de alumnos</h2>
-        <div class="request-list">
-          <div class="request-item" *ngFor="let req of solicitudes">
+        <div class="requests-list">
+          <div class="request-item" *ngFor="let r of solicitudes">
             <div class="req-info">
-              <strong>{{ req.clientName || req.ClientName }}</strong>
-              <span>Día: {{ req.requestedDay }} a las {{ req.requestedTime }}</span>
-              <small>Meta: {{ req.objectives || 'Fitness general' }}</small>
+              <strong>{{ r.clientName || r.ClientName }}</strong> 
+              quiere entrenar contigo los <span class="highlight">{{ r.requestedDay || r.RequestedDay }}</span> 
+              a las <span class="highlight">{{ r.requestedTime || r.RequestedTime }}</span>
             </div>
-            <div class="actions">
-              <button class="btn-ok" (click)="gestionarSolicitud(req.requestId || req.RequestId, 'Accepted')">ACEPTAR</button>
-              <button class="btn-no" (click)="gestionarSolicitud(req.requestId || req.RequestId, 'Rejected')">RECHAZAR</button>
+            <div class="req-actions">
+              <button class="btn-approve" (click)="gestionarSolicitud(r.requestId || r.RequestId, 'Accepted')">ACEPTAR</button>
+              <button class="btn-reject" (click)="gestionarSolicitud(r.requestId || r.RequestId, 'Rejected')">RECHAZAR</button>
             </div>
           </div>
         </div>
       </section>
 
       <section class="requests-section" *ngIf="rol === 'client' && peticionesEnviadas.length > 0">
-        <h2>⏳ Mis Solicitudes Pendientes</h2>
-        <div class="request-list" style="display: flex; flex-direction: column; gap: 15px;">
-          <div class="request-item" *ngFor="let req of peticionesEnviadas" style="border-left: 5px solid #f1c40f;">
+        <h2>⏳ Esperando respuesta de entrenadores</h2>
+        <div class="requests-list">
+          <div class="request-item pending-client" *ngFor="let p of peticionesEnviadas">
             <div class="req-info">
-              <strong>Entrenador: {{ req.workerName || req.WorkerName }}</strong>
-              <span>Día propuesto: {{ req.requestedDay }} a las {{ req.requestedTime }}</span>
+              Has enviado una solicitud a <strong>{{ p.workerName || p.WorkerName }}</strong> 
+              para los {{ p.requestedDay || p.RequestedDay }}
             </div>
-            <div class="session-status" style="margin-left: auto;">
-              <span class="status-pill" style="background: #f1c40f; color: black;">ESPERANDO RESPUESTA</span>
-            </div>
+            <span class="status-tag">PENDIENTE</span>
           </div>
         </div>
       </section>
 
-      <section class="agenda-section">
-        <h2>📅 Mi Agenda de Entrenamientos</h2>
-        <div *ngIf="sesiones.length === 0" class="empty-card">
-          <p>No tienes sesiones programadas actualmente.</p>
+      <section class="sessions-section">
+        <h2>📅 Mi Agenda</h2>
+        
+        <div *ngIf="sesiones.length === 0" class="empty-state-simple">
+          No tienes sesiones programadas actualmente.
         </div>
 
-        <div class="sessions-grid" *ngIf="sesiones.length > 0">
-          <div class="session-card" *ngFor="let s of sesiones" [ngClass]="(s.status || s.Status)?.toLowerCase()">
+        <div class="sessions-grid">
+          <div class="session-card" *ngFor="let s of sesiones" 
+               [ngClass]="(s.status || s.Status)?.toLowerCase()">
+            
             <div class="card-header">
               <span class="status-pill">{{ s.status || s.Status }}</span>
               <span class="time">{{ s.startTime || s.StartTime }}</span>
@@ -73,7 +87,9 @@
             </div>
 
             <div class="card-footer">
-              <button class="btn-chat" [routerLink]="['/session', s.idSession || s.IdSession]">💬 CHAT</button>
+              <button class="btn-chat" [routerLink]="['/session', s.idSession || s.IdSession]">
+                💬 CHAT Y RUTINAS
+              </button>
               
               <button *ngIf="rol === 'worker' && (s.status !== 'Completed' && s.Status !== 'Completed')" 
                       class="btn-finish" 
@@ -90,8 +106,8 @@
       <div class="modal-lock">
         <div class="alert-icon">⚠️</div>
         <h2>¡Perfil Incompleto!</h2>
-        <p>Para poder usar FitStation, necesitamos que rellenes tus datos profesionales o deportivos.</p>
-        <button class="btn-cuestionario" (click)="irAlCuestionario()">RELLENAR AHORA</button>
+        <p>Para poder usar FitStation, necesitamos que termines de configurar tu perfil.</p>
+        <button class="btn-confirm" routerLink="/perfil">CONFIGURAR AHORA</button>
       </div>
     </div>
   </div>

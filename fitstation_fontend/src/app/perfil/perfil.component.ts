@@ -20,20 +20,27 @@ export class PerfilComponent implements OnInit {
     private fb: FormBuilder,
     private profileService: ProfileService,
     private router: Router,
-    private cdr: ChangeDetectorRef // 👈 AÑADIDO: Fuerza a Angular a actualizar la vista
+    private cdr: ChangeDetectorRef 
   ) {
+    // Inicializamos el formulario con las claves exactas del DTO de C#
     this.profileForm = this.fb.group({
       name: [{ value: '', disabled: true }],
       email: [{ value: '', disabled: true }],
-      specialization: [''],
-      bio: [''],
-      pricePerSession: [0],
-      maxCapacity: [10],
-      objectives: [''],
-      experienceLevel: [''],
-      modality: [''],
-      prefDay: ['Monday'],
-      prefTime: ['10:00']
+      
+      // Campos para el Entrenador (Worker)
+      Specialization: [''],
+      Bio: [''],
+      PricePerSession: [0],
+      MaxCapacity: [10],
+
+      // Campos para el Atleta (Client)
+      Objectives: [''],
+      ExperienceLevel: [''],
+      Modality: [''],
+      
+      // Disponibilidad
+      PrefDay: ['Monday'],
+      PrefTime: ['10:00']
     });
   }
 
@@ -44,47 +51,55 @@ export class PerfilComponent implements OnInit {
   cargarDatos() {
     this.profileService.getMyProfile().subscribe({
       next: (res: any) => {
-        this.rol = (res?.role || res?.Role || localStorage.getItem('userRole') || '').toLowerCase().trim();
-        const d = res?.details || res?.Details || {};
-
-        // 👈 AÑADIDO: Formatea la hora para evitar que el input "time" crashee el formulario
+        // Tu backend puede devolver role/Role y details/Details
+        this.rol = (res?.role || res?.Role || '').toLowerCase();
+        const d = res?.details || res?.Details;
+        
+        // Formateamos la hora si viene del backend (ej: "10:00:00" -> "10:00")
         let hora = d?.prefTime || d?.PrefTime || '10:00';
-        if (hora.length > 5) hora = hora.substring(0, 5);
+        if (typeof hora === 'string' && hora.includes(':')) {
+            hora = hora.substring(0, 5);
+        }
 
+        // Mapeamos los datos recibidos a nuestro formulario con claves en Mayúscula
         this.profileForm.patchValue({
           name: res?.name || res?.Name || '',
           email: res?.email || res?.Email || '',
-          specialization: d?.specialization || d?.Specialization || d?.specialty || d?.Specialty || '',
-          bio: d?.bio || d?.Bio || '',
-          pricePerSession: d?.pricePerSession || d?.PricePerSession || 0,
-          maxCapacity: d?.maxCapacity || d?.MaxCapacity || 10,
-          objectives: d?.objectives || d?.Objectives || '',
-          experienceLevel: d?.experienceLevel || d?.ExperienceLevel || 'principiante',
-          modality: d?.modality || d?.Modality || 'presencial',
-          prefDay: d?.prefDay || d?.PrefDay || 'Monday',
-          prefTime: hora
+          Specialization: d?.specialization || d?.Specialization || d?.specialty || d?.Specialty || '',
+          Bio: d?.bio || d?.Bio || '',
+          PricePerSession: d?.pricePerSession || d?.PricePerSession || 0,
+          MaxCapacity: d?.maxCapacity || d?.MaxCapacity || 10,
+          Objectives: d?.objectives || d?.Objectives || '',
+          ExperienceLevel: d?.experienceLevel || d?.ExperienceLevel || 'principiante',
+          Modality: d?.modality || d?.Modality || 'presencial',
+          PrefDay: d?.prefDay || d?.PrefDay || 'Monday',
+          PrefTime: hora
         });
         
         this.cargando = false;
-        this.cdr.detectChanges(); // 👈 AÑADIDO: Quita la pantalla de carga instantáneamente
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error("Error:", err);
+        console.error("Error al cargar perfil:", err);
         this.cargando = false;
         this.cdr.detectChanges();
-        alert("Fallo al contactar con el servidor. Revisa si tu backend (C#) está encendido.");
+        alert("Fallo al conectar con el servidor.");
       }
     });
   }
 
   guardar() {
     if (this.profileForm.valid) {
+      // getRawValue incluye los campos deshabilitados (name/email) pero el DTO los ignorará
       this.profileService.updateProfile(this.profileForm.getRawValue()).subscribe({
         next: () => {
-          alert('✅ Perfil actualizado correctamente. Tus cambios ya se reflejan en el buscador.');
+          alert('✅ ¡Perfil actualizado correctamente!');
           this.router.navigate(['/dashboard']);
         },
-        error: (err) => alert('Error al actualizar: ' + err.message)
+        error: (err) => {
+          console.error("Error al guardar:", err);
+          alert('Error al actualizar los datos.');
+        }
       });
     }
   }

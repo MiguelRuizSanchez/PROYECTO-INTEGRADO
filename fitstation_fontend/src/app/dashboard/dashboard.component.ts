@@ -12,9 +12,9 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   datosUsuario: any = null;
-  solicitudes: any[] = [];
-  sesiones: any[] = [];
-  peticionesEnviadas: any[] = []; // 🚀 NUEVO
+  solicitudes: any[] = []; // Peticiones para el Coach 
+  sesiones: any[] = [];    // Sesiones activas para ambos 
+  peticionesEnviadas: any[] = []; // Peticiones que el cliente ha mandado 
   perfilIncompleto: boolean = false;
   cargando: boolean = true;
   rol: string = '';
@@ -33,30 +33,35 @@ export class DashboardComponent implements OnInit {
     this.profileService.getMyProfile().subscribe({
       next: (res: any) => {
         this.datosUsuario = res;
+        // Normalizamos el rol a minúsculas para las comparaciones 
         this.rol = (res?.role || res?.Role || '').toLowerCase().trim();
         const d = res?.details || res?.Details;
+        const idInterno = d?.idClient || d?.IdClient || d?.idWorker || d?.IdWorker;
 
+        // 1. Verificación de Perfil Incompleto 
         if (this.rol === 'worker') {
-          this.perfilIncompleto = !d?.specialization && !d?.Specialization;
-          if (!this.perfilIncompleto) {
-            this.cargarDatosWorker(d.idWorker || d.IdWorker);
-          }
-        } else {
-          this.perfilIncompleto = !d?.objectives && !d?.Objectives;
-          if (!this.perfilIncompleto) {
-            this.cargarDatosClient(d.idClient || d.IdClient);
-          }
+          // Un Coach está incompleto si no tiene especialidad o biografía
+          this.perfilIncompleto = !(d?.specialization || d?.Specialization || d?.bio || d?.Bio);
+          if (!this.perfilIncompleto) this.cargarDatosWorker(idInterno);
+        } else if (this.rol === 'client') {
+          // Un Atleta está incompleto si no tiene objetivos 
+          this.perfilIncompleto = !(d?.objectives || d?.Objectives);
+          if (!this.perfilIncompleto) this.cargarDatosClient(idInterno);
         }
+
         this.cargando = false;
         this.cdr.detectChanges();
       },
-      error: () => this.router.navigate(['/login'])
+      error: () => {
+        this.logout();
+      }
     });
   }
 
   cargarDatosWorker(id: number) {
+    // Carga las peticiones de alumnos y sus sesiones agendadas 
     this.profileService.getWorkerRequests(id).subscribe(reqs => {
-      this.solicitudes = reqs.filter(r => r.status === 'Pending' || r.Status === 'Pending');
+      this.solicitudes = reqs.filter(r => (r.status || r.Status) === 'Pending');
       this.cdr.detectChanges();
     });
     this.profileService.getWorkerSessions(id).subscribe(sess => {
@@ -66,22 +71,25 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarDatosClient(id: number) {
+    // Carga las sesiones y las peticiones que el cliente ha mandado a entrenadores 
     this.profileService.getClientSessions(id).subscribe(sess => {
       this.sesiones = sess;
       this.cdr.detectChanges();
     });
-
-    // 🚀 NUEVO: Cargar peticiones pendientes enviadas por el cliente
     this.profileService.getClientRequests(id).subscribe(reqs => {
-      this.peticionesEnviadas = reqs.filter(r => r.status === 'Pending' || r.Status === 'Pending');
+      this.peticionesEnviadas = reqs.filter(r => (r.status || r.Status) === 'Pending');
       this.cdr.detectChanges();
     });
   }
 
   gestionarSolicitud(requestId: number, status: string) {
-    this.profileService.updateStatus(requestId, status).subscribe(() => {
-      alert(`Petición ${status === 'Accepted' ? 'Aceptada' : 'Rechazada'}`);
-      this.cargarDashboard();
+    // El coach acepta o rechaza una petición 
+    this.profileService.updateStatus(requestId, status).subscribe({
+      next: () => {
+        alert(`Petición ${status === 'Accepted' ? 'Aceptada' : 'Rechazada'} correctamente.`);
+        this.cargarDashboard();
+      },
+      error: (err) => alert("Error al actualizar la petición.")
     });
   }
 
@@ -93,7 +101,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  irAlBuscador() { this.router.navigate(['/buscador']); }
-  irAlCuestionario() { this.router.navigate(['/cuestionario']); }
-  logout() { localStorage.clear(); this.router.navigate(['/login']); }
+  irAlBuscador() {
+    this.router.navigate(['/buscador']);
+  }
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 }

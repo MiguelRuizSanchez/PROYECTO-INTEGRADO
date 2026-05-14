@@ -20,44 +20,45 @@ export class CuestionarioComponent implements OnInit {
     private profileService: ProfileService, 
     private router: Router
   ) {
-    // Inicializamos el formulario con todos los controles necesarios
+    // Inicializamos el formulario con las claves en Mayúscula para C#
     this.questForm = this.fb.group({
-      // Campos Worker
-      Specialization: [''],
+      // Campos para el Coach (Worker)
+      Specialization: ['Musculacion'],
       Bio: [''],
-      PricePerSession: [0],
-      MaxCapacity: [0],
+      PricePerSession: [20],
+      MaxCapacity: [10], // IMPORTANTE: Mayor que 0 para aparecer en el buscador
 
-      // Campos Client
-      Objectives: ['', Validators.required],
+      // Campos para el Atleta (Client)
+      Objectives: ['Musculacion', Validators.required],
       ExperienceLevel: ['principiante', Validators.required],
       Modality: ['presencial', Validators.required],
 
-      // Comunes
+      // Campos Comunes
       PrefDay: ['Monday', Validators.required],
       PrefTime: ['10:00', Validators.required]
     });
   }
 
   ngOnInit() {
-    this.rol = localStorage.getItem('role') || 'client';
+    this.rol = localStorage.getItem('userRole') || 'client';
   }
 
   enviar() {
     if (this.questForm.valid) {
       console.log('Enviando perfil:', this.questForm.value);
+      // Enviamos el objeto con las claves corregidas al servicio
       this.profileService.updateProfile(this.questForm.value).subscribe({
         next: () => {
-          alert('¡Perfil configurado con éxito!');
+          alert('¡Perfil configurado con éxito! Bienvenido a FitStation.');
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          console.error('Error al actualizar:', err);
-          alert('Error al guardar los datos.');
+          console.error('Error al guardar:', err);
+          alert('Hubo un error al guardar tu perfil. Inténtalo de nuevo.');
         }
       });
     } else {
-      alert('Completa los campos obligatorios antes de continuar.');
+      alert('Por favor, rellena todos los campos obligatorios.');
     }
   }
 }
