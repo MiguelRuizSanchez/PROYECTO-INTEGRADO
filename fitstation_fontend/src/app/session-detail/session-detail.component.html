@@ -17,7 +17,8 @@
              [ngClass]="{'sent': msg.idSender == myId, 'received': msg.idSender != myId}" 
              class="message-row">
           <div class="bubble">
-            <p>{{ msg.text }}</p> <span class="time">{{ msg.time | date:'HH:mm' }}</span>
+            <p>{{ msg.text }}</p> 
+            <span class="time">{{ msg.time | date:'HH:mm' }}</span>
           </div>
         </div>
       </div>
@@ -31,15 +32,68 @@
     </section>
 
     <aside class="details-panel">
-      <h3>📅 Info Sesión</h3>
-      <div class="detail-card">
-        <label>Especialidad</label>
-        <div class="value">{{ especialidadEntrenador }}</div>
+      <h3>📦 Gestión de Alumno</h3>
+      <div class="user-summary">
+        <p><strong>Nivel:</strong> {{ detallesSesion?.experienceLevel || 'Intermedio' }}</p>
+        <p><strong>Modalidad:</strong> {{ modalidad }}</p>
       </div>
-      <div class="detail-card">
-        <label>Objetivos</label>
-        <div class="value" style="font-size: 0.9rem; font-style: italic;">"{{ objetivosPaco }}"</div>
+
+      <div class="routines-box" *ngIf="miRol === 'worker'"> 
+        <h4>Asignar Rutina</h4>
+        <div class="routine-selector">
+          <select [(ngModel)]="rutinaSeleccionadaId" class="form-control">
+            <option [value]="0">Seleccionar rutina...</option>
+            <option *ngFor="let r of misRutinas" [value]="r.idRoutine || r.IdRoutine">{{ r.name || r.Name }}</option>
+          </select>
+          <button class="btn-send-routine" (click)="enviarRutina()" [disabled]="rutinaSeleccionadaId == 0">
+            ENVIAR
+          </button>
+        </div>
+      </div>
+
+      <div class="assigned-routines">
+        <h4>Rutinas Activas</h4>
+        <div *ngIf="rutinasAsignadas.length === 0" style="color: #888; font-size: 0.85rem;">
+          Aún no hay rutinas asignadas.
+        </div>
+        <div *ngFor="let ar of rutinasAsignadas" class="routine-mini-card">
+           <span>🏋️ {{ ar.name || ar.Name }}</span>
+           <button (click)="verDetalleRutina(ar.idRoutine || ar.IdRoutine)">VER</button>
+        </div>
       </div>
     </aside>
+  </div>
+
+  <div class="modal-overlay" *ngIf="mostrandoModalRutina">
+    <div class="modal-content routine-modal">
+      <div class="modal-header">
+        <h2>{{ rutinaViendoInfo?.name || rutinaViendoInfo?.Name }}</h2>
+        <button class="btn-close" (click)="cerrarModal()">✖</button>
+      </div>
+      <p class="modal-desc">{{ rutinaViendoInfo?.description || rutinaViendoInfo?.Description || 'Sin descripción adicional.' }}</p>
+      
+      <div class="table-responsive">
+        <table class="routine-table">
+          <thead>
+            <tr>
+              <th>Ejercicio</th>
+              <th>Músculo</th>
+              <th>Series</th>
+              <th>Reps</th>
+              <th>Descanso</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ej of ejerciciosRutinaViendo">
+              <td><strong>{{ ej.exerciseName }}</strong></td>
+              <td><span class="badge-muscle">{{ ej.muscle || 'General' }}</span></td>
+              <td class="text-center">{{ ej.series }}</td>
+              <td class="text-center">{{ ej.repetitions }}</td>
+              <td class="text-center">{{ ej.rest }}s</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

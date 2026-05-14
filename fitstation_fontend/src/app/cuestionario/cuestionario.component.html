@@ -11,17 +11,17 @@
           <label>Especialidad Principal</label>
           <select formControlName="Specialization" class="form-control">
             <option value="">Selecciona tu especialidad...</option>
-            <option value="Musculación e Hipertrofia">Musculación e Hipertrofia</option>
-            <option value="Pérdida de Peso">Pérdida de Peso</option>
-            <option value="Yoga y Flexibilidad">Yoga y Flexibilidad</option>
-            <option value="Crossfit y Alta Intensidad">Crossfit y Alta Intensidad</option>
-            <option value="Entrenamiento Funcional">Entrenamiento Funcional</option>
-            <option value="Preparación de Oposiciones">Preparación de Oposiciones</option>
+            <option value="Musculacion">Musculación e Hipertrofia</option>
+            <option value="PerdidaPeso">Pérdida de Peso</option>
+            <option value="Yoga">Yoga y Flexibilidad</option>
+            <option value="AltaIntensidad">Crossfit y Alta Intensidad</option>
+            <option value="Funcional">Entrenamiento Funcional</option>
+            <option value="Oposiciones">Preparación de Oposiciones</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Biografía Profesional (Mín. 10 caracteres)</label>
+          <label>Biografía Profesional</label>
           <textarea formControlName="Bio" class="form-control" rows="4" placeholder="Describe tu metodología..."></textarea>
         </div>
 
@@ -31,30 +31,30 @@
             <input type="number" formControlName="PricePerSession" class="form-control">
           </div>
           <div class="form-group">
-            <label>Capacidad Máxima</label>
+            <label>Capacidad Máx. Alumnos</label>
             <input type="number" formControlName="MaxCapacity" class="form-control">
           </div>
         </div>
       </div>
 
       <div *ngIf="rol === 'client'" class="role-section">
-        <h3>Tus Metas Fitness</h3>
+        <h3>Tus Objetivos</h3>
         <div class="form-group">
-          <label>¿Cuál es tu objetivo principal?</label>
+          <label>¿Qué buscas conseguir?</label>
           <select formControlName="Objectives" class="form-control">
-            <option value="">Selecciona tu objetivo...</option>
-            <option value="Musculación e Hipertrofia">Musculación e Hipertrofia</option>
-            <option value="Pérdida de Peso">Pérdida de Peso</option>
-            <option value="Yoga y Flexibilidad">Yoga y Flexibilidad</option>
-            <option value="Crossfit y Alta Intensidad">Crossfit y Alta Intensidad</option>
-            <option value="Entrenamiento Funcional">Entrenamiento Funcional</option>
-            <option value="Preparación de Oposiciones">Preparación de Oposiciones</option>
+            <option value="">¿Cuál es tu meta principal?</option>
+            <option value="Musculacion">Musculación e Hipertrofia</option>
+            <option value="PerdidaPeso">Pérdida de Peso</option>
+            <option value="Yoga">Yoga y Flexibilidad</option>
+            <option value="AltaIntensidad">Crossfit y Alta Intensidad</option>
+            <option value="Funcional">Entrenamiento Funcional</option>
+            <option value="Oposiciones">Preparación de Oposiciones</option>
           </select>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Nivel Actual</label>
+            <label>Nivel de Experiencia</label>
             <select formControlName="ExperienceLevel" class="form-control">
               <option value="principiante">Principiante</option>
               <option value="intermedio">Intermedio</option>
@@ -94,7 +94,7 @@
       </div>
 
       <button type="submit" class="btn-submit" [disabled]="questForm.invalid">
-        GUARDAR Y ACTIVAR CUENTA
+        Finalizar Configuración
       </button>
     </form>
   </div>

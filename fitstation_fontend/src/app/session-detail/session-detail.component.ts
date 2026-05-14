@@ -16,6 +16,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   receiverId!: number;
   receiverName: string = 'Cargando...';
   myId = Number(localStorage.getItem('userId'));
+  miRol = localStorage.getItem('userRole') || '';
+  
   mensajes: any[] = [];
   nuevoMensaje: string = '';
   polling: any;
@@ -24,6 +26,16 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   modalidad: string = '';
   especialidadEntrenador: string = '';
   objetivosPaco: string = '';
+
+  // 📦 VARIABLES PARA EL PANEL DE RUTINAS
+  rutinaSeleccionadaId: number = 0;
+  misRutinas: any[] = [];
+  rutinasAsignadas: any[] = [];
+
+  // 🔍 VARIABLES PARA EL MODAL DE DETALLE DE RUTINA
+  mostrandoModalRutina: boolean = false;
+  rutinaViendoInfo: any = null;
+  ejerciciosRutinaViendo: any[] = [];
 
   constructor(private route: ActivatedRoute, private profileService: ProfileService) {}
 
@@ -44,9 +56,28 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
         this.modalidad = res.modalidad;
         this.especialidadEntrenador = res.especialidadEntrenador;
         this.objetivosPaco = res.objectives;
+        
         this.cargarChat();
+        this.cargarRutinas(); // 🚀 Cargamos las rutinas una vez tenemos los IDs de la sesión
       }
     });
+  }
+
+  cargarRutinas() {
+    const clientId = this.detallesSesion.idClient || this.detallesSesion.IdClient;
+    const workerId = this.detallesSesion.idWorker || this.detallesSesion.IdWorker;
+
+    // 1. Cargar las rutinas que el alumno ya tiene asignadas
+    this.profileService.getClientRoutines(clientId).subscribe(res => {
+      this.rutinasAsignadas = res;
+    });
+
+    // 2. Si yo soy el entrenador, cargo mis rutinas de la biblioteca para poder asignarlas
+    if (this.miRol === 'worker') {
+      this.profileService.getWorkerRoutines(workerId).subscribe(res => {
+        this.misRutinas = res;
+      });
+    }
   }
 
   cargarChat() {
@@ -77,5 +108,45 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
         alert("SERVIDOR DICE: " + (typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg)));
       }
     });
+  }
+
+  // 🚀 LÓGICA DE ASIGNACIÓN
+  enviarRutina() {
+    if (!this.rutinaSeleccionadaId) return;
+    const clientId = this.detallesSesion.idClient || this.detallesSesion.IdClient;
+
+    const payload = {
+      IdClient: clientId,
+      IdRoutine: Number(this.rutinaSeleccionadaId)
+    };
+
+    this.profileService.assignRoutineToClient(payload).subscribe({
+      next: (res: any) => {
+        // Recargamos la lista de asignadas para que aparezca al instante
+        this.cargarRutinas();
+        this.rutinaSeleccionadaId = 0; // Reseteamos el selector
+        
+        // (Opcional) Enviar un mensaje automático al chat
+        const msgAutomatico = `¡He añadido una nueva rutina a tu panel! Revísala a la derecha. 🏋️‍♂️`;
+        this.profileService.sendMessage({ receiverId: this.receiverId, content: msgAutomatico }).subscribe(() => this.cargarChat());
+      },
+      error: (err) => alert(err.error?.message || "Error al asignar rutina")
+    });
+  }
+
+  // 🚀 LÓGICA DEL VISUALIZADOR (MODAL)
+  verDetalleRutina(idRoutine: number) {
+    const rutina = this.rutinasAsignadas.find(r => r.idRoutine === idRoutine || r.IdRoutine === idRoutine);
+    this.rutinaViendoInfo = rutina;
+    
+    this.profileService.getRoutineDetails(idRoutine).subscribe(res => {
+      this.ejerciciosRutinaViendo = res;
+      this.mostrandoModalRutina = true;
+    });
+  }
+
+  cerrarModal() {
+    this.mostrandoModalRutina = false;
+    this.ejerciciosRutinaViendo = [];
   }
 }

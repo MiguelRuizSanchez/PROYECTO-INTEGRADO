@@ -27,6 +27,22 @@ public class RoutineController : ControllerBase
             .ToListAsync();
     }
 
+    // 🚀 NUEVO: Obtener las rutinas asignadas a un cliente específico
+    [HttpGet("client/{clientId}")]
+    public async Task<IActionResult> GetClientRoutines(int clientId)
+    {
+        var routines = await (from cr in _context.ClientRoutines
+                              join r in _context.Routines on cr.IdRoutine equals r.IdRoutine
+                              where cr.IdClient == clientId
+                              select new {
+                                  r.IdRoutine,
+                                  r.Name,
+                                  r.Description,
+                                  r.CreatedAt
+                              }).ToListAsync();
+        return Ok(routines);
+    }
+
     [HttpPost]
     public async Task<ActionResult<Routine>> CreateRoutine([FromBody] Routine routine)
     {
@@ -50,7 +66,7 @@ public class RoutineController : ControllerBase
                               join e in _context.Exercises on re.IdExercise equals e.IdExercise
                               where re.IdRoutine == routineId
                               select new {
-                                  re.Id, // Usamos el ID que ya existe
+                                  re.Id, 
                                   exerciseName = e.Name,
                                   series = re.Sets,
                                   repetitions = re.Reps,
@@ -71,4 +87,28 @@ public class RoutineController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
+    [HttpPost("assign-to-client")]
+    public IActionResult AssignToClient([FromBody] AssignRoutineDto dto)
+    {
+        var exists = _context.ClientRoutines.Any(cr => cr.IdClient == dto.IdClient && cr.IdRoutine == dto.IdRoutine);
+        if (exists) return BadRequest(new { message = "Esta rutina ya ha sido enviada a este cliente." });
+
+        var relation = new ClientRoutine
+        {
+            IdClient = dto.IdClient,
+            IdRoutine = dto.IdRoutine
+        };
+
+        _context.ClientRoutines.Add(relation);
+        _context.SaveChanges();
+
+        return Ok(new { message = "¡Rutina enviada con éxito al cliente!" });
+    }
+}
+
+public class AssignRoutineDto 
+{
+    public int IdClient { get; set; }
+    public int IdRoutine { get; set; }
 }

@@ -18,10 +18,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<Exercise> Exercises { get; set; }
     public DbSet<Routine> Routines { get; set; }
     public DbSet<RoutineExercise> RoutineExercises { get; set; }
+    
+    // 🚀 NUEVO: Registramos la tabla de relación entre clientes y rutinas
+    public DbSet<ClientRoutine> ClientRoutines { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        // Al tener el Id en RoutineExercise con la etiqueta [Key], no hace falta configurar claves compuestas aquí.
+        // No es necesario configurar claves compuestas aquí porque usamos [Key] en el modelo Id
     }
 }

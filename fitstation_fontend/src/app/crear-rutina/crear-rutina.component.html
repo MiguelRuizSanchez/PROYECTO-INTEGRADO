@@ -1,0 +1,66 @@
+<div class="creator-wrapper">
+  <header class="creator-header">
+    <div class="header-left">
+      <button class="btn-back" routerLink="/dashboard">← Volver</button>
+      <h2>⚙️ Laboratorio de Rutinas</h2>
+    </div>
+    <button class="btn-save-main" (click)="guardarRutinaCompleta()" [disabled]="guardando">
+      {{ guardando ? 'GUARDANDO...' : '💾 GUARDAR RUTINA FINAL' }}
+    </button>
+  </header>
+
+  <div class="creator-layout">
+    <div class="routine-canvas">
+      <div class="form-card">
+        <h3>Datos de la Rutina</h3>
+        <input type="text" [(ngModel)]="routineName" placeholder="Ej: Hipertrofia Pecho y Tríceps" class="big-input">
+        <textarea [(ngModel)]="routineDesc" placeholder="Descripción o instrucciones generales para el alumno..." rows="2" class="form-control"></textarea>
+      </div>
+
+      <div class="exercises-canvas">
+        <h3>Ejercicios Añadidos ({{ rutinaMontada.length }})</h3>
+        
+        <div *ngIf="rutinaMontada.length === 0" class="empty-state">
+          Empieza a añadir ejercicios desde el panel derecho.
+        </div>
+
+        <div class="exercise-block" *ngFor="let ej of rutinaMontada; let i = index">
+          <div class="ej-header">
+            <h4><span class="step-num">{{ i + 1 }}</span> {{ ej.name }}</h4>
+            <button class="btn-remove" (click)="eliminarDeRutina(i)">✖</button>
+          </div>
+          
+          <div class="ej-config">
+            <div class="config-group">
+              <label>Series</label>
+              <input type="number" [(ngModel)]="ej.sets" class="num-input" min="1">
+            </div>
+            <div class="config-group">
+              <label>Reps</label>
+              <input type="number" [(ngModel)]="ej.reps" class="num-input" min="1">
+            </div>
+            <div class="config-group">
+              <label>Descanso (seg)</label>
+              <input type="number" [(ngModel)]="ej.restSeconds" class="num-input" min="0" step="15">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="library-panel">
+      <h3>📚 Biblioteca de Ejercicios</h3>
+      <input type="text" [(ngModel)]="textoBusqueda" (keyup)="filtrarEjercicios()" placeholder="Buscar por nombre o músculo (ej: Pecho)..." class="search-box">
+      
+      <div class="library-list">
+        <div class="lib-item" *ngFor="let base of ejerciciosFiltrados">
+          <div class="lib-info">
+            <strong>{{ base.name }}</strong>
+            <span class="badge-muscle">{{ base.muscleGroup || 'General' }}</span>
+          </div>
+          <button class="btn-add" (click)="anadirARutina(base)">+ Añadir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

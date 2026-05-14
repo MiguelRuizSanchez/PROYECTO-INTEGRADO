@@ -9,12 +9,12 @@
   <div class="grid" *ngIf="!cargando">
     <div class="card" *ngFor="let coach of coaches">
       <h3>{{ coach.name || coach.Name }}</h3>
-      <span class="specialty">{{ coach.specialty || coach.Specialty || 'Fitness' }}</span>
+      <span class="specialty">{{ coach.specialty || coach.Specialty || coach.specialization || coach.Specialization || 'Fitness' }}</span>
       <p>{{ coach.bio || coach.Bio || 'Sin biografía.' }}</p>
       
       <div class="footer-card">
-        <span class="price">{{ coach.price || coach.Price || 0 }}€/sesión</span>
-        <button (click)="enviarSolicitud(coach.workerId || coach.WorkerId)">
+        <span class="price">{{ coach.pricePerSession || coach.PricePerSession || coach.price || coach.Price || 0 }}€/sesión</span>
+        <button (click)="abrirModalReserva(coach)">
           SOLICITAR
         </button>
       </div>
@@ -23,5 +23,42 @@
 
   <div *ngIf="!cargando && coaches.length === 0" class="empty">
     No hemos encontrado entrenadores que coincidan con tus objetivos todavía.
+  </div>
+
+  <div class="modal-overlay" *ngIf="mostrandoModal">
+    <div class="modal-content">
+      <h2>Agendar con {{ coachSeleccionado?.name || coachSeleccionado?.Name }}</h2>
+      <p class="modal-subtitle">Propón un día y una hora para vuestra primera sesión.</p>
+      
+      <div class="form-group">
+        <label>Día de la semana</label>
+        <select [(ngModel)]="diaElegido" (change)="actualizarHorasOcupadas()" class="modal-input">
+          <option value="Monday">Lunes</option>
+          <option value="Tuesday">Martes</option>
+          <option value="Wednesday">Miércoles</option>
+          <option value="Thursday">Jueves</option>
+          <option value="Friday">Viernes</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Horarios disponibles (Intervalos de 1h)</label>
+        <div class="time-grid">
+          <div *ngFor="let h of horasPosibles" 
+               class="time-card" 
+               [ngClass]="{'occupied': horasOcupadas.includes(h), 'selected': horaElegida === h}"
+               (click)="seleccionarHora(h)">
+            {{ h }}
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-confirm" (click)="confirmarSolicitud()" [disabled]="!horaElegida" [style.opacity]="!horaElegida ? '0.5' : '1'">
+          ENVIAR PETICIÓN
+        </button>
+        <button class="btn-cancel" (click)="cerrarModal()">CANCELAR</button>
+      </div>
+    </div>
   </div>
 </div>

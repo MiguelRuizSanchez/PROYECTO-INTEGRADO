@@ -15,14 +15,27 @@ export class CuestionarioComponent implements OnInit {
   questForm: FormGroup;
   rol: string = 'client';
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private profileService: ProfileService, 
+    private router: Router
+  ) {
+    // Inicializamos el formulario con todos los controles necesarios
     this.questForm = this.fb.group({
-      goal: ['', Validators.required],
-      objectives: ['', Validators.required],
-      experienceLevel: ['', Validators.required],
-      modality: ['', Validators.required],
-      prefDay: ['Monday'],
-      prefTime: ['10:00:00']
+      // Campos Worker
+      Specialization: [''],
+      Bio: [''],
+      PricePerSession: [0],
+      MaxCapacity: [0],
+
+      // Campos Client
+      Objectives: ['', Validators.required],
+      ExperienceLevel: ['principiante', Validators.required],
+      Modality: ['presencial', Validators.required],
+
+      // Comunes
+      PrefDay: ['Monday', Validators.required],
+      PrefTime: ['10:00', Validators.required]
     });
   }
 
@@ -32,13 +45,19 @@ export class CuestionarioComponent implements OnInit {
 
   enviar() {
     if (this.questForm.valid) {
+      console.log('Enviando perfil:', this.questForm.value);
       this.profileService.updateProfile(this.questForm.value).subscribe({
         next: () => {
-          alert('¡Perfil actualizado!');
+          alert('¡Perfil configurado con éxito!');
           this.router.navigate(['/dashboard']);
         },
-        error: (err: any) => console.error(err)
+        error: (err) => {
+          console.error('Error al actualizar:', err);
+          alert('Error al guardar los datos.');
+        }
       });
+    } else {
+      alert('Completa los campos obligatorios antes de continuar.');
     }
   }
 }

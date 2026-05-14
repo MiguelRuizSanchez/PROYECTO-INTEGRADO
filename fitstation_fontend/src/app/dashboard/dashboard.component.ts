@@ -14,8 +14,10 @@ export class DashboardComponent implements OnInit {
   datosUsuario: any = null;
   solicitudes: any[] = [];
   sesiones: any[] = [];
+  peticionesEnviadas: any[] = []; // 🚀 NUEVO
   perfilIncompleto: boolean = false;
   cargando: boolean = true;
+  rol: string = '';
 
   constructor(
     private profileService: ProfileService, 
@@ -31,37 +33,30 @@ export class DashboardComponent implements OnInit {
     this.profileService.getMyProfile().subscribe({
       next: (res: any) => {
         this.datosUsuario = res;
-        const role = (res?.role || res?.Role || '').toLowerCase().trim();
+        this.rol = (res?.role || res?.Role || '').toLowerCase().trim();
         const d = res?.details || res?.Details;
 
-        // Lógica de perfil incompleto basada en tu SQL
-        if (role === 'worker') {
+        if (this.rol === 'worker') {
           this.perfilIncompleto = !d?.specialization && !d?.Specialization;
           if (!this.perfilIncompleto) {
-            const workerId = d?.id_worker || d?.idWorker || d?.IdWorker;
-            this.cargarDatosWorker(workerId);
+            this.cargarDatosWorker(d.idWorker || d.IdWorker);
           }
         } else {
           this.perfilIncompleto = !d?.objectives && !d?.Objectives;
           if (!this.perfilIncompleto) {
-            const clientId = d?.id_client || d?.idClient || d?.IdClient;
-            this.cargarDatosClient(clientId);
+            this.cargarDatosClient(d.idClient || d.IdClient);
           }
         }
         this.cargando = false;
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.cargando = false;
-        this.router.navigate(['/login']);
-      }
+      error: () => this.router.navigate(['/login'])
     });
   }
 
   cargarDatosWorker(id: number) {
-    if (!id) return;
     this.profileService.getWorkerRequests(id).subscribe(reqs => {
-      this.solicitudes = reqs.filter((r: any) => (r.status || r.Status) === 'Pending');
+      this.solicitudes = reqs.filter(r => r.status === 'Pending' || r.Status === 'Pending');
       this.cdr.detectChanges();
     });
     this.profileService.getWorkerSessions(id).subscribe(sess => {
@@ -71,24 +66,34 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarDatosClient(id: number) {
-    if (!id) return;
     this.profileService.getClientSessions(id).subscribe(sess => {
       this.sesiones = sess;
+      this.cdr.detectChanges();
+    });
+
+    // 🚀 NUEVO: Cargar peticiones pendientes enviadas por el cliente
+    this.profileService.getClientRequests(id).subscribe(reqs => {
+      this.peticionesEnviadas = reqs.filter(r => r.status === 'Pending' || r.Status === 'Pending');
       this.cdr.detectChanges();
     });
   }
 
   gestionarSolicitud(requestId: number, status: string) {
     this.profileService.updateStatus(requestId, status).subscribe(() => {
+      alert(`Petición ${status === 'Accepted' ? 'Aceptada' : 'Rechazada'}`);
       this.cargarDashboard();
     });
   }
 
+  finalizarSesion(id: number) {
+    if (confirm('¿Quieres dar por finalizada esta etapa de entrenamiento? Esto liberará el slot del alumno.')) {
+      this.profileService.finishSession(id).subscribe(() => {
+        this.cargarDashboard();
+      });
+    }
+  }
+
   irAlBuscador() { this.router.navigate(['/buscador']); }
   irAlCuestionario() { this.router.navigate(['/cuestionario']); }
-  
-  logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
-  }
+  logout() { localStorage.clear(); this.router.navigate(['/login']); }
 }

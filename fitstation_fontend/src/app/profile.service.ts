@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -21,7 +21,6 @@ export class ProfileService {
   }
 
   updateProfile(dto: any): Observable<any> {
-    // Usamos el Content-Type para asegurar que el JSON se envíe bien
     const headers = this.getHeaders().set('Content-Type', 'application/json');
     return this.http.post(`${this.apiUrl}/Profile/update`, dto, { headers });
   }
@@ -31,14 +30,18 @@ export class ProfileService {
     return this.http.get<any[]>(`${this.apiUrl}/Matching/suggested-workers/${clientId}`, { headers: this.getHeaders() });
   }
 
-  sendMatchRequest(workerId: number): Observable<any> {
-    const params = new HttpParams().set('workerId', workerId.toString());
-    return this.http.post(`${this.apiUrl}/Request/send`, {}, { headers: this.getHeaders(), params });
+  sendMatchRequest(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Request/send`, payload, { headers: this.getHeaders() });
   }
 
   // --- PETICIONES Y SESIONES ---
   getWorkerRequests(workerId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Request/worker/${workerId}`, { headers: this.getHeaders() });
+  }
+
+  // 🚀 NUEVO
+  getClientRequests(clientId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Request/client/${clientId}`, { headers: this.getHeaders() });
   }
 
   updateStatus(requestId: number, status: string): Observable<any> {
@@ -54,6 +57,10 @@ export class ProfileService {
     return this.http.get<any[]>(`${this.apiUrl}/Session/worker/${workerId}`, { headers: this.getHeaders() });
   }
 
+  finishSession(sessionId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/Session/finish/${sessionId}`, {}, { headers: this.getHeaders() });
+  }
+
   // --- CHAT Y DETALLES ---
   getSessionDetails(sessionId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/Session/details/${sessionId}`, { headers: this.getHeaders() });
@@ -66,4 +73,38 @@ export class ProfileService {
   sendMessage(payload: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/Chat/send`, payload, { headers: this.getHeaders() });
   }
+
+  // --- EJERCICIOS Y RUTINAS ---
+  getExercises(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Exercise`, { headers: this.getHeaders() });
+  }
+
+  getWorkerRoutines(workerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Routine/worker/${workerId}`, { headers: this.getHeaders() });
+  }
+
+  createRoutine(routinePayload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Routine`, routinePayload, { headers: this.getHeaders() });
+  }
+
+  addExerciseToRoutine(routineExercisePayload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Routine/add-exercise`, routineExercisePayload, { headers: this.getHeaders() });
+  }
+
+  assignRoutineToClient(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Routine/assign-to-client`, payload, { headers: this.getHeaders() });
+  }
+
+  getClientRoutines(clientId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Routine/client/${clientId}`, { headers: this.getHeaders() });
+  }
+
+  getRoutineDetails(routineId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Routine/${routineId}/details`, { headers: this.getHeaders() });
+  }
+
+  // Añade esta función a tu ProfileService
+getOccupiedSlots(workerId: number, day: string): Observable<string[]> {
+  return this.http.get<string[]>(`${this.apiUrl}/Session/occupied-slots/${workerId}/${day}`, { headers: this.getHeaders() });
+}
 }

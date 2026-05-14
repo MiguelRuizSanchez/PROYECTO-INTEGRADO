@@ -1,12 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Necesario para ngModel
 import { ProfileService } from '../profile.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-buscador',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './buscador.component.html',
   styleUrls: ['./buscador.component.css']
 })
@@ -15,6 +16,12 @@ export class BuscadorComponent implements OnInit {
   cargando: boolean = true;
   clientId: number = 0;
   esWorker: boolean = false;
+
+  // Variables del Modal de Reserva
+  mostrandoModal: boolean = false;
+  coachSeleccionado: any = null;
+  diaElegido: string = 'Monday';
+  horaElegida: string = '10:00';
 
   constructor(
     private profileService: ProfileService,
@@ -37,7 +44,6 @@ export class BuscadorComponent implements OnInit {
           this.clientId = d?.idClient || d?.IdClient;
         }
 
-        // BLOQUEO DE SEGURIDAD
         if (perfilIncompleto) {
           alert("🛑 ¡Alto ahí! Debes completar tu perfil antes de buscar o recibir matches.");
           this.router.navigate(['/cuestionario']);
@@ -71,17 +77,55 @@ export class BuscadorComponent implements OnInit {
       }
     });
   }
+horasPosibles: string[] = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
+horasOcupadas: string[] = [];
 
-  enviarSolicitud(workerId: number) {
-    if (!workerId) return;
+ abrirModalReserva(coach: any) {
+  this.coachSeleccionado = coach;
+  this.mostrandoModal = true;
+  this.horaElegida = ''; // Resetear selección
+  this.actualizarHorasOcupadas();
+}
+
+actualizarHorasOcupadas() {
+  const workerId = this.coachSeleccionado.workerId || this.coachSeleccionado.IdWorker;
+  this.profileService.getOccupiedSlots(workerId, this.diaElegido).subscribe(res => {
+    this.horasOcupadas = res;
+  });
+}
+
+seleccionarHora(hora: string) {
+  if (this.horasOcupadas.includes(hora)) return;
+  this.horaElegida = hora;
+}
+
+  cerrarModal() {
+    this.mostrandoModal = false;
+    this.coachSeleccionado = null;
+  }
+
+  confirmarSolicitud() {
+    if (!this.coachSeleccionado) return;
     
-    this.profileService.sendMatchRequest(workerId).subscribe({
+    const workerId = this.coachSeleccionado.workerId || this.coachSeleccionado.WorkerId;
+    
+    const payload = {
+      WorkerId: workerId,
+      RequestedDay: this.diaElegido,
+      RequestedTime: `${this.horaElegida}:00` // Formato TimeSpan para C#
+    };
+
+    this.profileService.sendMatchRequest(payload).subscribe({
       next: (res: any) => {
-        alert(res.message || '¡Solicitud de match enviada al entrenador!');
+        alert(res.message || '✅ ¡Solicitud de match enviada al entrenador!');
+        this.cerrarModal();
+        this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {
-        alert(err.error?.message || 'Ya tienes una solicitud pendiente con este perfil.');
+        alert(err.error?.message || 'Ya tienes una solicitud pendiente o activa con este coach.');
+        this.cerrarModal();
       }
     });
   }
+
 }

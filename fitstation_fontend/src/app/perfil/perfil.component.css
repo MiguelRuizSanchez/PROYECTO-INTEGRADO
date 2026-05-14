@@ -1,0 +1,16 @@
+.perfil-container { min-height: 100vh; background: #0a0a0a; display: flex; justify-content: center; padding: 40px 20px; color: white; }
+.perfil-card { background: #111; max-width: 700px; width: 100%; padding: 40px; border-radius: 15px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.perfil-header { border-bottom: 1px solid #222; margin-bottom: 30px; padding-bottom: 20px; }
+.btn-back { background: none; border: none; color: #2ecc71; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+h1 { font-size: 2rem; color: #2ecc71; margin: 0; }
+.form-section { margin-bottom: 30px; }
+h3 { font-size: 1rem; text-transform: uppercase; color: #888; margin-bottom: 15px; border-left: 3px solid #2ecc71; padding-left: 10px; }
+.form-group { margin-bottom: 20px; display: flex; flex-direction: column; }
+.form-row { display: flex; gap: 20px; }
+.form-row .form-group { flex: 1; }
+label { font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; color: #ccc; }
+.form-control { background: #1a1a1a; border: 1px solid #333; color: white; padding: 12px; border-radius: 8px; outline: none; }
+.form-control:focus { border-color: #2ecc71; }
+.readonly { opacity: 0.5; cursor: not-allowed; }
+.btn-save { width: 100%; background: #2ecc71; color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 20px; }
+.btn-save:hover { background: #27ae60; transform: translateY(-2px); }

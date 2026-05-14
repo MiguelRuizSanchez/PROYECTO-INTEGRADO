@@ -18,6 +18,40 @@ public class RequestController : ControllerBase
         _context = context;
     }
 
+    [HttpPost("send")]
+    public IActionResult SendRequest([FromBody] SendRequestDto dto)
+    {
+        var myUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+        var client = _context.Clients.FirstOrDefault(c => c.IdUser == myUserId);
+        
+        if (client == null) return BadRequest(new { message = "Debes ser un cliente para solicitar un coach." });
+
+        var existingRequest = _context.WorkerRequests.FirstOrDefault(r => 
+            r.IdClient == client.IdClient && 
+            r.IdWorker == dto.WorkerId && 
+            (r.Status == "Pending" || r.Status == "Accepted"));
+
+        if (existingRequest != null)
+        {
+            return BadRequest(new { message = "Ya tienes una solicitud o sesión activa con este entrenador." });
+        }
+
+        var newRequest = new WorkerRequest
+        {
+            IdClient = client.IdClient,
+            IdWorker = dto.WorkerId,
+            Status = "Pending",
+            RequestDate = DateTime.Now,
+            RequestedDay = dto.RequestedDay,
+            RequestedTime = dto.RequestedTime
+        };
+
+        _context.WorkerRequests.Add(newRequest);
+        _context.SaveChanges();
+
+        return Ok(new { message = "¡Solicitud enviada correctamente!" });
+    }
+
     [HttpGet("worker/{workerId}")]
     public IActionResult GetWorkerRequests(int workerId)
     {
@@ -31,8 +65,26 @@ public class RequestController : ControllerBase
                            status = r.Status,
                            requestedDay = r.RequestedDay,
                            requestedTime = r.RequestedTime,
-                           // Añadimos modalidad para que el Coach la vea antes de aceptar
                            modality = c.Modality 
+                       }).ToList();
+
+        return Ok(requests);
+    }
+
+    // 🚀 NUEVO: Endpoint para el Cliente
+    [HttpGet("client/{clientId}")]
+    public IActionResult GetClientRequests(int clientId)
+    {
+        var requests = (from r in _context.WorkerRequests
+                       join w in _context.Workers on r.IdWorker equals w.IdWorker
+                       join u in _context.Users on w.IdUser equals u.IdUser
+                       where r.IdClient == clientId
+                       select new {
+                           requestId = r.IdRequest,
+                           workerName = u.Name,
+                           status = r.Status,
+                           requestedDay = r.RequestedDay,
+                           requestedTime = r.RequestedTime
                        }).ToList();
 
         return Ok(requests);
@@ -48,8 +100,6 @@ public class RequestController : ControllerBase
 
         if (newStatus == "Accepted")
         {
-            // 🛡️ Lógica de Creación de Sesión:
-            // Buscamos al cliente para heredar su modalidad y preferencias
             var client = _context.Clients.FirstOrDefault(c => c.IdClient == request.IdClient);
 
             var session = new Session
@@ -57,7 +107,6 @@ public class RequestController : ControllerBase
                 IdClient = request.IdClient,
                 IdWorker = request.IdWorker,
                 IdRequest = request.IdRequest,
-                // Programamos para la próxima semana por defecto
                 ScheduledDate = DateTime.Now.AddDays(7),
                 DayOfWeek = request.RequestedDay ?? client?.PrefDay ?? "Monday",
                 StartTime = request.RequestedTime ?? client?.PrefTime ?? new TimeSpan(10, 0, 0),
@@ -71,4 +120,11 @@ public class RequestController : ControllerBase
         _context.SaveChanges();
         return Ok(new { message = $"Solicitud {newStatus} correctamente." });
     }
+}
+
+public class SendRequestDto
+{
+    public int WorkerId { get; set; }
+    public string RequestedDay { get; set; } = string.Empty;
+    public TimeSpan RequestedTime { get; set; }
 }
