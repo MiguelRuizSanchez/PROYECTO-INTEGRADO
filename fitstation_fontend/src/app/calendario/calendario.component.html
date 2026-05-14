@@ -1,0 +1,49 @@
+<div class="calendar-container">
+  <header class="calendar-header">
+    <button class="btn-back" routerLink="/dashboard">← VOLVER</button>
+    <div class="month-nav">
+      <button (click)="cambiarMes(-1)">‹</button>
+      <h2>{{ nombreMes | uppercase }}</h2>
+      <button (click)="cambiarMes(1)">›</button>
+    </div>
+    <div class="role-indicator">
+      Vista: <span>{{ rol === 'worker' ? 'Entrenador' : 'Atleta' }}</span>
+    </div>
+  </header>
+
+  <div class="calendar-card">
+    <div class="weekdays-grid">
+      <div class="weekday">LUN</div>
+      <div class="weekday">MAR</div>
+      <div class="weekday">MIÉ</div>
+      <div class="weekday">JUE</div>
+      <div class="weekday">VIE</div>
+      <div class="weekday">SÁB</div>
+      <div class="weekday">DOM</div>
+    </div>
+
+    <div class="days-grid">
+      <div *ngFor="let item of diasMes" 
+           class="day-cell" 
+           [ngClass]="{'empty': !item.dia, 'today': item.esHoy}">
+        
+        <span class="day-number" *ngIf="item.dia">{{ item.dia }}</span>
+        
+        <div class="day-events" *ngIf="item.sesiones.length > 0">
+          <div *ngFor="let s of item.sesiones" 
+               class="event-pill"
+               [routerLink]="['/session', s.idSession || s.IdSession]">
+            <span class="event-time">{{ s.startTime || s.StartTime }}</span>
+            <span class="event-name">
+              {{ rol === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="calendar-footer">
+    <p>💡 Las sesiones se sincronizan automáticamente con tu agenda de FitStation.</p>
+  </footer>
+</div>

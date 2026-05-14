@@ -1,0 +1,180 @@
+/* Contenedor principal */
+.calendar-container {
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: white;
+  padding: 30px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Cabecera con navegación de meses */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.month-nav h2 {
+  font-size: 1.8rem;
+  color: #2ecc71;
+  min-width: 280px;
+  text-align: center;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.month-nav button {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: white;
+  font-size: 1.5rem;
+  padding: 5px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.month-nav button:hover {
+  background: #2ecc71;
+  color: black;
+}
+
+/* Tarjeta del calendario */
+.calendar-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Rejilla de nombres de días */
+.weekdays-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.weekday {
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* Rejilla de días numéricos */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(130px, auto);
+}
+
+.day-cell {
+  border-right: 1px solid #222;
+  border-bottom: 1px solid #222;
+  padding: 12px;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.day-cell:nth-child(7n) { border-right: none; }
+.day-cell.empty { background: #0d0d0d; }
+
+/* Resaltado del día actual */
+.day-cell.today {
+  background: rgba(46, 204, 113, 0.05);
+}
+
+.day-cell.today .day-number {
+  color: #2ecc71;
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.day-number {
+  font-size: 0.9rem;
+  color: #444;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Etiquetas de sesiones (Eventos) */
+.day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.event-pill {
+  background: #2ecc71;
+  color: black;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.event-pill:hover {
+  transform: translateY(-2px);
+  background: #27ae60;
+}
+
+.event-time {
+  font-weight: 800;
+  font-size: 0.65rem;
+  opacity: 0.8;
+  margin-bottom: 2px;
+}
+
+.event-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+
+/* Footer y botones */
+.calendar-footer {
+  text-align: center;
+  margin-top: 25px;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.btn-back {
+  background: none;
+  border: 1px solid #333;
+  color: #888;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-back:hover {
+  border-color: #2ecc71;
+  color: #2ecc71;
+}
+
+.role-indicator span {
+  color: #2ecc71;
+  font-weight: bold;
+}
