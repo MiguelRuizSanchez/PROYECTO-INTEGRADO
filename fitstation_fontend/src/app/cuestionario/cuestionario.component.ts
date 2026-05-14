@@ -1,64 +1,79 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../profile.service';
-import { Router } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-cuestionario',
+  selector: 'app-crear-rutina',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './cuestionario.component.html',
-  styleUrls: ['./cuestionario.component.css']
+  styleUrl: './cuestionario.component.css'
 })
-export class CuestionarioComponent implements OnInit {
-  questForm: FormGroup;
-  rol: string = 'client';
+export class CrearRutinaComponent implements OnInit {
+  nombreRutina: string = '';
+  descripcion: string = '';
+  objetivoSeleccionado: string = 'Hipertrofia (Músculo)';
+  listaObjetivos: string[] = ['Hipertrofia (Músculo)', 'Fuerza Máxima', 'Pérdida de Peso', 'Resistencia / Cardio', 'Salud y Movilidad'];
+
+  catalogoEjercicios: any[] = [];
+  ejerciciosEnRutina: any[] = [];
 
   constructor(
-    private fb: FormBuilder, 
-    private profileService: ProfileService, 
-    private router: Router
-  ) {
-    // Inicializamos el formulario con las claves en Mayúscula para C#
-    this.questForm = this.fb.group({
-      // Campos para el Coach (Worker)
-      Specialization: ['Musculacion'],
-      Bio: [''],
-      PricePerSession: [20],
-      MaxCapacity: [10], // IMPORTANTE: Mayor que 0 para aparecer en el buscador
+    private profileService: ProfileService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-      // Campos para el Atleta (Client)
-      Objectives: ['Musculacion', Validators.required],
-      ExperienceLevel: ['principiante', Validators.required],
-      Modality: ['presencial', Validators.required],
+  ngOnInit() {
+    this.cargarEjercicios();
+  }
 
-      // Campos Comunes
-      PrefDay: ['Monday', Validators.required],
-      PrefTime: ['10:00', Validators.required]
+  cargarEjercicios() {
+    this.profileService.getExercises().subscribe({
+      next: (res) => {
+        this.catalogoEjercicios = res.map(e => ({
+          id_exercise: e.idExercise || e.id_exercise,
+          name: e.name || e.Name,
+          muscle: e.muscleGroup || e.muscle_group
+        }));
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  ngOnInit() {
-    this.rol = localStorage.getItem('userRole') || 'client';
+  agregarFilaEjercicio() {
+    this.ejerciciosEnRutina.push({ id_exercise: 0, series: 3, repetitions: 12, rest: 60 });
   }
 
-  enviar() {
-    if (this.questForm.valid) {
-      console.log('Enviando perfil:', this.questForm.value);
-      // Enviamos el objeto con las claves corregidas al servicio
-      this.profileService.updateProfile(this.questForm.value).subscribe({
-        next: () => {
-          alert('¡Perfil configurado con éxito! Bienvenido a FitStation.');
-          this.router.navigate(['/dashboard']);
-        },
-        error: (err) => {
-          console.error('Error al guardar:', err);
-          alert('Hubo un error al guardar tu perfil. Inténtalo de nuevo.');
-        }
-      });
-    } else {
-      alert('Por favor, rellena todos los campos obligatorios.');
+  quitarFila(index: number) {
+    this.ejerciciosEnRutina.splice(index, 1);
+  }
+
+  guardarRutina() {
+    if (!this.nombreRutina || this.ejerciciosEnRutina.length === 0) {
+      alert("Introduce un nombre y al menos un ejercicio.");
+      return;
     }
+
+    const payload = {
+      Name: this.nombreRutina,
+      Description: `[${this.objetivoSeleccionado}] ${this.descripcion}`,
+      Exercises: this.ejerciciosEnRutina.map(e => ({
+        IdExercise: Number(e.id_exercise),
+        Series: e.series,
+        Repetitions: e.repetitions,
+        Rest: e.rest
+      }))
+    };
+
+    this.profileService.createFullRoutine(payload).subscribe({
+      next: () => {
+        alert("✅ Rutina guardada correctamente.");
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => alert("Error al guardar: " + err.error)
+    });
   }
 }

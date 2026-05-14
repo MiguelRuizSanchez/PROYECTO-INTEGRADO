@@ -18,7 +18,6 @@ public class Routine
 
     [Column("description")]
     public string? Description { get; set; }
-
-    [Column("created_at")]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    
+    // ❌ ELIMINADO CreatedAt porque no existe en tu SQL
 }

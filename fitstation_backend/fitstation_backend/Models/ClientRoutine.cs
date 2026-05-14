@@ -6,15 +6,16 @@ namespace fitstation_backend.Models;
 [Table("client_routines")]
 public class ClientRoutine
 {
-    // CAMBIO - coincide exactamente con la columna de la BD
     [Key]
-    [Column("id")] 
-    public int Id { get; set; } 
-    // FIN DEL CAMBIO
+    [Column("id_client_routine")]
+    public int Id { get; set; }
 
     [Column("id_client")]
     public int IdClient { get; set; }
 
     [Column("id_routine")]
     public int IdRoutine { get; set; }
+
+    [Column("assigned_at")]
+    public DateTime AssignedAt { get; set; } = DateTime.Now;
 }

@@ -20,6 +20,12 @@ export class ProfileService {
     return this.http.get(`${this.apiUrl}/Profile/me`, { headers: this.getHeaders() });
   }
 
+  // --- 🚀 ESTA ES LA FUNCIÓN QUE FALTABA ---
+  getUserData(): Observable<any> {
+    const userId = localStorage.getItem('userId');
+    return this.http.get(`${this.apiUrl}/Profile/me`, { headers: this.getHeaders() });
+  }
+
   updateProfile(dto: any): Observable<any> {
     const headers = this.getHeaders().set('Content-Type', 'application/json');
     return this.http.post(`${this.apiUrl}/Profile/update`, dto, { headers });

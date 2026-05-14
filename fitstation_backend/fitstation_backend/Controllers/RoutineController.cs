@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using fitstation_backend.Data;
+using fitstation_backend.Models;
 using System.Security.Claims;
-// 🚀 ESTAS LÍNEAS SON LAS QUE ARREGLAN EL ERROR CS0246
-using fitstation_backend.Data;   
-using fitstation_backend.Models; 
 
 namespace fitstation_backend.Controllers
 {
@@ -18,54 +17,48 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // 1. OBTENER EJERCICIOS (Para el catálogo de Angular)
+        // Obtener ejercicios
         [HttpGet("exercises")]
         public async Task<ActionResult<IEnumerable<Exercise>>> GetExercises()
         {
-            try
-            {
-                // Usamos la tabla definida en tu ApplicationDbContext
-                var exercises = await _context.Exercises.ToListAsync();
-                return Ok(exercises);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al obtener ejercicios: {ex.Message}");
-            }
+            return Ok(await _context.Exercises.ToListAsync());
         }
 
-        // 2. CREAR RUTINA COMPLETA (Cabecera + Ejercicios)
+        // GUARDAR RUTINA SIN FECHA (Sincronizado con SQL)
         [HttpPost("create-full")]
         public async Task<IActionResult> CreateFullRoutine([FromBody] RoutineCreateDto dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Obtenemos el ID del Coach desde el Token
-                var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (string.IsNullOrEmpty(workerIdClaim)) return Unauthorized("Usuario no válido");
+                var workerIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(workerIdStr)) return Unauthorized("No identificado");
 
-                // A. Insertamos la Rutina base
+                int workerId = int.Parse(workerIdStr);
+
+                // A. Guardar en 'routines' (Solo columnas existentes)
                 var nuevaRutina = new Routine
                 {
-                    IdWorker = int.Parse(workerIdClaim),
+                    IdWorker = workerId,
                     Name = dto.Name,
-                    Description = dto.Description,
-                    CreatedAt = DateTime.Now
+                    Description = dto.Description
+                    // Ya no ponemos CreatedAt aquí
                 };
+
                 _context.Routines.Add(nuevaRutina);
                 await _context.SaveChangesAsync();
 
-                // B. Insertamos los ejercicios asociados
-                foreach (var ex in dto.Exercises)
+                // B. Guardar en 'routine_exercises'
+                foreach (var exDto in dto.Exercises)
                 {
+                    if (exDto.IdExercise <= 0) continue;
+
                     var re = new RoutineExercise
                     {
                         IdRoutine = nuevaRutina.IdRoutine,
-                        IdExercise = ex.IdExercise,
-                        Sets = ex.Series,       // Mapeado a 'series' en SQL
-                        Reps = ex.Repetitions, // Mapeado a 'repetitions' en SQL
-                        RestSeconds = ex.Rest  // Mapeado a 'rest_seconds' en SQL
+                        IdExercise = exDto.IdExercise,
+                        Reps = exDto.Repetitions,
+                        Sets = exDto.Series
                     };
                     _context.RoutineExercises.Add(re);
                 }
@@ -73,29 +66,26 @@ namespace fitstation_backend.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return Ok(new { message = "Rutina guardada con éxito" });
+                return Ok(new { message = "✅ ¡Rutina guardada con éxito!" });
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return StatusCode(500, $"Error: {ex.Message}");
+                var msg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return StatusCode(500, $"Error en SQL: {msg}");
             }
         }
     }
 
-    // Estructuras de datos para recibir la información desde Angular
-    public class RoutineCreateDto
-    {
+    public class RoutineCreateDto {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<ExerciseDto> Exercises { get; set; } = new();
     }
 
-    public class ExerciseDto
-    {
+    public class ExerciseDto {
         public int IdExercise { get; set; }
         public int Series { get; set; }
         public int Repetitions { get; set; }
-        public int Rest { get; set; }
     }
 }

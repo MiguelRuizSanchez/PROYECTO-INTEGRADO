@@ -1,107 +1,37 @@
 <div class="gestion-container">
-  <header class="header-main">
-    <div class="header-left">
-      <button routerLink="/dashboard" class="btn-back">← DASHBOARD</button>
-      <div class="titles">
-        <h1>Gestión de Entrenamiento</h1>
-        <p>Alumno: <span>{{ nombreAlumno }}</span></p>
-      </div>
-    </div>
-    <div class="badge-role">MODO ENTRENADOR</div>
+  <header class="header-gestion">
+    <button routerLink="/dashboard" class="btn-back">← Volver</button>
+    <h1>Gestión de Entrenamiento</h1>
+    <p>Alumno: <span>{{ nombreAlumno }}</span></p>
   </header>
 
-  <div class="gestion-grid">
-    <section class="card-glass">
-      <div class="card-icon">📚</div>
-      <h2>Mi Biblioteca de Rutinas</h2>
-      <p class="card-desc">Selecciona una rutina de tu base de datos para asignarla a este alumno.</p>
-
-      <div class="assign-form">
+  <div class="main-content">
+    <div class="card-gestion">
+      <h2>Asignar Rutina de mi Biblioteca</h2>
+      <div class="assign-box">
         <select [(ngModel)]="rutinaParaAsignarId" class="select-dark">
-          <option [value]="0">-- Seleccionar Rutina --</option>
-          <option *ngFor="let r of bibliotecaRutinas" [value]="r.idRoutine || r.id_routine || r.IdRoutine">
+          <option [value]="0">-- Seleccionar una rutina --</option>
+          <option *ngFor="let r of misRutinas" [value]="r.idRoutine || r.IdRoutine">
             {{ r.name || r.Name }}
           </option>
         </select>
-
-        <div class="action-btns">
-          <button class="btn-outline" 
-                  (click)="verContenidoRutina(rutinaParaAsignarId, 'Vista Previa')"
-                  [disabled]="rutinaParaAsignarId == 0">
-            👁️ PREVISUALIZAR
+        
+        <div class="actions">
+          <button class="btn-preview" (click)="verContenidoRutina(rutinaParaAsignarId, 'Vista Previa')" [disabled]="rutinaParaAsignarId == 0">
+            OJO
           </button>
-          
-          <button class="btn-primary" 
-                  (click)="asignarRutina()"
-                  [disabled]="rutinaParaAsignarId == 0">
-            ENVIAR ALUMNO
+          <button class="btn-assign" (click)="asignarRutina()" [disabled]="rutinaParaAsignarId == 0">
+            ASIGNAR AHORA
           </button>
         </div>
       </div>
-    </section>
-
-    <section class="card-glass">
-      <div class="card-icon">🏋️</div>
-      <h2>Rutinas en Curso</h2>
-      <p class="card-desc">Historial de rutinas que el alumno tiene activas en su perfil.</p>
-
-      <div *ngIf="cargando" class="state-msg">Sincronizando con la base de datos...</div>
-      
-      <div class="routines-list" *ngIf="!cargando">
-        <div class="empty-state" *ngIf="rutinasDelAlumno.length === 0">
-          El alumno aún no tiene rutinas asignadas.
-        </div>
-
-        <div class="routine-item" *ngFor="let ra of rutinasDelAlumno">
-          <div class="item-info">
-            <strong>{{ ra.name || ra.Name }}</strong>
-            <span>Asignada el: {{ (ra.createdAt || ra.CreatedAt) | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <button class="btn-view-small" 
-                  (click)="verContenidoRutina(ra.idRoutine || ra.id_routine || ra.IdRoutine, ra.name || ra.Name)">
-            VER TABLA
-          </button>
-        </div>
-      </div>
-    </section>
+    </div>
   </div>
 
   <div class="modal-overlay" *ngIf="mostrandoEjercicios">
     <div class="modal-content">
-      <div class="modal-header">
-        <h3>Contenido de: {{ nombreRutinaViendo }}</h3>
-        <button class="close-x" (click)="cerrarModal()">×</button>
-      </div>
-
-      <div class="table-container">
-        <table class="exercise-table">
-          <thead>
-            <tr>
-              <th>Ejercicio</th>
-              <th>Músculo</th>
-              <th class="center">Series</th>
-              <th class="center">Reps</th>
-              <th class="center">Peso/Desc</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ej of detallesRutinaSeleccionada">
-              <td><strong>{{ ej.exerciseName || ej.ExerciseName }}</strong></td>
-              <td><span class="m-badge">{{ ej.muscle || ej.Muscle || 'General' }}</span></td>
-              <td class="center">{{ ej.series || ej.Series }}</td>
-              <td class="center">{{ ej.repetitions || ej.Repetitions }}</td>
-              <td class="center">{{ ej.rest || ej.Rest }}s</td>
-            </tr>
-          </tbody>
-        </table>
-        <div *ngIf="detallesRutinaSeleccionada.length === 0" class="no-data">
-          Esta rutina no tiene ejercicios registrados en la tabla 'routine_exercises'.
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-primary" (click)="cerrarModal()">CERRAR VISTA</button>
-      </div>
+      <h3>{{ nombreRutinaViendo }}</h3>
+      <button class="btn-close" (click)="cerrarModal()">CERRAR</button>
     </div>
   </div>
 </div>
