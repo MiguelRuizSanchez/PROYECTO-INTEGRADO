@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 🚀 Necesario para ngModel
+import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../profile.service';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'; // 🚀 Importado Router
 
 @Component({
   selector: 'app-gestion-rutinas',
@@ -12,55 +12,98 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   styleUrl: './gestion-rutinas.component.css'
 })
 export class GestionRutinasComponent implements OnInit {
+  sessionId!: number;
   clientId!: number;
   nombreAlumno: string = 'Cargando...';
   misRutinas: any[] = [];
-  rutinasDelAlumno: any[] = []; // Para mostrar qué tiene ya puesto
   
-  // Variables para la interfaz que pedía tu error
   rutinaParaAsignarId: number = 0;
   mostrandoEjercicios: boolean = false;
   nombreRutinaViendo: string = '';
-  detallesRutinaSeleccionada: any[] = [];
+  ejerciciosDeLaRutina: any[] = []; // Array para la vista previa
 
   constructor(
     private route: ActivatedRoute,
-    private profileService: ProfileService
+    private router: Router, // 🚀 Inyectamos el enrutador
+    private profileService: ProfileService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.clientId = Number(this.route.snapshot.paramMap.get('id'));
-    this.cargarDatosAlumno();
+    this.sessionId = Number(this.route.snapshot.paramMap.get('id'));
+    this.cargarDatosSesion();
     this.cargarBiblioteca();
   }
 
-  cargarDatosAlumno() {
-    this.profileService.getUserData().subscribe({
-      next: (res: any) => this.nombreAlumno = res.name || res.Name || 'Alumno',
-      error: () => this.nombreAlumno = 'Alumno'
+  cargarDatosSesion() {
+    this.profileService.getSessionDetails(this.sessionId).subscribe({
+      next: (res: any) => {
+        const s = res.session || res.Session;
+        this.clientId = s.idClient || s.IdClient;
+        this.nombreAlumno = res.otherName || res.OtherName || 'Alumno';
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.nombreAlumno = 'Alumno';
+        this.cdr.detectChanges();
+      }
     });
   }
 
   cargarBiblioteca() {
-    this.profileService.getWorkerRoutines(0).subscribe(res => this.misRutinas = res);
-  }
-
-  asignarRutina() {
-    if (this.rutinaParaAsignarId == 0) return;
-    const payload = { IdClient: this.clientId, IdRoutine: this.rutinaParaAsignarId };
-    this.profileService.assignRoutineToClient(payload).subscribe(() => {
-      alert("✅ Rutina asignada con éxito");
+    this.profileService.getWorkerRoutines(0).subscribe({
+      next: (res) => {
+        this.misRutinas = res;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error("Error cargando biblioteca:", err)
     });
   }
 
-  // Funciones de apoyo para el modal que pide tu HTML
-  verContenidoRutina(id: number, nombre: string) {
-    this.nombreRutinaViendo = nombre;
+  verContenidoRutina() {
+    const idRutina = Number(this.rutinaParaAsignarId);
+    if (!idRutina || idRutina === 0) return;
+
+    const rutinaSeleccionada = this.misRutinas.find(r => (r.idRoutine || r.IdRoutine) === idRutina);
+    this.nombreRutinaViendo = rutinaSeleccionada?.name || rutinaSeleccionada?.Name || 'Vista Previa';
     this.mostrandoEjercicios = true;
-    // Aquí podrías cargar ejercicios específicos si quisieras
+
+    this.profileService.getRoutineDetails(idRutina).subscribe({
+      next: (ejerciciosDescargados) => {
+        this.ejerciciosDeLaRutina = ejerciciosDescargados;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error("Error al descargar ejercicios:", err)
+    });
+  }
+
+  asignarRutina() {
+    if (this.rutinaParaAsignarId == 0) {
+      alert("Por favor, selecciona una rutina válida.");
+      return;
+    }
+
+    const payload = { 
+      IdClient: this.clientId, 
+      IdRoutine: Number(this.rutinaParaAsignarId) 
+    };
+
+    this.profileService.assignRoutineToClient(payload).subscribe({
+      next: () => {
+        alert("✅ Rutina asignada con éxito al alumno.");
+        // 🚀 REDIRECCIÓN AUTOMÁTICA AL DASHBOARD
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        const errorServidor = err.error?.message || err.error || err.message;
+        alert("Error al realizar la asignación: " + errorServidor);
+      }
+    });
   }
 
   cerrarModal() {
     this.mostrandoEjercicios = false;
+    this.ejerciciosDeLaRutina = [];
+    this.cdr.detectChanges();
   }
 }

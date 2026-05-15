@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("fitstation_backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7508721f07bcc08b63e16654acf126d9c3781f05")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+678ffa21c1e11c510789f2fe7013b0492aa1a481")]
 [assembly: System.Reflection.AssemblyProductAttribute("fitstation_backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("fitstation_backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

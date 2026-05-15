@@ -7,7 +7,7 @@ namespace fitstation_backend.Models;
 public class ClientRoutine
 {
     [Key]
-    [Column("id_client_routine")]
+    [Column("id")] // 🚀 MÁGICO: Le aclaramos a C# que se llama 'id' y no 'id_client_routine'
     public int Id { get; set; }
 
     [Column("id_client")]
@@ -16,6 +16,5 @@ public class ClientRoutine
     [Column("id_routine")]
     public int IdRoutine { get; set; }
 
-    [Column("assigned_at")]
-    public DateTime AssignedAt { get; set; } = DateTime.Now;
+    // ❌ Eliminada cualquier propiedad de fecha porque tu tabla real solo tiene 3 columnas
 }

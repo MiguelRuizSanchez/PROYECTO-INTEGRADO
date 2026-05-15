@@ -17,8 +17,8 @@
         </select>
         
         <div class="actions">
-          <button class="btn-preview" (click)="verContenidoRutina(rutinaParaAsignarId, 'Vista Previa')" [disabled]="rutinaParaAsignarId == 0">
-            OJO
+          <button class="btn-preview" (click)="verContenidoRutina()" [disabled]="rutinaParaAsignarId == 0">
+            👁️ Ver Tabla
           </button>
           <button class="btn-assign" (click)="asignarRutina()" [disabled]="rutinaParaAsignarId == 0">
             ASIGNAR AHORA
@@ -30,7 +30,29 @@
 
   <div class="modal-overlay" *ngIf="mostrandoEjercicios">
     <div class="modal-content">
-      <h3>{{ nombreRutinaViendo }}</h3>
+      <h3>VISTA PREVIA: {{ nombreRutinaViendo }}</h3>
+      
+      <div class="tabla-preview-box" *ngIf="ejerciciosDeLaRutina.length > 0">
+        <table class="tabla-tecnica">
+          <thead>
+            <tr>
+              <th>EJERCICIO</th>
+              <th>GRUPO MUSCULAR</th>
+              <th class="text-center">SERIES</th>
+              <th class="text-center">REPETICIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ej of ejerciciosDeLaRutina">
+              <td class="nombre-ej"><strong>{{ ej.exerciseName || ej.ExerciseName }}</strong></td>
+              <td><span class="badge-musculo">{{ ej.muscle || ej.Muscle || 'General' }}</span></td>
+              <td class="text-center series-num">{{ ej.series || ej.Series }}</td>
+              <td class="text-center reps-num">{{ ej.repetitions || ej.Repetitions }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <button class="btn-close" (click)="cerrarModal()">CERRAR</button>
     </div>
   </div>
