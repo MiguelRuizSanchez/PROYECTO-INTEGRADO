@@ -17,14 +17,14 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // 1. Catálogo de Ejercicios para Angular
+        // 1. Catálogo global de ejercicios (Lo que usamos en el desplegable)
         [HttpGet("exercises")]
         public async Task<ActionResult<IEnumerable<Exercise>>> GetExercises()
         {
             return Ok(await _context.Exercises.ToListAsync());
         }
 
-        // 2. Biblioteca de Rutinas del Coach logueado
+        // 2. Biblioteca de rutinas del Coach logueado
         [HttpGet("worker-library")]
         public async Task<ActionResult<IEnumerable<Routine>>> GetWorkerRoutines()
         {
@@ -34,15 +34,10 @@ namespace fitstation_backend.Controllers
                 if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado");
 
                 int userId = int.Parse(userIdStr);
-
-                // Buscamos cuál es su id_worker real en la base de datos
                 var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
                 if (worker == null) return BadRequest("No eres un entrenador registrado.");
 
-                var routines = await _context.Routines
-                    .Where(r => r.IdWorker == worker.IdWorker)
-                    .ToListAsync();
-
+                var routines = await _context.Routines.Where(r => r.IdWorker == worker.IdWorker).ToListAsync();
                 return Ok(routines);
             }
             catch (Exception ex)
@@ -51,76 +46,114 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 3. Guardar Rutina Completa (Cabecera + Ejercicios)
+        // 3. Guardar rutina completa en la biblioteca (¡El que probaste con éxito!)
         [HttpPost("create-full")]
         public async Task<IActionResult> CreateFullRoutine([FromBody] RoutineCreateDto dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Extraemos el ID de usuario desde el Token JWT
                 var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
-                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("Token de usuario inválido");
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("Token inválido");
 
                 int userId = int.Parse(userIdStr);
-
-                // Traducimos el id_user al id_worker real de la base de datos
                 var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
-                if (worker == null) 
-                {
-                    return BadRequest("La cuenta conectada no tiene un perfil de Worker asociado.");
-                }
+                if (worker == null) return BadRequest("Perfil de Worker no asociado.");
 
-                // A. Insertamos en 'routines' usando el id_worker correcto
-                var nuevaRutina = new Routine
-                {
-                    IdWorker = worker.IdWorker,
-                    Name = dto.Name,
-                    Description = dto.Description
-                };
-
+                var nuevaRutina = new Routine { IdWorker = worker.IdWorker, Name = dto.Name, Description = dto.Description };
                 _context.Routines.Add(nuevaRutina);
                 await _context.SaveChangesAsync();
 
-                // B. Insertamos los ejercicios en 'routine_exercises'
                 foreach (var exDto in dto.Exercises)
                 {
                     if (exDto.IdExercise <= 0) continue;
-
-                    var re = new RoutineExercise
-                    {
+                    _context.RoutineExercises.Add(new RoutineExercise {
                         IdRoutine = nuevaRutina.IdRoutine,
                         IdExercise = exDto.IdExercise,
                         Reps = exDto.Repetitions,
                         Sets = exDto.Series
-                    };
-                    _context.RoutineExercises.Add(re);
+                    });
                 }
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-
-                return Ok(new { message = "✅ ¡Rutina guardada en tu biblioteca con éxito!" });
+                return Ok(new { message = "✅ ¡Rutina guardada!" });
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                var detalle = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                return StatusCode(500, $"Error de persistencia: {detalle}");
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
+
+        // 🚀 4. ENLACE CON TU FRONTEND: Obtener rutinas asignadas al alumno
+        // Responde directamente a: getClientRoutines(clientId) de tu profile.service.ts
+        [HttpGet("client/{clientId}")]
+        public async Task<IActionResult> GetClientRoutines(int clientId)
+        {
+            try
+            {
+                // Buscamos en client_routines y cruzamos con la tabla routines para sacar los nombres
+                var clientRoutines = await _context.ClientRoutines
+                    .Where(cr => cr.IdClient == clientId)
+                    .Join(_context.Routines,
+                        cr => cr.IdRoutine,
+                        r => r.IdRoutine,
+                        (cr, r) => new {
+                            IdRoutine = r.IdRoutine,
+                            Name = r.Name,
+                            Description = r.Description,
+                            AssignedAt = cr.AssignedAt
+                        })
+                    .OrderByDescending(x => x.AssignedAt)
+                    .ToListAsync();
+
+                return Ok(clientRoutines);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar planes: {ex.Message}");
+            }
+        }
+
+        // 🚀 5. ENLACE CON TU FRONTEND: Obtener los ejercicios de la rutina seleccionada
+        // Responde directamente a: getRoutineDetails(routineId) de tu profile.service.ts
+        [HttpGet("{routineId}/details")]
+        public async Task<IActionResult> GetRoutineDetails(int routineId)
+        {
+            try
+            {
+                // Cruzamos routine_exercises con exercises para armar el objeto que tu HTML renderiza
+                var detalles = await _context.RoutineExercises
+                    .Where(re => re.IdRoutine == routineId)
+                    .Join(_context.Exercises,
+                        re => re.IdExercise,
+                        e => e.IdExercise,
+                        (re, e) => new {
+                            ExerciseName = e.Name,
+                            Muscle = e.MuscleGroup,
+                            Series = re.Sets,       // Coincide con {{ ej.series }} de tu HTML
+                            Repetitions = re.Reps,  // Coincide con {{ ej.repetitions }} de tu HTML
+                            Rest = 60               // Tu tabla SQL no tiene columna 'rest', enviamos un valor por defecto seguro
+                        })
+                    .ToListAsync();
+
+                return Ok(detalles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar ejercicios: {ex.Message}");
             }
         }
     }
 
-    // Estructuras de comunicación (DTOs)
-    public class RoutineCreateDto 
-    {
+    public class RoutineCreateDto {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<ExerciseDto> Exercises { get; set; } = new();
     }
 
-    public class ExerciseDto 
-    {
+    public class ExerciseDto {
         public int IdExercise { get; set; }
         public int Series { get; set; }
         public int Repetitions { get; set; }

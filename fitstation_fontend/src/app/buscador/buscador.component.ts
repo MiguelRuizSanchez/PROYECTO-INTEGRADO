@@ -17,7 +17,7 @@ export class BuscadorComponent implements OnInit {
   clientId: number = 0;
   perfilIncompleto: boolean = false;
 
-  // Variables del Modal de Reserva
+  // Variables del Modal de Reserva (Mantenidas intactas)
   mostrandoModal: boolean = false;
   coachSeleccionado: any = null;
   diaElegido: string = 'Monday';
@@ -32,6 +32,8 @@ export class BuscadorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // 🔍 CHIVATO DIAGNÓSTICO 1: Si ves este mensaje en pantalla, sabemos que las rutas están BIEN y el fallo es de la API.
+    alert("🔍 DIAGNÓSTICO: El componente Buscador ha conseguido ejecutarse con éxito.");
     this.verificarPerfil();
   }
 
@@ -41,45 +43,50 @@ export class BuscadorComponent implements OnInit {
         const role = (res?.role || res?.Role || '').toLowerCase();
         const d = res?.details || res?.Details;
         
-        // Verificamos si el cliente tiene objetivos guardados (usando ambas carcasas)
         if (role === 'client') {
           const tieneObjetivos = d?.objectives || d?.Objectives || d?.goal || d?.Goal;
+          
           if (!tieneObjetivos) {
             this.perfilIncompleto = true;
             this.cargando = false;
             this.cdr.detectChanges();
             return;
           }
-          this.clientId = d?.idClient || d?.IdClient;
+          
+          this.clientId = d?.idClient || d?.IdClient || 0;
           this.cargarSugerencias();
         } else {
-          // Si un entrenador entra aquí por error, lo mandamos al dashboard
           this.router.navigate(['/dashboard']);
         }
       },
-      error: () => {
-        this.cargando = false;
-        this.cdr.detectChanges();
+      error: (err) => {
+        // 🔍 CHIVATO DIAGNÓSTICO 2: Nos dirá si la llamada al perfil está rota.
+        alert(`❌ ERROR EN PERFIL (Profile/me): Código ${err.status} - ${err.message}`);
+        this.clientId = 0;
+        this.cargarSugerencias();
       }
     });
   }
 
   cargarSugerencias() {
-    this.profileService.getSuggestedWorkers(this.clientId).subscribe({
+    const idSeguro = this.clientId > 0 ? this.clientId : 0;
+    
+    this.profileService.getSuggestedWorkers(idSeguro).subscribe({
       next: (res: any) => {
         this.coaches = res;
         this.cargando = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Error al cargar sugerencias:", err);
+        // 🔍 CHIVATO DIAGNÓSTICO 3: Nos dirá si lo que falla es la base de datos de entrenadores.
+        alert(`❌ ERROR EN BUSCADOR (Matching/suggested-workers): Código ${err.status}\nDetalle: ${err.error?.message || err.message}`);
         this.cargando = false;
         this.cdr.detectChanges();
       }
     });
   }
 
-  // --- LÓGICA DEL MODAL ---
+  // --- LÓGICA DEL MODAL (Mantenida intacta) ---
   abrirModalReserva(coach: any) {
     this.coachSeleccionado = coach;
     this.mostrandoModal = true;
@@ -107,7 +114,7 @@ export class BuscadorComponent implements OnInit {
     const payload = {
       WorkerId: workerId,
       RequestedDay: this.diaElegido,
-      RequestedTime: `${this.horaElegida}:00` // Formato TimeSpan para C#
+      RequestedTime: `${this.horaElegida}:00` 
     };
 
     this.profileService.sendMatchRequest(payload).subscribe({
