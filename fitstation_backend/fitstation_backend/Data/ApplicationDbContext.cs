@@ -21,12 +21,16 @@ public class ApplicationDbContext : DbContext
     public DbSet<ConversationUser> ConversationUsers { get; set; }
     public DbSet<Message> Messages { get; set; }
 
-    // --- 4. TABLAS DE ENTRENAMIENTO (UNIFICADAS Y SIN DUPLICADOS) ---
-    // He eliminado las repeticiones para solucionar el error CS0102
+    // --- 4. TABLAS DE ENTRENAMIENTO (MANTENIDAS) ---
     public DbSet<Exercise> Exercises { get; set; }
     public DbSet<Routine> Routines { get; set; }
     public DbSet<RoutineExercise> RoutineExercises { get; set; }
     public DbSet<ClientRoutine> ClientRoutines { get; set; }
+
+    // 🚀 --- 5. NUEVAS TABLAS DE CLASES COLECTIVAS Y RESERVAS ---
+    // Esto soluciona los errores CS1061 y CS0246 en tu ClassController
+    public DbSet<Class> Classes { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

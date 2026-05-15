@@ -1,0 +1,32 @@
+<div class="clases-container">
+  <header class="header-clases">
+    <button routerLink="/dashboard" class="btn-back">← Volver</button>
+    <h1>Clases Colectivas disponibles</h1>
+    <p>Elige tu actividad y asegura tu plaza en el horario seleccionado.</p>
+  </header>
+
+  <div class="grid-clases" *ngIf="listaClases.length > 0">
+    <div class="card-clase" *ngFor="let clase of listaClases">
+      <div class="badge-horario">
+        ⏱️ {{ clase.dayOfWeek }} - {{ clase.classTime }}
+      </div>
+      
+      <div class="card-body">
+        <h2>{{ clase.name }}</h2>
+        <p class="desc">{{ clase.description }}</p>
+        
+        <div class="trainer-info">
+          <span>Profesor:</span> <strong>{{ clase.trainerName }}</strong>
+        </div>
+      </div>
+
+      <button class="btn-book" (click)="reservar(clase.idClass)">
+        RESERVAR PLAZA
+      </button>
+    </div>
+  </div>
+
+  <div class="no-clases" *ngIf="listaClases.length === 0">
+    <p>Buscando actividades disponibles en el servidor de FitStation...</p>
+  </div>
+</div>
