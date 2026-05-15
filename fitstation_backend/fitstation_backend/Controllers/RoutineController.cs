@@ -17,38 +17,72 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // Obtener ejercicios
+        // 1. Catálogo de Ejercicios para Angular
         [HttpGet("exercises")]
         public async Task<ActionResult<IEnumerable<Exercise>>> GetExercises()
         {
             return Ok(await _context.Exercises.ToListAsync());
         }
 
-        // GUARDAR RUTINA SIN FECHA (Sincronizado con SQL)
+        // 2. Biblioteca de Rutinas del Coach logueado
+        [HttpGet("worker-library")]
+        public async Task<ActionResult<IEnumerable<Routine>>> GetWorkerRoutines()
+        {
+            try
+            {
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado");
+
+                int userId = int.Parse(userIdStr);
+
+                // Buscamos cuál es su id_worker real en la base de datos
+                var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
+                if (worker == null) return BadRequest("No eres un entrenador registrado.");
+
+                var routines = await _context.Routines
+                    .Where(r => r.IdWorker == worker.IdWorker)
+                    .ToListAsync();
+
+                return Ok(routines);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al cargar biblioteca: {ex.Message}");
+            }
+        }
+
+        // 3. Guardar Rutina Completa (Cabecera + Ejercicios)
         [HttpPost("create-full")]
         public async Task<IActionResult> CreateFullRoutine([FromBody] RoutineCreateDto dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var workerIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
-                if (string.IsNullOrEmpty(workerIdStr)) return Unauthorized("No identificado");
+                // Extraemos el ID de usuario desde el Token JWT
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("Token de usuario inválido");
 
-                int workerId = int.Parse(workerIdStr);
+                int userId = int.Parse(userIdStr);
 
-                // A. Guardar en 'routines' (Solo columnas existentes)
+                // Traducimos el id_user al id_worker real de la base de datos
+                var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
+                if (worker == null) 
+                {
+                    return BadRequest("La cuenta conectada no tiene un perfil de Worker asociado.");
+                }
+
+                // A. Insertamos en 'routines' usando el id_worker correcto
                 var nuevaRutina = new Routine
                 {
-                    IdWorker = workerId,
+                    IdWorker = worker.IdWorker,
                     Name = dto.Name,
                     Description = dto.Description
-                    // Ya no ponemos CreatedAt aquí
                 };
 
                 _context.Routines.Add(nuevaRutina);
                 await _context.SaveChangesAsync();
 
-                // B. Guardar en 'routine_exercises'
+                // B. Insertamos los ejercicios en 'routine_exercises'
                 foreach (var exDto in dto.Exercises)
                 {
                     if (exDto.IdExercise <= 0) continue;
@@ -66,24 +100,27 @@ namespace fitstation_backend.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return Ok(new { message = "✅ ¡Rutina guardada con éxito!" });
+                return Ok(new { message = "✅ ¡Rutina guardada en tu biblioteca con éxito!" });
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                var msg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                return StatusCode(500, $"Error en SQL: {msg}");
+                var detalle = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return StatusCode(500, $"Error de persistencia: {detalle}");
             }
         }
     }
 
-    public class RoutineCreateDto {
+    // Estructuras de comunicación (DTOs)
+    public class RoutineCreateDto 
+    {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<ExerciseDto> Exercises { get; set; } = new();
     }
 
-    public class ExerciseDto {
+    public class ExerciseDto 
+    {
         public int IdExercise { get; set; }
         public int Series { get; set; }
         public int Repetitions { get; set; }

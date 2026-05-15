@@ -23,8 +23,8 @@ public class Worker
     public string? Bio { get; set; }
 
     [Column("price_per_session")]
-    public decimal? PricePerSession { get; set; }
+    public decimal PricePerSession { get; set; }
 
     [Column("max_capacity")]
-    public int? MaxCapacity { get; set; }
+    public int MaxCapacity { get; set; }
 }
