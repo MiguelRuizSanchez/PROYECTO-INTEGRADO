@@ -4,6 +4,10 @@ using fitstation_backend.Data;
 using fitstation_backend.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace fitstation_backend.Controllers
 {
@@ -19,7 +23,7 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // 📋 1. CATÁLOGO GLOBAL: Abierto al público para ver horarios semanales
+        // 📋 1. CATÁLOGO GLOBAL: Abierto al público para ver horarios semanales recurrentes
         [HttpGet("available")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAvailableClasses()
@@ -46,7 +50,8 @@ namespace fitstation_backend.Controllers
                             Description = x.c.Description,
                             DayOfWeek = x.c.DayOfWeek,
                             ClassTime = x.c.ClassTime,
-                            TrainerName = u != null ? u.Name : "Por asignar"
+                            TrainerName = u != null ? u.Name : "Por asignar",
+                            IdWorker = x.c.IdWorker 
                         })
                     .ToListAsync();
 
@@ -58,7 +63,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 🎯 2. RESERVA CON FECHA Y VALIDACIÓN DE 2 SEMANAS
+        // 🎯 2. RESERVA CON FECHA DEL ALUMNO
         [HttpPost("book")]
         public async Task<IActionResult> BookClass([FromBody] BookClassDto dto)
         {
@@ -108,7 +113,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 📅 3. VISTA CALENDARIO CLIENTE: Basado en fechas reales fijas
+        // 📅 3. VISTA CALENDARIO CLIENTE
         [HttpGet("client-calendar")]
         public async Task<IActionResult> GetClientClassCalendar()
         {
@@ -128,7 +133,7 @@ namespace fitstation_backend.Controllers
                         b => b.IdClass,
                         c => c.IdClass,
                         (b, c) => new {
-                            IdBooking = b.IdBooking, // 🚀 LLAVE CRÍTICA: Enviamos el ID único de reserva para poder borrarlo
+                            IdBooking = b.IdBooking, 
                             ClassName = c.Name,
                             BookingDate = b.BookingDate,
                             ClassTime = c.ClassTime,
@@ -143,29 +148,64 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 👔 4. VISTA CALENDARIO ENTRENADOR: Horarios recurrentes
+        // 👔 4. VISTA CALENDARIO ENTRENADOR: Horarios por fecha única asignada
         [HttpGet("worker-calendar")]
         public async Task<IActionResult> GetWorkerClassCalendar()
         {
             try
             {
-                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
-                                User.FindFirst("id")?.Value;
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
                 if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado");
 
                 int userId = int.Parse(userIdStr);
                 var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
                 if (worker == null) return BadRequest("Perfil de entrenador no encontrado.");
 
-                var misTurnosLaborales = await _context.Classes
-                    .Where(c => c.IdWorker == worker.IdWorker)
-                    .Select(c => new {
-                        IdClass = c.IdClass,
-                        ClassName = c.Name,
-                        DayOfWeek = c.DayOfWeek,
-                        ClassTime = c.ClassTime
-                    })
-                    .ToListAsync();
+                // Escudo de creación automatizada de tabla relacional
+                string createTableSql = @"
+                    CREATE TABLE IF NOT EXISTS `worker_class_assignments` (
+                        `id_assignment` INT AUTO_INCREMENT PRIMARY KEY,
+                        `id_worker` INT NOT NULL,
+                        `id_class` INT NOT NULL,
+                        `assignment_date` DATE NOT NULL
+                    );";
+                await _context.Database.ExecuteSqlRawAsync(createTableSql);
+
+                var misTurnosLaborales = new List<object>();
+                
+                using (var command = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = @"
+                        SELECT wca.id_assignment, wca.assignment_date, c.id_class, c.name, c.day_of_week, c.class_time 
+                        FROM worker_class_assignments wca
+                        JOIN classes c ON wca.id_class = c.id_class
+                        WHERE wca.id_worker = @workerId";
+                    
+                    var parameter = command.CreateParameter();
+                    parameter.ParameterName = "@workerId";
+                    parameter.Value = worker.IdWorker;
+                    command.Parameters.Add(parameter);
+
+                    if (command.Connection?.State != System.Data.ConnectionState.Open)
+                        await (command.Connection?.OpenAsync() ?? Task.CompletedTask);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            misTurnosLaborales.Add(new {
+                                IdAssignment = reader.GetInt32(0),
+                                BookingDate = reader.GetDateTime(1).ToString("yyyy-MM-dd"),
+                                IdClass = reader.GetInt32(2),
+                                ClassName = reader.GetString(3),
+                                DayOfWeek = reader.GetString(4),
+                                // 🚀 REPARADO: Usamos GetValue().ToString() para evitar la ausencia de GetTimeSpan en DbDataReader
+                                ClassTime = reader.GetValue(5)?.ToString() ?? "00:00:00",
+                                IdWorker = worker.IdWorker
+                            });
+                        }
+                    }
+                }
 
                 return Ok(misTurnosLaborales);
             }
@@ -174,7 +214,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // ❌ 5. NUEVO ENDPOINT: Cancelar y liberar plaza en la clase colectiva
+        // ❌ 5. Cancelar reserva del Alumno
         [HttpDelete("cancel/{idBooking}")]
         public async Task<IActionResult> CancelBooking(int idBooking)
         {
@@ -188,7 +228,6 @@ namespace fitstation_backend.Controllers
                 var client = await _context.Clients.FirstOrDefaultAsync(c => c.IdUser == userId);
                 if (client == null) return BadRequest("Perfil de cliente no encontrado.");
 
-                // Buscamos la reserva exacta y nos aseguramos de que pertenezca al cliente logueado por seguridad
                 var reserva = await _context.Bookings
                     .FirstOrDefaultAsync(b => b.IdBooking == idBooking && b.IdClient == client.IdClient);
 
@@ -202,6 +241,111 @@ namespace fitstation_backend.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error crítico al procesar la cancelación en el servidor: {ex.Message}");
+            }
+        }
+
+        // 🚀 6. ASIGNAR INSTRUCTOR CON FECHA FIJA (No recurrente)
+        [HttpPost("assign/{idClass}")]
+        public async Task<IActionResult> AssignTrainerToClass(int idClass, [FromQuery] string chosenDate)
+        {
+            try
+            {
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado");
+
+                int userId = int.Parse(userIdStr);
+                var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
+                if (worker == null) return BadRequest("Perfil de entrenador no encontrado.");
+
+                var claseColectiva = await _context.Classes.FirstOrDefaultAsync(c => c.IdClass == idClass);
+                if (claseColectiva == null) return NotFound("La clase colectiva solicitada no existe.");
+
+                if (string.IsNullOrEmpty(chosenDate)) return BadRequest("Debe especificar la fecha exacta para este turno.");
+                DateTime dateValue = DateTime.Parse(chosenDate);
+
+                string createTableSql = @"
+                    CREATE TABLE IF NOT EXISTS `worker_class_assignments` (
+                        `id_assignment` INT AUTO_INCREMENT PRIMARY KEY,
+                        `id_worker` INT NOT NULL,
+                        `id_class` INT NOT NULL,
+                        `assignment_date` DATE NOT NULL
+                    );";
+                await _context.Database.ExecuteSqlRawAsync(createTableSql);
+
+                using (var command = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = "SELECT COUNT(*) FROM worker_class_assignments WHERE id_worker = @workerId AND id_class = @classId AND assignment_date = @assignDate";
+                    
+                    var p1 = command.CreateParameter(); p1.ParameterName = "@workerId"; p1.Value = worker.IdWorker; command.Parameters.Add(p1);
+                    var p2 = command.CreateParameter(); p2.ParameterName = "@classId"; p2.Value = idClass; command.Parameters.Add(p2);
+                    var p3 = command.CreateParameter(); p3.ParameterName = "@assignDate"; p3.Value = dateValue.Date; command.Parameters.Add(p3);
+
+                    if (command.Connection?.State != System.Data.ConnectionState.Open) 
+                        await (command.Connection?.OpenAsync() ?? Task.CompletedTask);
+
+                    long count = Convert.ToInt64(await command.ExecuteScalarAsync());
+                    if (count > 0) return BadRequest("Ya tienes asignada esta clase para la fecha seleccionada.");
+                }
+
+                using (var command = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = "INSERT INTO worker_class_assignments (id_worker, id_class, assignment_date) VALUES (@workerId, @classId, @assignDate)";
+                    
+                    var p1 = command.CreateParameter(); p1.ParameterName = "@workerId"; p1.Value = worker.IdWorker; command.Parameters.Add(p1);
+                    var p2 = command.CreateParameter(); p2.ParameterName = "@classId"; p2.Value = idClass; command.Parameters.Add(p2);
+                    var p3 = command.CreateParameter(); p3.ParameterName = "@assignDate"; p3.Value = dateValue.Date; command.Parameters.Add(p3);
+
+                    if (command.Connection?.State != System.Data.ConnectionState.Open) 
+                        await (command.Connection?.OpenAsync() ?? Task.CompletedTask);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+
+                return Ok(new { message = "✅ ¡Te has asignado este turno de forma exclusiva para el día elegido!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno al guardar la asignación: {ex.Message}");
+            }
+        }
+
+        // ❌ 7. DESASIGNAR INSTRUCTOR CON FECHA FIJA
+        [HttpPost("unassign/{idClass}")]
+        public async Task<IActionResult> UnassignTrainerFromClass(int idClass, [FromQuery] string chosenDate)
+        {
+            try
+            {
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado");
+
+                int userId = int.Parse(userIdStr);
+                var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
+                if (worker == null) return BadRequest("Perfil de entrenador no encontrado.");
+
+                if (string.IsNullOrEmpty(chosenDate)) return BadRequest("Debe especificar la fecha exacta.");
+                DateTime dateValue = DateTime.Parse(chosenDate);
+
+                using (var command = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = "DELETE FROM worker_class_assignments WHERE id_worker = @workerId AND id_class = @classId AND assignment_date = @assignDate";
+                    
+                    var p1 = command.CreateParameter(); p1.ParameterName = "@workerId"; p1.Value = worker.IdWorker; command.Parameters.Add(p1);
+                    var p2 = command.CreateParameter(); p2.ParameterName = "@classId"; p2.Value = idClass; command.Parameters.Add(p2);
+                    var p3 = command.CreateParameter(); p3.ParameterName = "@assignDate"; p3.Value = dateValue.Date; command.Parameters.Add(p3);
+
+                    if (command.Connection?.State != System.Data.ConnectionState.Open) 
+                        await (command.Connection?.OpenAsync() ?? Task.CompletedTask);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    
+                    if (rowsAffected == 0) return BadRequest("No tienes una asignación registrada para esta fecha específica.");
+                }
+
+                return Ok(new { message = "✕ Has cancelado tu turno laboral para el día elegido." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno al liberar la clase: {ex.Message}");
             }
         }
     }

@@ -45,11 +45,11 @@
           </thead>
           <tbody>
             <tr *ngFor="let ej of ejerciciosDeLaRutina">
-              <td class="nombre-ej"><strong>{{ ej.exerciseName }}</strong></td>
-              <td><span class="badge-musculo">{{ ej.muscle || 'General' }}</span></td>
-              <td class="text-center">{{ ej.series }}</td>
-              <td class="text-center">{{ ej.repetitions }}</td>
-              <td class="text-center">{{ ej.rest }}s</td>
+              <td class="nombre-ej"><strong>{{ ej.exerciseName || ej.ExerciseName }}</strong></td>
+              <td><span class="badge-musculo">{{ ej.muscle || ej.Muscle || 'General' }}</span></td>
+              <td class="text-center">{{ ej.series || ej.Series }}</td>
+              <td class="text-center">{{ ej.repetitions || ej.Repetitions }}</td>
+              <td class="text-center">{{ ej.rest || ej.Rest }}s</td>
             </tr>
           </tbody>
         </table>

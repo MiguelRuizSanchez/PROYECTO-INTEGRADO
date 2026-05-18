@@ -13,7 +13,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 export class EntrenamientoComponent implements OnInit {
   sessionId!: number;
   idCliente!: number;
-  nombreCoach: string = '';
+  nombreCoach: string = 'Cargando Coach...';
   
   rutinasAsignadas: any[] = [];
   rutinaSeleccionada: any = null;
@@ -27,7 +27,7 @@ export class EntrenamientoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Obtenemos el ID de la sesión de la URL
+    // Obtenemos el ID de la sesión de la URL de forma segura
     this.sessionId = Number(this.route.snapshot.paramMap.get('id'));
     this.cargarDatosSesion();
   }
@@ -37,19 +37,38 @@ export class EntrenamientoComponent implements OnInit {
     this.profileService.getSessionDetails(this.sessionId).subscribe({
       next: (res: any) => {
         const s = res.session || res.Session;
-        this.idCliente = s.idClient || s.IdClient;
-        this.nombreCoach = res.otherName || res.OtherName;
-        this.cargarListaRutinas();
+        if (s) {
+          this.idCliente = s.idClient || s.IdClient;
+          this.nombreCoach = res.otherName || res.OtherName || 'Entrenador';
+          this.cargarListaRutinas();
+        } else {
+          this.nombreCoach = 'Entrenador';
+          this.cargando = false;
+          this.cdr.detectChanges();
+        }
+      },
+      error: () => {
+        this.nombreCoach = 'Entrenador';
+        this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   cargarListaRutinas() {
     // 2. Traemos todas las rutinas que el coach ha enviado a este alumno
-    this.profileService.getClientRoutines(this.idCliente).subscribe(res => {
-      this.rutinasAsignadas = res;
-      this.cargando = false;
-      this.cdr.detectChanges();
+    this.profileService.getClientRoutines(this.idCliente).subscribe({
+      next: (res) => {
+        this.rutinasAsignadas = res || [];
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Error cargando biblioteca del alumno:", err);
+        this.rutinasAsignadas = [];
+        this.cargando = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -58,14 +77,22 @@ export class EntrenamientoComponent implements OnInit {
     const idRutina = rutina.idRoutine || rutina.IdRoutine;
 
     // 3. Traemos los ejercicios específicos (series, repes, músculo...) de esa rutina
-    this.profileService.getRoutineDetails(idRutina).subscribe(exs => {
-      this.ejerciciosDeLaRutina = exs;
-      this.cdr.detectChanges();
+    this.profileService.getRoutineDetails(idRutina).subscribe({
+      next: (exs) => {
+        this.ejerciciosDeLaRutina = exs || [];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Error al descargar ejercicios de la rutina:", err);
+        this.ejerciciosDeLaRutina = [];
+        this.cdr.detectChanges();
+      }
     });
   }
 
   cerrarDetalle() {
     this.rutinaSeleccionada = null;
     this.ejerciciosDeLaRutina = [];
+    this.cdr.detectChanges();
   }
 }

@@ -73,49 +73,86 @@
       </section>
 
       <section class="sessions-section">
-        <h2>📅 Mis Sesiones Activas</h2>
+        <h2>📅 Mis Sesiones de Entrenamiento Privado</h2>
         
         <div *ngIf="sesiones.length === 0" class="empty-state-simple">
-          No tienes sesiones programadas en este momento.
+          No tienes sesiones privadas programadas en este momento.
         </div>
 
         <div class="sessions-grid">
-          <div class="session-card" *ngFor="let s of sesiones" 
-               [ngClass]="(s.status || s.Status)?.toLowerCase()">
+          <ng-container *ngFor="let s of sesiones">
+            <div class="session-card" 
+                 *ngIf="(s.status || s.Status) !== 'Completed'"
+                 [ngClass]="(s.status || s.Status)?.toLowerCase()">
+              
+              <div class="card-header">
+                <span class="status-pill">{{ s.status || s.Status }}</span>
+                <span class="time">{{ s.startTime || s.StartTime }}</span>
+              </div>
+              
+              <div class="card-content">
+                <h4>{{ rol === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}</h4>
+                <p>🗓️ {{ s.dayOfWeek || s.DayOfWeek }}</p>
+              </div>
+
+              <div class="card-footer-split">
+                <button *ngIf="rol === 'client'" 
+                        class="btn-train-only" 
+                        [routerLink]="['/entrenamiento', s.idSession || s.IdSession]">
+                  🏋️ MI PLAN
+                </button>
+                
+                <button *ngIf="rol === 'worker'" 
+                        class="btn-train-only" 
+                        [routerLink]="['/gestion-rutinas', s.idSession || s.IdSession]">
+                  📋 GESTIÓN
+                </button>
+                
+                <button *ngIf="rol === 'worker'" 
+                        class="btn-finish-small" 
+                        title="Marcar como finalizada e indicar completado"
+                        (click)="finalizarSesion(s.idSession || s.IdSession)">
+                  ✅ FINALIZAR
+                </button>
+              </div>
+
+            </div>
+          </ng-container>
+        </div>
+      </section>
+
+      <section class="sessions-section" style="margin-top: 35px;">
+        <h2>👥 Mis Clases Colectivas de la Semana</h2>
+        
+        <div *ngIf="clasesDashboard.length === 0" class="empty-state-simple">
+          No tienes turnos ni clases grupales programadas para esta semana.
+        </div>
+
+        <div class="sessions-grid">
+          <div class="session-card" 
+               *ngFor="let c of clasesDashboard"
+               style="border-left: 4px solid #00ff88; background: rgba(0, 255, 136, 0.03);">
             
             <div class="card-header">
-              <span class="status-pill">{{ s.status || s.Status }}</span>
-              <span class="time">{{ s.startTime || s.StartTime }}</span>
+              <span class="status-pill" style="background: #00ff88; color: #000; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 0.72rem;">
+                {{ rol === 'worker' ? 'IMPARTES' : 'RESERVADO' }}
+              </span>
+              <span class="time">{{ c.classTime || c.ClassTime || c.class_time }}</span>
             </div>
             
             <div class="card-content">
-              <h4>{{ rol === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}</h4>
-              <p>🗓️ {{ s.dayOfWeek || s.DayOfWeek }}</p>
+              <h4 style="color: #fff; font-size: 1.1rem; margin: 0;">{{ c.className || c.ClassName || c.name }}</h4>
+              <p style="color: #00ff88; font-weight: 500; font-size: 0.88rem; margin: 6px 0 0 0; display: flex; align-items: center; gap: 4px;">
+                📅 Fecha: {{ c.bookingDate || c.BookingDate || c.assignment_date || c.dayOfWeek || c.DayOfWeek }}
+              </p>
             </div>
 
-            <div class="card-footer-split">
-              <button class="btn-chat-only" 
-                      [routerLink]="['/session', s.idSession || s.IdSession]">
-                💬 CHAT
-              </button>
-              
-              <button *ngIf="rol === 'client'" 
-                      class="btn-train-only" 
-                      [routerLink]="['/entrenamiento', s.idSession || s.IdSession]">
-                🏋️ MI PLAN
-              </button>
-              
-              <button *ngIf="rol === 'worker'" 
-                      class="btn-train-only" 
-                      [routerLink]="['/gestion-rutinas', s.idSession || s.IdSession]">
-                📋 GESTIÓN
-              </button>
-              
-              <button *ngIf="rol === 'worker' && (s.status !== 'Completed' && s.Status !== 'Completed')" 
-                      class="btn-finish-small" 
-                      title="Marcar como finalizada"
-                      (click)="finalizarSesion(s.idSession || s.IdSession)">
-                ✅
+            <div class="card-footer-split" style="justify-content: flex-end;">
+              <button class="btn-train-only" 
+                      routerLink="/calendario"
+                      [queryParams]="{ vista: 'clases' }"
+                      style="background: #333; color: #fff; border: 1px solid #444; width: 100%; font-weight: bold; cursor: pointer; padding: 8px; border-radius: 4px; font-size: 0.82rem; transition: 0.2s;">
+                📅 VER EN AGENDA
               </button>
             </div>
           </div>
