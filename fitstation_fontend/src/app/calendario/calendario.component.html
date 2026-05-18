@@ -11,6 +11,15 @@
     </div>
   </header>
 
+  <div class="calendar-views-toggle">
+    <button [class.active]="vistaActual === 'entrenamientos'" (click)="cambiarVista('entrenamientos')">
+      🏋️ Mis Entrenamientos
+    </button>
+    <button [class.active]="vistaActual === 'clases'" (click)="cambiarVista('clases')">
+      👥 Clases Colectivas y Horarios
+    </button>
+  </div>
+
   <div class="calendar-card">
     <div class="weekdays-grid">
       <div class="weekday">LUN</div>
@@ -29,21 +38,52 @@
         
         <span class="day-number" *ngIf="item.dia">{{ item.dia }}</span>
         
-        <div class="day-events" *ngIf="item.sesiones.length > 0">
-          <div *ngFor="let s of item.sesiones" 
-               class="event-pill"
-               [routerLink]="['/session', s.idSession || s.IdSession]">
-            <span class="event-time">{{ s.startTime || s.StartTime }}</span>
-            <span class="event-name">
-              {{ rol === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}
-            </span>
-          </div>
+        <div class="day-events" *ngIf="item.dia">
+          
+          <ng-container *ngIf="vistaActual === 'entrenamientos'">
+            <div *ngFor="let s of item.sesiones" 
+                 class="event-pill"
+                 [routerLink]="['/session', s.idSession || s.IdSession]">
+              <span class="event-time">{{ s.startTime || s.StartTime }}</span>
+              <span class="event-name">
+                {{ rol === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}
+              </span>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="vistaActual === 'clases'">
+            <div *ngFor="let c of item.clases" 
+                 class="event-pill class-colective-pill" 
+                 style="display: flex; justify-content: space-between; align-items: center; gap: 4px; padding: 4px 8px;">
+              
+              <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
+                <span class="event-time class-time-badge" style="font-size: 0.72rem; line-height: 1.1;">
+                  {{ c.classTime || c.ClassTime }}
+                </span>
+                <span class="event-name class-title-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.78rem;">
+                  {{ c.className || c.ClassName || c.name }}
+                </span>
+              </div>
+              
+              <button *ngIf="rol === 'client'" 
+                      class="btn-cancel-class" 
+                      (click)="cancelarClase(c.idBooking || c.IdBooking)"
+                      title="Cancelar esta reserva"
+                      style="background: transparent; border: none; color: #ff4d4d; cursor: pointer; font-size: 0.85rem; padding: 0 4px; font-weight: 900; line-height: 1; transition: 0.2s;"
+                      onmouseover="this.style.color='#ff1a1a'; this.style.transform='scale(1.15)'"
+                      onmouseout="this.style.color='#ff4d4d'; this.style.transform='scale(1)'">
+                ✕
+              </button>
+
+            </div>
+          </ng-container>
+
         </div>
       </div>
     </div>
   </div>
 
   <footer class="calendar-footer">
-    <p>💡 Las sesiones se sincronizan automáticamente con tu agenda de FitStation.</p>
+    <p>💡 Usa las pestañas de arriba para alternar al instante entre tus clases grupales y tus entrenamientos privados.</p>
   </footer>
 </div>

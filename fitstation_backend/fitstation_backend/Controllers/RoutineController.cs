@@ -4,6 +4,10 @@ using fitstation_backend.Data;
 using fitstation_backend.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace fitstation_backend.Controllers
 {
@@ -110,8 +114,8 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 🚀 5. ASIGNACIÓN CORREGIDA: Sin campos fantasma y con mapeo de ID real
-        [HttpPost("assign-to-client")]
+        // 🚀 5. ASIGNACIÓN REPARADA: Cambiado "assign-to-client" por "assign" para fulminar el Error 404
+        [HttpPost("assign")]
         public async Task<IActionResult> AssignToClient([FromBody] AssignRoutineDto dto)
         {
             try
@@ -120,7 +124,6 @@ namespace fitstation_backend.Controllers
                 {
                     IdClient = dto.IdClient,
                     IdRoutine = dto.IdRoutine
-                    // ❌ Fecha eliminada por completo
                 };
 
                 _context.ClientRoutines.Add(asignacion);
@@ -134,7 +137,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 🚀 6. LISTADO CORREGIDO: Ordena por la ID autoincremental de la tabla
+        // 6. LISTADO CORREGIDO: Ordena por la ID autoincremental de la tabla
         [HttpGet("client/{clientId}")]
         public async Task<IActionResult> GetClientRoutines(int clientId)
         {
@@ -142,7 +145,7 @@ namespace fitstation_backend.Controllers
             {
                 var clientRoutines = await _context.ClientRoutines
                     .Where(cr => cr.IdClient == clientId)
-                    .OrderByDescending(cr => cr.Id) // Súper truco: el ID más alto siempre es el último asignado
+                    .OrderByDescending(cr => cr.Id)
                     .Join(_context.Routines,
                         cr => cr.IdRoutine,
                         r => r.IdRoutine,
@@ -162,24 +165,35 @@ namespace fitstation_backend.Controllers
         }
 
         // 7. Obtener detalles de ejercicios de una rutina
+        // 🚀 SOPORTE DE RUTAS BLINDADO: Responde de forma segura a cualquier variante de URL de Angular
+        [AllowAnonymous]
+        [HttpGet("details/{routineId}")]
         [HttpGet("{routineId}/details")]
+        [HttpGet("{routineId}")]
         public async Task<IActionResult> GetRoutineDetails(int routineId)
         {
             try
             {
-                var detalles = await _context.RoutineExercises
+                var routineExercises = await _context.RoutineExercises
                     .Where(re => re.IdRoutine == routineId)
-                    .Join(_context.Exercises,
-                        re => re.IdExercise,
-                        e => e.IdExercise,
-                        (re, e) => new {
-                            ExerciseName = e.Name,
-                            Muscle = e.MuscleGroup,
-                            Series = re.Sets,
-                            Repetitions = re.Reps,
-                            Rest = 60
-                        })
                     .ToListAsync();
+
+                var exerciseIds = routineExercises.Select(re => re.IdExercise).Distinct().ToList();
+
+                var exercises = await _context.Exercises
+                    .Where(e => exerciseIds.Contains(e.IdExercise))
+                    .ToListAsync();
+
+                var detalles = routineExercises.Select(re => {
+                    var e = exercises.FirstOrDefault(ex => ex.IdExercise == re.IdExercise);
+                    return new {
+                        ExerciseName = e != null ? e.Name : "Ejercicio no encontrado",
+                        Muscle = e != null ? e.MuscleGroup : "General",
+                        Series = re.Sets,
+                        Repetitions = re.Reps,
+                        Rest = 60
+                    };
+                }).ToList();
 
                 return Ok(detalles);
             }

@@ -9,7 +9,7 @@ namespace fitstation_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // 🔐 Protegido globalmente por seguridad básica
+    [Authorize] // 🔐 Protegido globalmente por token JWT
     public class ClassController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -19,9 +19,9 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // 📋 1. CATÁLOGO GLOBAL: Abierto al público para poder probarlo en el navegador
+        // 📋 1. CATÁLOGO GLOBAL: Abierto al público para ver horarios semanales
         [HttpGet("available")]
-        [AllowAnonymous] // 🚀 MÁGICO: Permite el acceso sin token solo para leer las clases disponibles
+        [AllowAnonymous]
         public async Task<IActionResult> GetAvailableClasses()
         {
             try
@@ -58,7 +58,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 🎯 2. RESERVA DIRECTA: Requiere Token JWT obligatorio
+        // 🎯 2. RESERVA CON FECHA Y VALIDACIÓN DE 2 SEMANAS
         [HttpPost("book")]
         public async Task<IActionResult> BookClass([FromBody] BookClassDto dto)
         {
@@ -72,22 +72,35 @@ namespace fitstation_backend.Controllers
                 var client = await _context.Clients.FirstOrDefaultAsync(c => c.IdUser == userId);
                 if (client == null) return BadRequest("Solo los clientes pueden reservar clases colectivas.");
 
+                DateTime fechaLimiteFutura = DateTime.Today.AddDays(14);
+                if (dto.ChosenDate.Date < DateTime.Today)
+                {
+                    return BadRequest("No puedes reservar una clase en una fecha pasada.");
+                }
+                if (dto.ChosenDate.Date > fechaLimiteFutura)
+                {
+                    return BadRequest("Solo puedes reservar clases con un máximo de 2 semanas de antelación.");
+                }
+
                 var yaReservado = await _context.Bookings
-                    .AnyAsync(b => b.IdClient == client.IdClient && b.IdClass == dto.IdClass);
-                if (yaReservado) return BadRequest("Ya te has apuntado a esta clase colectiva.");
+                    .AnyAsync(b => b.IdClient == client.IdClient && 
+                                   b.IdClass == dto.IdClass && 
+                                   b.BookingDate.Date == dto.ChosenDate.Date);
+                
+                if (yaReservado) return BadRequest("Ya tienes una plaza reservada para esta clase en la fecha elegida.");
 
                 var nuevaReserva = new Booking
                 {
                     IdClient = client.IdClient,
                     IdClass = dto.IdClass,
-                    BookingDate = DateTime.Now,
+                    BookingDate = dto.ChosenDate.Date,
                     Status = "Accepted"
                 };
 
                 _context.Bookings.Add(nuevaReserva);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "✅ ¡Reserva confirmada con éxito!" });
+                return Ok(new { message = "✅ ¡Reserva confirmada con éxito para el día elegido!" });
             }
             catch (Exception ex)
             {
@@ -95,7 +108,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 📅 3. VISTA CALENDARIO CLIENTE: Requiere Token JWT obligatorio
+        // 📅 3. VISTA CALENDARIO CLIENTE: Basado en fechas reales fijas
         [HttpGet("client-calendar")]
         public async Task<IActionResult> GetClientClassCalendar()
         {
@@ -115,9 +128,9 @@ namespace fitstation_backend.Controllers
                         b => b.IdClass,
                         c => c.IdClass,
                         (b, c) => new {
-                            IdBooking = b.IdBooking,
+                            IdBooking = b.IdBooking, // 🚀 LLAVE CRÍTICA: Enviamos el ID único de reserva para poder borrarlo
                             ClassName = c.Name,
-                            DayOfWeek = c.DayOfWeek,
+                            BookingDate = b.BookingDate,
                             ClassTime = c.ClassTime,
                             Status = b.Status
                         })
@@ -125,13 +138,12 @@ namespace fitstation_backend.Controllers
 
                 return Ok(misClasesColectivas);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 return StatusCode(500, $"Error al procesar el calendario del alumno: {ex.Message}");
             }
         }
 
-        // 👔 4. VISTA CALENDARIO ENTRENADOR: Requiere Token JWT obligatorio
+        // 👔 4. VISTA CALENDARIO ENTRENADOR: Horarios recurrentes
         [HttpGet("worker-calendar")]
         public async Task<IActionResult> GetWorkerClassCalendar()
         {
@@ -157,9 +169,39 @@ namespace fitstation_backend.Controllers
 
                 return Ok(misTurnosLaborales);
             }
+            catch (Exception ex) {
+                return StatusCode(500, $"Error al procesar los turnos del entrenador: {ex.Message}");
+            }
+        }
+
+        // ❌ 5. NUEVO ENDPOINT: Cancelar y liberar plaza en la clase colectiva
+        [HttpDelete("cancel/{idBooking}")]
+        public async Task<IActionResult> CancelBooking(int idBooking)
+        {
+            try
+            {
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
+                                User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado");
+
+                int userId = int.Parse(userIdStr);
+                var client = await _context.Clients.FirstOrDefaultAsync(c => c.IdUser == userId);
+                if (client == null) return BadRequest("Perfil de cliente no encontrado.");
+
+                // Buscamos la reserva exacta y nos aseguramos de que pertenezca al cliente logueado por seguridad
+                var reserva = await _context.Bookings
+                    .FirstOrDefaultAsync(b => b.IdBooking == idBooking && b.IdClient == client.IdClient);
+
+                if (reserva == null) return NotFound("La reserva no existe o no tienes autorización para cancelarla.");
+
+                _context.Bookings.Remove(reserva);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "❌ Reserva de clase grupal cancelada correctamente." });
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al procesar los turnos del entrenador: {ex.Message}");
+                return StatusCode(500, $"Error crítico al procesar la cancelación en el servidor: {ex.Message}");
             }
         }
     }
@@ -167,5 +209,6 @@ namespace fitstation_backend.Controllers
     public class BookClassDto
     {
         public int IdClass { get; set; }
+        public DateTime ChosenDate { get; set; }
     }
 }

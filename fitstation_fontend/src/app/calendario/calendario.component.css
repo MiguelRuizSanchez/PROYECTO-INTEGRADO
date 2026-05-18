@@ -178,3 +178,51 @@
   color: #2ecc71;
   font-weight: bold;
 }
+
+/* Selector de doble vista */
+.calendar-views-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.calendar-views-toggle button {
+  background: #141414;
+  border: 1px solid #252525;
+  color: #888;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.calendar-views-toggle button:hover {
+  border-color: #555;
+  color: white;
+}
+
+.calendar-views-toggle button.active {
+  background: #2ecc71;
+  color: black;
+  border-color: #2ecc71;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+}
+
+/* Píldora especial para Clases Colectivas (Azul) */
+.class-colective-pill {
+  background: #102030 !important;
+  border-left: 3px solid #3498db !important;
+  cursor: default !important; /* Indica que no es cliqueable */
+}
+
+.class-time-badge {
+  color: #3498db !important;
+  font-weight: 800;
+}
+
+.class-title-text {
+  color: #e0e0e0;
+}

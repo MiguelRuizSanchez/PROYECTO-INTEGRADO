@@ -12,9 +12,9 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   datosUsuario: any = null;
-  solicitudes: any[] = []; // Peticiones para el Coach 
-  sesiones: any[] = [];    // Sesiones activas para ambos 
-  peticionesEnviadas: any[] = []; // Peticiones que el cliente ha mandado 
+  solicitudes: any[] = []; // Peticiones para el Coach
+  sesiones: any[] = [];    // Sesiones activas para ambos
+  peticionesEnviadas: any[] = []; // Peticiones que el cliente ha mandado
   perfilIncompleto: boolean = false;
   cargando: boolean = true;
   rol: string = '';
@@ -33,18 +33,16 @@ export class DashboardComponent implements OnInit {
     this.profileService.getMyProfile().subscribe({
       next: (res: any) => {
         this.datosUsuario = res;
-        // Normalizamos el rol a minúsculas para las comparaciones 
+        // Normalizamos el rol a minúsculas para evitar cualquier conflicto de lectura
         this.rol = (res?.role || res?.Role || '').toLowerCase().trim();
         const d = res?.details || res?.Details;
         const idInterno = d?.idClient || d?.IdClient || d?.idWorker || d?.IdWorker;
 
-        // 1. Verificación de Perfil Incompleto 
+        // Verificación automatizada del estado del perfil
         if (this.rol === 'worker') {
-          // Un Coach está incompleto si no tiene especialidad o biografía
           this.perfilIncompleto = !(d?.specialization || d?.Specialization || d?.bio || d?.Bio);
           if (!this.perfilIncompleto) this.cargarDatosWorker(idInterno);
         } else if (this.rol === 'client') {
-          // Un Atleta está incompleto si no tiene objetivos 
           this.perfilIncompleto = !(d?.objectives || d?.Objectives);
           if (!this.perfilIncompleto) this.cargarDatosClient(idInterno);
         }
@@ -59,7 +57,6 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarDatosWorker(id: number) {
-    // Carga las peticiones de alumnos y sus sesiones agendadas 
     this.profileService.getWorkerRequests(id).subscribe(reqs => {
       this.solicitudes = reqs.filter(r => (r.status || r.Status) === 'Pending');
       this.cdr.detectChanges();
@@ -71,7 +68,6 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarDatosClient(id: number) {
-    // Carga las sesiones y las peticiones que el cliente ha mandado a entrenadores 
     this.profileService.getClientSessions(id).subscribe(sess => {
       this.sesiones = sess;
       this.cdr.detectChanges();
@@ -83,7 +79,6 @@ export class DashboardComponent implements OnInit {
   }
 
   gestionarSolicitud(requestId: number, status: string) {
-    // El coach acepta o rechaza una petición 
     this.profileService.updateStatus(requestId, status).subscribe({
       next: () => {
         alert(`Petición ${status === 'Accepted' ? 'Aceptada' : 'Rechazada'} correctamente.`);

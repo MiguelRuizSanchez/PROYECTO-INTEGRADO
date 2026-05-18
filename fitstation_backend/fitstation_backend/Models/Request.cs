@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fitstation_backend.Models
 {
-    [Table("worker_requests")]
-    public class WorkerRequest
+    [Table("worker_requests")] // 🚀 REPARADO: Apunta directamente a la tabla vinculada con tus sesiones
+    public class Request
     {
         [Key]
         [Column("id_request")]
@@ -17,16 +17,13 @@ namespace fitstation_backend.Models
         [Column("id_worker")]
         public int IdWorker { get; set; }
 
-        [Column("status")]
-        public string Status { get; set; } = "Pending";
-
-        [Column("request_date")]
-        public DateTime RequestDate { get; set; } = DateTime.Now;
-
-        [Column("requested_day")]
-        public string? RequestedDay { get; set; }
+        [Column("requested_date")]
+        public DateTime RequestedDate { get; set; }
 
         [Column("requested_time")]
-        public TimeSpan? RequestedTime { get; set; }
+        public string RequestedTime { get; set; } = string.Empty;
+
+        [Column("status")]
+        public string Status { get; set; } = "Pending";
     }
 }

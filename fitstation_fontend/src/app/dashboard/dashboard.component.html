@@ -15,6 +15,10 @@
           📅 MI CALENDARIO
         </button>
 
+        <button *ngIf="rol === 'client'" class="btn-profile" routerLink="/clases">
+          👥 CLASES
+        </button>
+
         <button *ngIf="rol === 'worker'" 
                 class="btn-profile" 
                 routerLink="/crear-rutina">

@@ -6,117 +6,132 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProfileService {
-  private apiUrl = 'http://localhost:5038/api'; // Mantenemos tu puerto original
+  // 🌐 URLs de conexión hacia tus controladores del Backend de C#
+  private profileUrl = 'http://localhost:5038/api/Profile';
+  private sessionUrl = 'http://localhost:5038/api/Session';
+  private exerciseUrl = 'http://localhost:5038/api/Exercise';
+  private routineUrl = 'http://localhost:5038/api/Routine';
+  private chatUrl = 'http://localhost:5038/api/Chat';
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders() {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  // 🔐 Generador de Cabeceras Seguro: Adjunta el token JWT del usuario logueado
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token') || '';
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
   }
 
-  // --- 1. PERFIL ---
+  // ==========================================
+  // 👤 SECCIÓN A: CONTROL DE PERFIL Y ROLES
+  // ==========================================
+
   getMyProfile(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/Profile/me`, { headers: this.getHeaders() });
+    return this.http.get<any>(`${this.profileUrl}/my-profile`, { headers: this.getHeaders() });
   }
 
-  // --- 🚀 ESTA ES LA FUNCIÓN QUE FALTABA ---
-  getUserData(): Observable<any> {
-    const userId = localStorage.getItem('userId');
-    return this.http.get(`${this.apiUrl}/Profile/me`, { headers: this.getHeaders() });
+  updateProfile(payload: any): Observable<any> {
+    return this.http.put<any>(`${this.profileUrl}/update`, payload, { headers: this.getHeaders() });
   }
 
-  updateProfile(dto: any): Observable<any> {
-    const headers = this.getHeaders().set('Content-Type', 'application/json');
-    return this.http.post(`${this.apiUrl}/Profile/update`, dto, { headers });
+  // ==========================================
+  // 📩 SECCIÓN B: SOLICITUDES DE COACH PRIVADO
+  // ==========================================
+
+  // 🚀 Actualizado: Ahora transmite la fecha exacta y la hora de reserva elegida por el atleta
+  requestCoach(idWorker: number, requestedDate: string, requestedTime: string): Observable<any> {
+    const payload = {
+      idWorker: Number(idWorker),
+      requestedDate: requestedDate, // Formato YYYY-MM-DD
+      requestedTime: requestedTime  // Formato HH:mm
+    };
+    return this.http.post<any>(`${this.profileUrl}/request-coach`, payload, { headers: this.getHeaders() });
   }
 
-  // --- 2. BUSCADOR Y MATCH ---
-  getSuggestedWorkers(clientId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Matching/suggested-workers/${clientId}`, { headers: this.getHeaders() });
+  getWorkerRequests(idWorker: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.profileUrl}/worker-requests/${idWorker}`, { headers: this.getHeaders() });
   }
 
-  sendMatchRequest(payload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Request/send`, payload, { headers: this.getHeaders() });
-  }
-
-  // --- 3. PETICIONES Y SESIONES ---
-  getWorkerRequests(workerId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Request/worker/${workerId}`, { headers: this.getHeaders() });
-  }
-
-  getClientRequests(clientId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Request/client/${clientId}`, { headers: this.getHeaders() });
+  getClientRequests(idClient: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.profileUrl}/client-requests/${idClient}`, { headers: this.getHeaders() });
   }
 
   updateStatus(requestId: number, status: string): Observable<any> {
-    const headers = this.getHeaders().set('Content-Type', 'application/json');
-    return this.http.put(`${this.apiUrl}/Request/update-status/${requestId}`, JSON.stringify(status), { headers });
+    const payload = { status: status };
+    return this.http.put<any>(`${this.profileUrl}/update-status/${requestId}`, payload, { headers: this.getHeaders() });
   }
 
-  getClientSessions(clientId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Session/client/${clientId}`, { headers: this.getHeaders() });
+  getSuggestedWorkers(clientId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.profileUrl}/suggested-workers/${clientId}`, { headers: this.getHeaders() });
   }
 
-  getWorkerSessions(workerId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Session/worker/${workerId}`, { headers: this.getHeaders() });
+  getOccupiedSlots(workerId: number, date: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.profileUrl}/occupied-slots/${workerId}?date=${date}`, { headers: this.getHeaders() });
   }
 
-  finishSession(sessionId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/Session/finish/${sessionId}`, {}, { headers: this.getHeaders() });
+  sendMatchRequest(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.profileUrl}/match-request`, payload, { headers: this.getHeaders() });
   }
 
-  getSessionDetails(sessionId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/Session/details/${sessionId}`, { headers: this.getHeaders() });
+  // ==========================================
+  // 📅 SECCIÓN C: GESTIÓN DE SESIONES ACTIVAS
+  // ==========================================
+
+  getWorkerSessions(idWorker: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.sessionUrl}/worker/${idWorker}`, { headers: this.getHeaders() });
   }
 
-  getOccupiedSlots(workerId: number, day: string): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/Session/occupied-slots/${workerId}/${day}`, { headers: this.getHeaders() });
+  getClientSessions(idClient: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.sessionUrl}/client/${idClient}`, { headers: this.getHeaders() });
   }
 
-  // --- 4. CHAT ---
-  getChatHistory(receiverId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Chat/history/${receiverId}`, { headers: this.getHeaders() });
+  getSessionDetails(idSession: number): Observable<any> {
+    return this.http.get<any>(`${this.sessionUrl}/details/${idSession}`, { headers: this.getHeaders() });
   }
 
-  sendMessage(payload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Chat/send`, payload, { headers: this.getHeaders() });
+  finishSession(idSession: number): Observable<any> {
+    return this.http.put<any>(`${this.sessionUrl}/finish/${idSession}`, {}, { headers: this.getHeaders() });
   }
 
-  // --- 5. EJERCICIOS Y RUTINAS (Limpieza de duplicados) ---
-  
-  // Obtiene los ejercicios de tu tabla (Antes tenías dos versiones de esto)
+  // ==========================================
+  // 🏋️ SECCIÓN D: BIBLIOTECA DE EJERCICIOS Y RUTINAS
+  // ==========================================
+
   getExercises(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Exercise`, { headers: this.getHeaders() });
+    return this.http.get<any[]>(`${this.exerciseUrl}`, { headers: this.getHeaders() });
   }
 
-  getWorkerRoutines(workerId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Routine/worker/${workerId}`, { headers: this.getHeaders() });
-  }
-
-  // Función para crear la cabecera de la rutina
-  createRoutine(routinePayload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Routine`, routinePayload, { headers: this.getHeaders() });
-  }
-
-  // Para el guardado completo que estamos montando
   createFullRoutine(payload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Routine/create-full`, payload, { headers: this.getHeaders() });
+    return this.http.post<any>(`${this.routineUrl}/create-full`, payload, { headers: this.getHeaders() });
   }
 
-  addExerciseToRoutine(payload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Routine/add-exercise`, payload, { headers: this.getHeaders() });
+  getClientRoutines(idClient: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.routineUrl}/client/${idClient}`, { headers: this.getHeaders() });
+  }
+
+  getWorkerRoutines(idWorker: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.routineUrl}/worker/${idWorker}`, { headers: this.getHeaders() });
+  }
+
+  getRoutineDetails(idRoutine: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.routineUrl}/details/${idRoutine}`, { headers: this.getHeaders() });
   }
 
   assignRoutineToClient(payload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Routine/assign-to-client`, payload, { headers: this.getHeaders() });
+    return this.http.post<any>(`${this.routineUrl}/assign`, payload, { headers: this.getHeaders() });
   }
 
-  getClientRoutines(clientId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Routine/client/${clientId}`, { headers: this.getHeaders() });
+  // ==========================================
+  // 💬 SECCIÓN E: SISTEMA DE CHAT PRIVADO
+  // ==========================================
+
+  getChatHistory(receiverId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.chatUrl}/history/${receiverId}`, { headers: this.getHeaders() });
   }
 
-  getRoutineDetails(routineId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Routine/${routineId}/details`, { headers: this.getHeaders() });
+  sendMessage(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.chatUrl}/send`, payload, { headers: this.getHeaders() });
   }
 }
