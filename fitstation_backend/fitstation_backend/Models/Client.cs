@@ -31,9 +31,9 @@ public class Client
     [Column("equipment")]
     public string? Equipment { get; set; }
 
-    [Column("pref_day")] // 👈 Mapeo exacto para evitar el Error 500
+    [Column("pref_day")]
     public string? PrefDay { get; set; }
 
-    [Column("pref_time")] // 👈 Mapeo exacto
+    [Column("pref_time")]
     public TimeSpan? PrefTime { get; set; }
 }

@@ -16,7 +16,7 @@ public class Message
     [Column("id_sender")]
     public int IdSender { get; set; }
 
-    [Column("message")] // Sincronizado con tu SQL real
+    [Column("content")] // Sincronizado con tu SQL real
     public string Content { get; set; } = string.Empty;
 
     [Column("created_at")]

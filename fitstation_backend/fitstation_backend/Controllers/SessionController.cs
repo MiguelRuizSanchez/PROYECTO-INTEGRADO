@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using fitstation_backend.Data;
-using fitstation_backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Data;
 
 namespace fitstation_backend.Controllers;
 
@@ -19,97 +22,139 @@ public class SessionController : ControllerBase
         _context = context;
     }
 
+    private int GetCurrentUserId()
+    {
+        var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+        return string.IsNullOrEmpty(userIdStr) ? 0 : int.Parse(userIdStr);
+    }
+
+    // 👨‍🎓 1. OBTENER SESIONES DEL ALUMNO (BLINDADO)
     [HttpGet("client/{clientId}")]
-    public IActionResult GetClientSessions(int clientId)
+    public async Task<IActionResult> GetClientSessions(int clientId)
     {
-        var sessions = (from s in _context.Sessions
-                       join w in _context.Workers on s.IdWorker equals w.IdWorker
-                       join u in _context.Users on w.IdUser equals u.IdUser
-                       where s.IdClient == clientId
-                       select new {
-                           idSession = s.IdSession,
-                           workerName = u.Name,
-                           scheduledDate = s.ScheduledDate,
-                           dayOfWeek = s.DayOfWeek,
-                           startTime = s.StartTime,
-                           status = s.Status
-                       }).ToList();
-        return Ok(sessions);
+        var sessions = new List<object>();
+        try
+        {
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = @"
+                    SELECT s.id_session, u.name, s.scheduled_date, s.day_of_week, s.start_time, s.status
+                    FROM sessions s
+                    JOIN workers w ON s.id_worker = w.id_worker
+                    JOIN users u ON w.id_user = u.id_user
+                    WHERE s.id_client = @c";
+                
+                var p = command.CreateParameter(); p.ParameterName = "@c"; p.Value = clientId; command.Parameters.Add(p);
+                
+                if (command.Connection?.State != ConnectionState.Open) await command.Connection.OpenAsync();
+                
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        sessions.Add(new {
+                            idSession = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
+                            workerName = reader.IsDBNull(1) ? "Coach" : reader.GetString(1),
+                            scheduledDate = reader.IsDBNull(2) ? "" : reader.GetDateTime(2).ToString("yyyy-MM-dd"),
+                            dayOfWeek = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                            startTime = reader.IsDBNull(4) ? "" : reader.GetFieldValue<TimeSpan>(4).ToString(@"hh\:mm"),
+                            status = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                        });
+                    }
+                }
+            }
+            return Ok(sessions);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error al cargar sesiones: {ex.Message}");
+        }
     }
 
+    // 🔍 4. OBTENER DETALLES (BLINDADO)
+    [HttpGet("details/{sessionId}")]
+    public async Task<IActionResult> GetDetails(int sessionId)
+    {
+        try
+        {
+            var result = new Dictionary<string, object>();
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = @"
+                    SELECT s.id_client, s.id_worker, c.modality, w.specialty, u.name
+                    FROM sessions s
+                    LEFT JOIN clients c ON s.id_client = c.id_client
+                    LEFT JOIN workers w ON s.id_worker = w.id_worker
+                    LEFT JOIN users u ON (u.id_user = c.id_user OR u.id_user = w.id_user)
+                    WHERE s.id_session = @id LIMIT 1";
+                
+                var p = command.CreateParameter(); p.ParameterName = "@id"; p.Value = sessionId; command.Parameters.Add(p);
+                if (command.Connection?.State != ConnectionState.Open) await command.Connection.OpenAsync();
+                
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync()) {
+                        result.Add("idClient", reader.IsDBNull(0) ? 0 : reader.GetInt32(0));
+                        result.Add("idWorker", reader.IsDBNull(1) ? 0 : reader.GetInt32(1));
+                        result.Add("modalidad", reader.IsDBNull(2) ? "Presencial" : reader.GetString(2));
+                        result.Add("especialidad", reader.IsDBNull(3) ? "General" : reader.GetString(3));
+                        result.Add("nombre", reader.IsDBNull(4) ? "Usuario" : reader.GetString(4));
+                        return Ok(result);
+                    }
+                    return NotFound("Sesión no encontrada");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error en detalles: {ex.Message}");
+        }
+    }
     [HttpGet("worker/{workerId}")]
-    public IActionResult GetWorkerSessions(int workerId)
+    public async Task<IActionResult> GetWorkerSessions(int workerId)
     {
-        var sessions = (from s in _context.Sessions
-                       join c in _context.Clients on s.IdClient equals c.IdClient
-                       join u in _context.Users on c.IdUser equals u.IdUser
-                       where s.IdWorker == workerId
-                       select new {
-                           idSession = s.IdSession,
-                           clientName = u.Name,
-                           scheduledDate = s.ScheduledDate,
-                           dayOfWeek = s.DayOfWeek,
-                           startTime = s.StartTime,
-                           status = s.Status,
-                           objectives = c.Objectives
-                       }).ToList();
+        var sessions = await _context.Sessions
+            .Where(s => s.IdWorker == workerId)
+            .Join(_context.Clients, s => s.IdClient, c => c.IdClient, (s, c) => new { s, c })
+            .Join(_context.Users, temp => temp.c.IdUser, u => u.IdUser, (temp, u) => new {
+                idSession = temp.s.IdSession,
+                clientName = u.Name,
+                scheduledDate = temp.s.ScheduledDate,
+                dayOfWeek = temp.s.DayOfWeek,
+                startTime = temp.s.StartTime.ToString(@"hh\:mm"),
+                status = temp.s.Status
+            }).ToListAsync();
         return Ok(sessions);
     }
 
-    [HttpPut("finish/{sessionId}")]
-    public IActionResult FinishSession(int sessionId)
+    // 🏁 FINALIZAR SESIÓN Y LIBERAR EL CUPO
+[HttpPut("finish/{sessionId}")]
+public async Task<IActionResult> FinishSession(int sessionId)
+{
+    try
     {
-        var session = _context.Sessions.Find(sessionId);
-        if (session == null) return NotFound();
+        var session = await _context.Sessions.FindAsync(sessionId);
+        if (session == null) return NotFound("Sesión no encontrada");
 
+        // 1. Marcar la sesión como completada
         session.Status = "Completed";
 
-        // Al completar la sesión, también marcamos la request como finalizada
-        var request = _context.WorkerRequests.Find(session.IdRequest);
-        if (request != null) request.Status = "Completed";
+        // 2. Buscar la petición original y cerrarla también
+        var request = await _context.WorkerRequests.FindAsync(session.IdRequest);
+        if (request != null)
+        {
+            request.Status = "Completed"; 
+        }
 
-        _context.SaveChanges();
-        return Ok(new { message = "Sesión finalizada. El slot ha sido liberado." });
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "✅ Sesión finalizada. Slot liberado correctamente." });
     }
-
-    [HttpGet("details/{sessionId}")]
-    public IActionResult GetDetails(int sessionId)
+    catch (Exception ex)
     {
-        var session = _context.Sessions.Find(sessionId);
-        if (session == null) return NotFound();
-
-        var myUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-        var client = _context.Clients.First(c => c.IdClient == session.IdClient);
-        var worker = _context.Workers.First(w => w.IdWorker == session.IdWorker);
-
-        var otherUserId = (myUserId == client.IdUser) ? worker.IdUser : client.IdUser;
-        var otherName = _context.Users.First(u => u.IdUser == otherUserId).Name;
-
-        return Ok(new { 
-            session, 
-            otherUserId, 
-            otherName,
-            modalidad = client.Modality,
-            especialidadEntrenador = worker.Specialty
-        });
+        return StatusCode(500, $"Error interno al finalizar la sesión: {ex.Message}");
     }
-
-    // Añade este método dentro de tu SessionController
-[HttpGet("occupied-slots/{workerId}/{day}")]
-public IActionResult GetOccupiedSlots(int workerId, string day)
-{
-    var occupied = _context.Sessions
-        .Where(s => s.IdWorker == workerId && s.DayOfWeek == day && s.Status != "Completed")
-        .Select(s => s.StartTime.ToString(@"hh\:mm"))
-        .ToList();
-    
-    // También restamos las peticiones pendientes para que no se pisen
-    var pendingRequests = _context.WorkerRequests
-        .Where(r => r.IdWorker == workerId && r.RequestedDay == day && r.Status == "Pending")
-        .Select(r => r.RequestedTime.HasValue ? r.RequestedTime.Value.ToString(@"hh\:mm") : "")
-        .ToList();
-
-    occupied.AddRange(pendingRequests);
-    return Ok(occupied.Distinct());
 }
+
+    // Mantén tus otros métodos existentes si los necesitas, pero asegúrate de aplicar el mismo patrón IsDBNull.
+    // Si necesitas ayuda con ellos, dímelo y los incluimos en el siguiente bloque.
 }

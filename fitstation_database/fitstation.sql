@@ -280,7 +280,82 @@ CREATE TABLE IF NOT EXISTS `workers` (
   CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- La exportación de datos fue deseleccionada.
+INSERT INTO `exercises` (`name`, `description`, `muscle_group`) VALUES
+-- ------------------------
+-- PRIMERA PARTE DE TU LISTA
+-- ------------------------
+-- Pecho
+('Pullover con Mancuerna', 'Acostado en un banco transversalmente, se baja una mancuerna por detrás de la cabeza con los brazos semiflexionados. Expande la caja torácica y trabaja pectorales y dorsales.', 'Pecho'),
+('Press Declinado', 'Press de banca en un banco con inclinación negativa. Pone el enfoque en la porción inferior del pectoral mayor.', 'Pecho'),
+('Pec Deck (Aperturas en Máquina)', 'Ejercicio en máquina que aísla el pecho simulando el movimiento de un abrazo. Excelente para mantener tensión constante sin requerir estabilización del peso.', 'Pecho'),
+
+-- Espalda
+('Remo con Mancuerna a Una Mano', 'Apoyando una rodilla y mano en un banco, se tracciona una mancuerna con el otro brazo. Permite un gran rango de recorrido y corrige asimetrías musculares.', 'Espalda'),
+('Hiperextensiones', 'Ejercicio en banco romano (o en el suelo) para fortalecer la zona lumbar, glúteos e isquiotibiales.', 'Espalda'),
+('Remo en Polea Baja (Gironda)', 'Tracción horizontal sentado en el suelo o banco utilizando una polea. Trabaja el grosor de la espalda (dorsales, romboides y trapecios medios).', 'Espalda'),
+
+-- Piernas y Glúteos
+('Sentadilla Búlgara', 'Sentadilla unilateral con la pierna trasera elevada sobre un banco o cajón. Exige gran equilibrio y trabaja intensamente cuádriceps y glúteos.', 'Piernas'),
+('Hip Thrust (Empuje de Cadera)', 'Con la espalda alta apoyada en un banco y una barra sobre la cadera, se realiza una potente extensión de cadera. El mejor ejercicio para el desarrollo máximo de los glúteos.', 'Piernas'),
+('Extensiones de Cuádriceps', 'Ejercicio de aislamiento en máquina para la parte frontal del muslo. Ideal para calentar las rodillas o para agotar el músculo al final de la rutina.', 'Piernas'),
+('Curl de Isquiotibiales', 'Flexión de rodilla contra resistencia en máquina (puede ser tumbado o sentado). Aísla completamente la parte posterior del muslo.', 'Piernas'),
+
+-- Hombros
+('Press Arnold', 'Variante del press de hombros con mancuernas inventada por Arnold Schwarzenegger. Se rotan las muñecas durante el recorrido, involucrando intensamente la cabeza frontal y lateral.', 'Hombros'),
+('Face Pull', 'Tracción con cuerda hacia la cara utilizando una polea alta. Fundamental para la postura y la salud del hombro, trabajando el deltoides posterior y los rotadores externos.', 'Hombros'),
+('Elevaciones Frontales', 'Levantamiento de mancuernas, disco o barra recta hacia el frente. Aísla específicamente la parte anterior del hombro.', 'Hombros'),
+
+-- Brazos
+('Press Francés (Rompecráneos)', 'Extensión de tríceps acostado en un banco utilizando una barra EZ, llevando el peso hacia la frente o detrás de la cabeza. Trabaja la cabeza larga del tríceps.', 'Brazos'),
+('Curl Predicador (Banco Scott)', 'Flexión de bíceps con los brazos apoyados en un pupitre inclinado. Evita hacer trampa balanceando el cuerpo y aísla el bíceps de forma estricta.', 'Brazos'),
+('Patada de Tríceps', 'Con el torso inclinado hacia adelante, se extiende el brazo hacia atrás sujetando una mancuerna. Muy bueno para lograr la máxima contracción final del músculo.', 'Brazos'),
+
+-- Core / Abdomen
+('Rueda Abdominal (Ab Wheel)', 'Extensión completa del cuerpo rodando sobre una rueda desde la posición de rodillas. Requiere muchísima fuerza en el core para evitar quebrar la zona lumbar.', 'Core'),
+('Mountain Climbers (Escaladores)', 'En posición de plancha o de flexión, se llevan las rodillas alternativamente hacia el pecho a un ritmo rápido. Combina trabajo de core y resistencia cardiovascular.', 'Core'),
+
+-- Full Body / Acondicionamiento
+('Burpees', 'Ejercicio metabólico completo que combina una sentadilla, una flexión de pecho y un salto vertical. Excelente para quemar calorías y ganar resistencia.', 'Full Body'),
+('Kettlebell Swing', 'Balanceo de pesa rusa impulsado desde la cadera. Un movimiento explosivo que trabaja toda la cadena posterior (glúteos, isquios, espalda baja) y dispara la frecuencia cardíaca.', 'Full Body'),
+
+-- ------------------------
+-- SEGUNDA PARTE DE TU LISTA
+-- ------------------------
+-- Pecho
+('Press de Banca', 'Ejercicio compuesto clásico para el pecho utilizando una barra olímpica en un banco plano. Trabaja pectorales, deltoides frontales y tríceps.', 'Pecho'),
+('Press Inclinado con Mancuernas', 'Variante del press tradicional que pone mayor énfasis en la porción superior del pecho (haz clavicular).', 'Pecho'),
+('Flexiones (Push-ups)', 'Ejercicio de peso corporal fundamental. Mantener el core contraído y bajar hasta que el pecho casi toque el suelo.', 'Pecho'),
+('Cruces en Polea', 'Ejercicio de aislamiento para dar amplitud y forma al pectoral, manteniendo una tensión constante mediante el uso de poleas.', 'Pecho'),
+
+-- Espalda
+('Dominadas (Pull-ups)', 'Ejercicio de tracción vertical con peso corporal. Excelente para desarrollar la amplitud del dorsal ancho.', 'Espalda'),
+('Peso Muerto', 'Ejercicio compuesto de potencia que trabaja toda la cadena posterior: espalda baja, glúteos e isquiotibiales.', 'Espalda'),
+('Remo con Barra', 'Tracción horizontal inclinando el torso hacia adelante. Construye densidad en la espalda media y alta.', 'Espalda'),
+('Jalón al Pecho', 'Alternativa en máquina a las dominadas. Consiste en tirar de una barra conectada a una polea alta hacia la parte superior del pecho.', 'Espalda'),
+
+-- Piernas
+('Sentadillas (Squats)', 'El ejercicio rey para el tren inferior. Flexión profunda de rodillas y cadera con una barra sobre los trapecios.', 'Piernas'),
+('Prensa de Piernas', 'Máquina que permite empujar cargas pesadas con las piernas con la espalda apoyada, reduciendo la carga en la zona lumbar.', 'Piernas'),
+('Zancadas (Lunges)', 'Ejercicio unilateral que implica dar un paso adelante y flexionar ambas rodillas a 90 grados. Mejora el equilibrio y fortalece glúteos y cuádriceps.', 'Piernas'),
+('Peso Muerto Rumano', 'Variante del peso muerto con piernas semi-rígidas, enfocada en estirar y contraer los isquiotibiales y glúteos.', 'Piernas'),
+('Elevación de Gemelos de Pie', 'Ejercicio de aislamiento para las pantorrillas. Consiste en una flexión plantar contra resistencia.', 'Piernas'),
+
+-- Hombros
+('Press Militar', 'Empuje vertical por encima de la cabeza, de pie o sentado. Trabaja de forma integral los hombros y requiere gran estabilización del core.', 'Hombros'),
+('Elevaciones Laterales', 'Elevación de mancuernas hacia los lados hasta la altura de los hombros. Aísla la cabeza lateral del deltoides.', 'Hombros'),
+('Pájaros (Elevaciones Posteriores)', 'Se realiza con el tronco inclinado hacia adelante. Enfocado en la cabeza posterior de los hombros y músculos romboides.', 'Hombros'),
+
+-- Brazos
+('Curl de Bíceps con Barra', 'Flexión de codos de pie sujetando una barra recta o barra EZ. El ejercicio constructor de masa por excelencia para bíceps.', 'Brazos'),
+('Curl Martillo', 'Flexión de codo con agarre neutro (las palmas se miran). Trabaja el bíceps braquial y el braquiorradial (antebrazo).', 'Brazos'),
+('Extensión de Tríceps en Polea', 'Empuje hacia abajo utilizando una polea alta con cuerda o barra recta para aislar el tríceps.', 'Brazos'),
+('Fondos en Paralelas (Dips)', 'Ejercicio de empuje con peso corporal colgado en barras paralelas. Gran constructor de tríceps y porción inferior del pecho.', 'Brazos'),
+
+-- Core / Abdomen
+('Plancha Abdominal (Plank)', 'Ejercicio isométrico en el que se mantiene el cuerpo recto apoyado sobre los antebrazos y las puntas de los pies.', 'Core'),
+('Crunch Abdominal', 'Flexión de la columna sobre el suelo para contraer el recto abdominal. Rango de movimiento corto y controlado.', 'Core'),
+('Elevación de Piernas Colgado', 'Suspendido de una barra de dominadas, se elevan las piernas rectas o flexionadas hacia el pecho. Gran estímulo para la parte inferior del abdomen.', 'Core'),
+('Giro Ruso (Russian Twist)', 'Ejercicio sentado en el suelo, con el torso reclinado, girando el tronco de lado a lado. Trabaja intensamente los oblicuos.', 'Core');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

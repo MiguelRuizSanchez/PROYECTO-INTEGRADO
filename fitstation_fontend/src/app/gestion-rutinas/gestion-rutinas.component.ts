@@ -16,7 +16,7 @@ export class GestionRutinasComponent implements OnInit {
   clientId!: number;
   nombreAlumno: string = 'Cargando...';
   misRutinas: any[] = [];
-  
+
   rutinaParaAsignarId: number = 0;
   mostrandoEjercicios: boolean = false;
   nombreRutinaViendo: string = '';
@@ -38,9 +38,10 @@ export class GestionRutinasComponent implements OnInit {
   cargarDatosSesion() {
     this.profileService.getSessionDetails(this.sessionId).subscribe({
       next: (res: any) => {
-        const s = res.session || res.Session;
-        this.clientId = s.idClient || s.IdClient;
-        this.nombreAlumno = res.otherName || res.OtherName || 'Alumno';
+        // 🚀 Leemos directo de "res" (sin la caja 'session')
+        this.clientId = res.idClient || res.IdClient || 0;
+        // 🚀 Usamos 'nombre' porque así lo envía tu backend de C#
+        this.nombreAlumno = res.nombre || res.Nombre || 'Alumno';
         this.cdr.detectChanges();
       },
       error: () => {
@@ -83,9 +84,9 @@ export class GestionRutinasComponent implements OnInit {
       return;
     }
 
-    const payload = { 
-      IdClient: this.clientId, 
-      IdRoutine: Number(this.rutinaParaAsignarId) 
+    const payload = {
+      IdClient: this.clientId,
+      IdRoutine: Number(this.rutinaParaAsignarId)
     };
 
     this.profileService.assignRoutineToClient(payload).subscribe({

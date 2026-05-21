@@ -17,7 +17,6 @@ namespace fitstation_backend.Data
         public DbSet<Class> Classes { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Session> Sessions { get; set; }
-        public DbSet<Request> Requests { get; set; } // Nueva tabla para el control de clases grupales
 
         // 🚀 2. RESTAURACIÓN: Devolvemos todas tus tablas originales de FitStation
         public DbSet<Exercise> Exercises { get; set; }
@@ -40,7 +39,6 @@ namespace fitstation_backend.Data
             modelBuilder.Entity<Class>().ToTable("classes");
             modelBuilder.Entity<Booking>().ToTable("bookings");
             modelBuilder.Entity<Session>().ToTable("sessions");
-            modelBuilder.Entity<Request>().ToTable("requests");
 
             // Asegurar el mapeo correcto de tus tablas previas
             modelBuilder.Entity<Exercise>().ToTable("exercises");

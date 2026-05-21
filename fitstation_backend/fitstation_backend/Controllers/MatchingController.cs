@@ -4,12 +4,14 @@ using fitstation_backend.Data;
 using fitstation_backend.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace fitstation_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Requerimos el token de Paco para identificarlo
+    [Authorize]
     public class MatchingController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -19,33 +21,24 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // GET: api/Matching/suggested-workers/{clientId}
-        [HttpGet("suggested-workers/{clientId}")]
-        public async Task<IActionResult> GetSuggestedWorkers(int clientId)
+        // GET: api/Matching/suggested-workers
+        // Ahora es universal: no necesita el clientId por URL, lo extrae del Token.
+        [HttpGet("suggested-workers")]
+        public async Task<IActionResult> GetSuggestedWorkers()
         {
             try
             {
-                // 1. Salvavidas: Si el ID llega a 0, recuperamos el perfil de Paco usando su Token
-                if (clientId <= 0)
-                {
-                    var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
-                                    User.FindFirst("id")?.Value;
+                // 1. Identificar al usuario real desde el token
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado.");
 
-                    if (!string.IsNullOrEmpty(userIdStr))
-                    {
-                        int userId = int.Parse(userIdStr);
-                        var clientRecord = await _context.Clients.FirstOrDefaultAsync(c => c.IdUser == userId);
-                        if (clientRecord != null)
-                        {
-                            clientId = clientRecord.IdClient;
-                        }
-                    }
-                }
+                int userId = int.Parse(userIdStr);
+                
+                // 2. Obtener el cliente real asociado a este usuario
+                var client = await _context.Clients.FirstOrDefaultAsync(c => c.IdUser == userId);
+                if (client == null) return BadRequest("Perfil de cliente no encontrado. Completa tu perfil.");
 
-                // 2. Buscamos la fila de Paco en la tabla 'clients' para saber sus objetivos
-                var client = await _context.Clients.FirstOrDefaultAsync(c => c.IdClient == clientId);
-
-                // 3. Creamos la consulta base uniendo 'workers' con 'users' para los nombres
+                // 3. Consulta base: Unir Workers con Users para obtener nombres y datos
                 var query = _context.Workers
                     .Join(_context.Users,
                         w => w.IdUser,
@@ -60,21 +53,19 @@ namespace fitstation_backend.Controllers
                             Capacity = w.MaxCapacity
                         });
 
-                // 🚀 4. FILTRADO INTELIGENTE: Si Paco tiene un objetivo guardado, filtramos el catálogo
-                // NOTA: He incluido comprobación para 'Objectives' o 'Goal' según cómo se llame en tu modelo Client.cs
-                if (client != null)
-                {
-                    // Intentamos sacar el texto del objetivo (ej: "Hipertrofia")
-                    string? objetivoPaco = client.Objectives ?? client.Goal;
+                // 4. Filtrado Inteligente Universal: 
+                // Usamos los objetivos reales que el cliente guardó en su perfil
+                string? objetivoCliente = client.Objectives ?? client.Goal;
 
-                    if (!string.IsNullOrEmpty(objetivoPaco))
-                    {
-                        string objetivoMinusc = objetivoPaco.ToLower();
-                        
-                        // Solo nos quedamos con entrenadores cuya especialidad contenga el objetivo de Paco
-                        query = query.Where(w => w.Specialty!.ToLower().Contains(objetivoMinusc) || 
-                                                 w.Specialization!.ToLower().Contains(objetivoMinusc));
-                    }
+                if (!string.IsNullOrEmpty(objetivoCliente))
+                {
+                    string objetivoMinusc = objetivoCliente.ToLower();
+                    
+                    // Filtramos entrenadores que coincidan con la especialidad o especialización
+                    query = query.Where(w => 
+                        (w.Specialty != null && w.Specialty.ToLower().Contains(objetivoMinusc)) || 
+                        (w.Specialization != null && w.Specialization.ToLower().Contains(objetivoMinusc))
+                    );
                 }
 
                 var entrenadoresFiltrados = await query.ToListAsync();

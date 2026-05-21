@@ -27,7 +27,7 @@ export class BuscadorComponent implements OnInit {
 
   // ⏰ Listado de turnos fijos en intervalos de 1 hora (Jornada del Gimnasio)
   listadoHorarios: string[] = [
-    '09:00', '10:00', '11:00', '12:00', '13:00', 
+    '09:00', '10:00', '11:00', '12:00', '13:00',
     '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
   ];
 
@@ -58,7 +58,7 @@ export class BuscadorComponent implements OnInit {
       next: (res: any) => {
         const d = res?.details || res?.Details;
         this.idCliente = d?.idClient || d?.IdClient || 0;
-        
+
         if (this.idCliente > 0) {
           this.cargarCoaches(this.idCliente);
         } else {
@@ -79,14 +79,14 @@ export class BuscadorComponent implements OnInit {
     this.profileService.getSuggestedWorkers(idSeguro).subscribe({
       next: (res: any[]) => {
         this.coachesSugeridos = res;
-        
+
         // Inicializamos los valores por defecto de cada tarjeta
         this.coachesSugeridos.forEach(coach => {
           const id = coach.idWorker || coach.IdWorker;
           this.fechasSeleccionadas[id] = this.minDate; // Por defecto: Hoy
           this.horasSeleccionadas[id] = '';           // Ninguna tarjeta marcada al inicio
           this.slotsOcupadosPorCoach[id] = [];        // Lista de ocupación vacía
-          
+
           // Consultamos inmediatamente las horas ocupadas de este coach para el día de hoy
           this.consultarSlotsOcupados(id);
         });
@@ -135,7 +135,7 @@ export class BuscadorComponent implements OnInit {
     return ocupadas.includes(hora);
   }
 
-  // 📩 ENVIAR SOLICITUD DE ENTRENAMIENTO PRIVADO 1-A-1
+// 📩 ENVIAR SOLICITUD DE ENTRENAMIENTO PRIVADO 1-A-1
   solicitarEntrenador(workerId: number) {
     const fecha = this.fechasSeleccionadas[workerId];
     const hora = this.horasSeleccionadas[workerId];
@@ -156,8 +156,13 @@ export class BuscadorComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {
-        alert('⚠️ No se pudo enviar la solicitud: ' + (err.error || err.message));
+        // 🚀 CORRECCIÓN: Extraemos el mensaje real del JSON para evitar el [object Object]
+        const mensajeBackend = err.error?.message ||
+          (typeof err.error === 'string' ? err.error : 'Ya tienes una cita o petición en curso con este coach.');
+
+        alert('⚠️ No se pudo enviar la solicitud: ' + mensajeBackend);
       }
     });
   }
 }
+

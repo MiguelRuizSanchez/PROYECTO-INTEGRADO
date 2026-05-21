@@ -14,7 +14,7 @@ export class EntrenamientoComponent implements OnInit {
   sessionId!: number;
   idCliente!: number;
   nombreCoach: string = 'Cargando Coach...';
-  
+
   rutinasAsignadas: any[] = [];
   rutinaSeleccionada: any = null;
   ejerciciosDeLaRutina: any[] = [];
@@ -36,10 +36,10 @@ export class EntrenamientoComponent implements OnInit {
     // 1. Buscamos de quién es esta sesión para saber qué rutinas cargar
     this.profileService.getSessionDetails(this.sessionId).subscribe({
       next: (res: any) => {
-        const s = res.session || res.Session;
-        if (s) {
-          this.idCliente = s.idClient || s.IdClient;
-          this.nombreCoach = res.otherName || res.OtherName || 'Entrenador';
+        // 🚀 Comprobamos si 'res' tiene el ID directamente
+        if (res && (res.idClient || res.IdClient)) {
+          this.idCliente = res.idClient || res.IdClient;
+          this.nombreCoach = res.nombre || res.Nombre || 'Entrenador';
           this.cargarListaRutinas();
         } else {
           this.nombreCoach = 'Entrenador';

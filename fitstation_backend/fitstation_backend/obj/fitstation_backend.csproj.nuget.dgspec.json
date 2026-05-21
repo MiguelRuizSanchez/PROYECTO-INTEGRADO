@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj": {}
+    "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj": {}
   },
   "projects": {
-    "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj": {
+    "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
+        "projectUniqueName": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
         "projectName": "fitstation_backend",
-        "projectPath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
+        "projectPath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
         "packagesPath": "C:\\Users\\juanm\\.nuget\\packages\\",
-        "outputPath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\obj\\",
+        "outputPath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\juanm\\AppData\\Roaming\\NuGet\\NuGet.Config"

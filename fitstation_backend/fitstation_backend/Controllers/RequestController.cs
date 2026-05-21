@@ -26,15 +26,22 @@ public class RequestController : ControllerBase
         
         if (client == null) return BadRequest(new { message = "Debes ser un cliente para solicitar un coach." });
 
-        var existingRequest = _context.WorkerRequests.FirstOrDefault(r => 
-            r.IdClient == client.IdClient && 
-            r.IdWorker == dto.WorkerId && 
-            (r.Status == "Pending" || r.Status == "Accepted"));
+     // 1. Comprobar si hay una petición "Pending" (Esperando respuesta)
+var tienePeticionPendiente = _context.WorkerRequests.Any(r => 
+    r.IdClient == client.IdClient && 
+    r.IdWorker == dto.WorkerId && 
+    r.Status == "Pending");
 
-        if (existingRequest != null)
-        {
-            return BadRequest(new { message = "Ya tienes una solicitud o sesión activa con este entrenador." });
-        }
+// 2. Comprobar si hay una sesión "Scheduled" (En curso)
+var tieneSesionActiva = _context.Sessions.Any(s => 
+    s.IdClient == client.IdClient && 
+    s.IdWorker == dto.WorkerId && 
+    s.Status == "Scheduled");
+
+if (tienePeticionPendiente || tieneSesionActiva)
+{
+    return BadRequest(new { message = "Ya tienes una solicitud pendiente o sesión activa con este entrenador." });
+}
 
         var newRequest = new WorkerRequest
         {

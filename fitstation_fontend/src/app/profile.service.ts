@@ -42,12 +42,19 @@ export class ProfileService {
 
   // 🚀 Actualizado: Ahora transmite la fecha exacta y la hora de reserva elegida por el atleta
   requestCoach(idWorker: number, requestedDate: string, requestedTime: string): Observable<any> {
+    // Obtenemos el día de la semana en inglés para que encaje con tu Base de Datos
+    const dateObj = new Date(requestedDate);
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayName = days[dateObj.getDay()];
+
     const payload = {
-      idWorker: Number(idWorker),
-      requestedDate: requestedDate, // Formato YYYY-MM-DD
-      requestedTime: requestedTime  // Formato HH:mm
+      WorkerId: Number(idWorker),
+      RequestedDay: dayName,
+      RequestedTime: requestedTime + ":00" // Añadimos segundos para el TimeSpan de C#
     };
-    return this.http.post<any>(`${this.profileUrl}/request-coach`, payload, { headers: this.getHeaders() });
+
+    // Llamamos al RequestController, que es el que gestiona esto correctamente
+    return this.http.post<any>(`http://localhost:5038/api/Request/send`, payload, { headers: this.getHeaders() });
   }
 
   getWorkerRequests(idWorker: number): Observable<any[]> {
@@ -59,10 +66,15 @@ export class ProfileService {
   }
 
   updateStatus(requestId: number, status: string): Observable<any> {
-    const payload = { status: status };
-    return this.http.put<any>(`${this.profileUrl}/update-status/${requestId}`, payload, { headers: this.getHeaders() });
+    // 🚀 CORRECCIÓN: Apuntamos al RequestController que es el que fabrica la Session.
+    // Además, enviamos el status entre comillas dobles `"${status}"` para que C#
+    // lo reciba como un string JSON válido.
+    return this.http.put<any>(
+      `http://localhost:5038/api/Request/update-status/${requestId}`,
+      `"${status}"`,
+      { headers: this.getHeaders() }
+    );
   }
-
   getSuggestedWorkers(clientId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.profileUrl}/suggested-workers/${clientId}`, { headers: this.getHeaders() });
   }

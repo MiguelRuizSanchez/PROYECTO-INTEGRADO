@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AFduj2oix2E=",
+  "dgSpecHash": "4sAnHhzpWxU=",
   "success": true,
-  "projectFilePath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
+  "projectFilePath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\juanm\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\juanm\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
