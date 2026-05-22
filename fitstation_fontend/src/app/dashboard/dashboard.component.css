@@ -1,14 +1,19 @@
+/* ==========================================================================
+   FITSTATION - COMPONENT: DASHBOARD
+   Estilos corporativos aplicados: #5afeb2 (Verde) y #000000 (Negro)
+   ========================================================================== */
+
 .dashboard-main {
   min-height: 100vh;
-  background-color: #0a0a0a;
+  background-color: #000000;
   color: white;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Scale VF', sans-serif;
 }
 
-/* 1. BARRA DE NAVEGACIÓN */
+/* 1. BARRA DE NAVEGACIÓN - AJUSTE DE PRECISIÓN */
 .top-nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Mantenemos el espacio entre logo y botones */
   align-items: center;
   padding: 20px 5%;
   background: #111;
@@ -18,14 +23,17 @@
   z-index: 100;
 }
 
-.brand {
-  font-size: 1.5rem;
-  font-weight: 900;
-  letter-spacing: 2px;
+/* Contenedor que agrupa el logo */
+.logo-container {
+  display: flex;
+  justify-content: flex-start; /* Fuerza a que el contenido de este bloque empiece a la izquierda */
+  flex: 1; /* Permite que el logo ocupe el espacio disponible a la izquierda */
 }
-
-.brand span {
-  color: #2ecc71;
+.logo-img {
+  max-width: 180px;
+  height: auto;
+  display: block;
+  margin: 0; /* Aseguramos que no tenga márgenes que lo centren */
 }
 
 .user-area {
@@ -34,14 +42,38 @@
   align-items: center;
 }
 
+.brand {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.brand span {
+  color: #5afeb2; /* Verde corporativo */
+}
+
+/* Para empujar los botones a la derecha si es necesario */
+.user-area {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-left: auto; /* Esto empuja todo el bloque de botones al extremo derecho */
+}
 .badge {
   background: #222;
-  color: #2ecc71;
+  color: #5afeb2; /* Verde corporativo */
   padding: 5px 12px;
   border-radius: 5px;
   font-size: 0.7rem;
   font-weight: bold;
   border: 1px solid #333;
+}
+
+.logo-img {
+  max-width: 200px; /* Ajusta este valor al tamaño que quieras */
+  height: auto;
+  display: block;
+  margin: 0 auto 30px auto; /* Centrado horizontal y margen inferior */
 }
 
 .btn-profile, .btn-match-nav, .btn-exit {
@@ -60,12 +92,12 @@
 }
 
 .btn-nav-highlight {
-  border-color: #2ecc71 !important;
-  color: #2ecc71 !important;
+  border-color: #5afeb2 !important; /* Verde corporativo */
+  color: #5afeb2 !important;
 }
 
 .btn-match-nav {
-  background: #2ecc71;
+  background: #5afeb2; /* Verde corporativo */
   color: black;
   border: none;
 }
@@ -96,10 +128,10 @@
 /* 3. SECCIÓN DE PETICIONES */
 .requests-section {
   margin-bottom: 50px;
-  background: rgba(46, 204, 113, 0.05);
+  background: rgba(90, 254, 178, 0.05); /* Verde corporativo suave */
   padding: 25px;
   border-radius: 15px;
-  border: 1px solid rgba(46, 204, 113, 0.2);
+  border: 1px solid rgba(90, 254, 178, 0.2);
 }
 
 .requests-list {
@@ -120,11 +152,11 @@
 }
 
 .highlight {
-  color: #2ecc71;
+  color: #5afeb2; /* Verde corporativo */
   font-weight: bold;
 }
 
-.btn-approve { background: #2ecc71; color: black; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn-approve { background: #5afeb2; color: black; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 .btn-reject { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-left: 10px; }
 
 /* 4. GRID DE SESIONES */
@@ -179,7 +211,7 @@
   font-size: 0.9rem;
 }
 
-/* 5. FOOTER DE TARJETA (NUEVOS BOTONES) */
+/* 5. FOOTER DE TARJETA */
 .card-footer-split {
   display: flex;
   gap: 10px;
@@ -188,7 +220,7 @@
   border-top: 1px solid #222;
 }
 
-.btn-chat-only, .btn-train-only {
+.btn-train-only {
   flex: 1;
   padding: 12px;
   border-radius: 8px;
@@ -200,26 +232,13 @@
   justify-content: center;
   gap: 5px;
   transition: 0.2s;
-}
-
-.btn-chat-only {
-  background: #1a1a1a;
-  color: #fff;
-  border: 1px solid #333;
-}
-
-.btn-chat-only:hover {
-  background: #333;
-}
-
-.btn-train-only {
-  background: #2ecc71;
+  background: #5afeb2; /* Verde corporativo */
   color: black;
   border: none;
 }
 
 .btn-train-only:hover {
-  background: #27ae60;
+  background: #46e098;
 }
 
 .btn-finish-small {
@@ -248,13 +267,12 @@
   padding: 40px;
   border-radius: 20px;
   text-align: center;
-  border: 1px solid #2ecc71;
+  border: 1px solid #5afeb2; /* Verde corporativo */
   max-width: 400px;
 }
 
-.alert-icon { font-size: 3rem; margin-bottom: 20px; }
 .btn-confirm {
-  background: #2ecc71;
+  background: #5afeb2; /* Verde corporativo */
   color: black;
   border: none;
   padding: 15px 30px;
@@ -266,6 +284,6 @@
 }
 
 /* COLORES DE ESTADO */
-.completed { border-left: 4px solid #2ecc71; }
+.completed { border-left: 4px solid #5afeb2; }
 .scheduled { border-left: 4px solid #3498db; }
 .pending { border-left: 4px solid #f1c40f; }

@@ -4,21 +4,21 @@
     <button routerLink="/dashboard" class="btn-back" style="align-self: flex-start; background: #333; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;">
       ← Volver al Panel
     </button>
-    <h1 style="font-size: 2rem; font-weight: 800; margin: 10px 0 0 0;">🔍 Encuentra tu Coach Ideal</h1>
+    <h1 style="font-size: 2rem; font-weight: 800; margin: 10px 0 0 0;"> Encuentra tu Coach Ideal</h1>
     <p style="color: #888; margin: 0;">Selecciona el entrenador que mejor se adapte a tus objetivos, elige el día y reserva un horario libre.</p>
   </header>
 
-  <div *ngIf="cargando" class="loading-box" style="text-align: center; padding: 40px; color: #2ecc71; font-weight: 600;">
+  <div *ngIf="isLoading" class="loading-box" style="text-align: center; padding: 40px; color: #2ecc71; font-weight: 600;">
     <p>Analizando compatibilidades y consultando agendas disponibles...</p>
   </div>
 
-  <div class="grid-coaches" *ngIf="!cargando && coachesSugeridos.length > 0">
+  <div class="grid-coaches" *ngIf="!isLoading && suggestedCoaches.length > 0">
     
-    <div class="card-coach" *ngFor="let coach of coachesSugeridos">
+    <div class="card-coach" *ngFor="let coach of suggestedCoaches">
       
       <div class="card-content">
         <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: #fff;">
-          👤 {{ coach.name || coach.Name || 'Entrenador FitStation' }}
+           {{ coach.name || coach.Name || 'Entrenador FitStation' }}
         </h3>
         
         <p style="font-size: 0.9rem; color: #aaa; line-height: 1.4; margin-bottom: 15px;">
@@ -27,7 +27,7 @@
 
         <div class="specialization" style="margin-bottom: 20px;">
           <span style="font-size: 0.8rem; background: #222; color: #2ecc71; padding: 4px 10px; border-radius: 20px; font-weight: 600; border: 1px solid #333;">
-            💪 {{ coach.specialization || coach.Specialization }}
+             {{ coach.specialization || coach.Specialization }}
           </span>
         </div>
 
@@ -36,35 +36,35 @@
         <div class="agenda-box" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
           
           <div class="input-group" style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 0.8rem; color: #666; font-weight: 700;">📅 FECHA DE LA SESIÓN:</label>
+            <label style="font-size: 0.8rem; color: #666; font-weight: 700;"> FECHA DE LA SESIÓN:</label>
             <input 
               type="date" 
               [min]="minDate" 
               [max]="maxDate" 
-              [(ngModel)]="fechasSeleccionadas[coach.idWorker || coach.IdWorker]"
-              (change)="consultarSlotsOcupados(coach.idWorker || coach.IdWorker)"
+              [(ngModel)]="selectedDates[coach.idWorker || coach.IdWorker]"
+              (change)="checkOccupiedSlots(coach.idWorker || coach.IdWorker)"
             />
           </div>
 
           <div class="hours-section" style="margin-top: 5px;">
             <label style="font-size: 0.8rem; color: #666; font-weight: 700; display: block; margin-bottom: 10px;">
-              ⏰ TURNOS DISPONIBLES PARA ESTE DÍA:
+               TURNOS DISPONIBLES PARA ESTE DÍA:
             </label>
             
             <div class="hours-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
               <button 
-                *ngFor="let hora of listadoHorarios"
+                *ngFor="let time of availableTimeSlots"
                 type="button"
-                [disabled]="esHoraOcupada(coach.idWorker || coach.IdWorker, hora)"
-                (click)="seleccionarHora(coach.idWorker || coach.IdWorker, hora)"
-                [style.background]="esHoraOcupada(coach.idWorker || coach.IdWorker, hora) ? '#141414' : (horasSeleccionadas[coach.idWorker || coach.IdWorker] === hora ? '#2ecc71' : '#1e1e1e')"
-                [style.color]="esHoraOcupada(coach.idWorker || coach.IdWorker, hora) ? '#444' : (horasSeleccionadas[coach.idWorker || coach.IdWorker] === hora ? '#000' : '#fff')"
-                [style.border]="esHoraOcupada(coach.idWorker || coach.IdWorker, hora) ? '1px solid #252525' : (horasSeleccionadas[coach.idWorker || coach.IdWorker] === hora ? '1px solid #2ecc71' : '1px solid #2a2a2a')"
-                [style.text-decoration]="esHoraOcupada(coach.idWorker || coach.IdWorker, hora) ? 'line-through' : 'none'"
-                [style.cursor]="esHoraOcupada(coach.idWorker || coach.IdWorker, hora) ? 'not-allowed' : 'pointer'"
+                [disabled]="isTimeSlotOccupied(coach.idWorker || coach.IdWorker, time)"
+                (click)="selectTimeSlot(coach.idWorker || coach.IdWorker, time)"
+                [style.background]="isTimeSlotOccupied(coach.idWorker || coach.IdWorker, time) ? '#141414' : (selectedTimes[coach.idWorker || coach.IdWorker] === time ? '#2ecc71' : '#1e1e1e')"
+                [style.color]="isTimeSlotOccupied(coach.idWorker || coach.IdWorker, time) ? '#444' : (selectedTimes[coach.idWorker || coach.IdWorker] === time ? '#000' : '#fff')"
+                [style.border]="isTimeSlotOccupied(coach.idWorker || coach.IdWorker, time) ? '1px solid #252525' : (selectedTimes[coach.idWorker || coach.IdWorker] === time ? '1px solid #2ecc71' : '1px solid #2a2a2a')"
+                [style.text-decoration]="isTimeSlotOccupied(coach.idWorker || coach.IdWorker, time) ? 'line-through' : 'none'"
+                [style.cursor]="isTimeSlotOccupied(coach.idWorker || coach.IdWorker, time) ? 'not-allowed' : 'pointer'"
                 style="padding: 10px 2px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; transition: 0.2s ease; text-align: center; outline: none;"
               >
-                {{ hora }}
+                {{ time }}
               </button>
             </div>
           </div>
@@ -74,7 +74,7 @@
 
       <button 
         class="btn-solicitar" 
-        (click)="solicitarEntrenador(coach.idWorker || coach.IdWorker)"
+        (click)="requestPrivateCoach(coach.idWorker || coach.IdWorker)"
       >
         Solicitar Cita Privada
       </button>
@@ -82,7 +82,7 @@
     </div>
   </div>
 
-  <div class="no-coaches" *ngIf="!cargando && coachesSugeridos.length === 0" style="text-align: center; padding: 40px; background: #111; border-radius: 12px; border: 1px solid #222;">
+  <div class="no-coaches" *ngIf="!isLoading && suggestedCoaches.length === 0" style="text-align: center; padding: 40px; background: #111; border-radius: 12px; border: 1px solid #222;">
     <p style="color: #aaa; margin: 0;">No se han encontrado entrenadores disponibles para tu especialidad en este momento.</p>
   </div>
 

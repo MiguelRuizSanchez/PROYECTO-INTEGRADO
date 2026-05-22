@@ -1,69 +1,69 @@
 <div class="dashboard-main">
-  <div *ngIf="cargando" class="loader-overlay">
+  <div *ngIf="isLoading" class="loader-overlay">
     <div class="spinner"></div>
     <p>Sincronizando FitStation...</p>
   </div>
 
-  <div class="content-wrapper" *ngIf="!cargando">
+  <div class="content-wrapper" *ngIf="!isLoading">
     <header class="top-nav">
       <div class="brand">FIT<span>STATION</span></div>
       
       <div class="user-area">
-        <span class="badge">{{ rol | uppercase }}</span>
+        <span class="badge">{{ userRole | uppercase }}</span>
         
         <button class="btn-profile btn-nav-highlight" routerLink="/calendario">
-          📅 MI CALENDARIO
+           MI CALENDARIO
         </button>
 
-        <button *ngIf="rol === 'client'" class="btn-profile" routerLink="/clases">
-          👥 CLASES
+        <button *ngIf="userRole === 'client'" class="btn-profile" routerLink="/clases">
+           CLASES
         </button>
 
-        <button *ngIf="rol === 'worker'" 
+        <button *ngIf="userRole === 'worker'" 
                 class="btn-profile" 
                 routerLink="/crear-rutina">
-          ➕ CREAR RUTINA
+           CREAR RUTINA
         </button>
 
-        <button *ngIf="rol === 'client'" 
+        <button *ngIf="userRole === 'client'" 
                 class="btn-match-nav" 
-                (click)="irAlBuscador()">
-          🔍 BUSCAR COACH
+                (click)="navigateToSearch()">
+           BUSCAR COACH
         </button>
 
-        <button class="btn-profile" routerLink="/perfil">⚙️ MI PERFIL</button>
+        <button class="btn-profile" routerLink="/perfil"> MI PERFIL</button>
         <button class="btn-exit" (click)="logout()">SALIR</button>
       </div>
     </header>
 
     <main class="dashboard-body">
       <div class="welcome">
-        <h1>Bienvenido, {{ datosUsuario?.name || datosUsuario?.Name }} 🦾</h1>
+        <h1>Bienvenido, {{ userData?.name || userData?.Name }} </h1>
         <p>Tu centro de control deportivo personalizado.</p>
       </div>
 
-      <section class="requests-section" *ngIf="rol === 'worker' && solicitudes.length > 0">
-        <h2>🔔 Nuevas peticiones de alumnos</h2>
+      <section class="requests-section" *ngIf="userRole === 'worker' && pendingRequests.length > 0">
+        <h2> Nuevas peticiones de alumnos</h2>
         <div class="requests-list">
-          <div class="request-item" *ngFor="let r of solicitudes">
+          <div class="request-item" *ngFor="let request of pendingRequests">
             <div class="req-info">
-              <strong>{{ r.clientName }}</strong> 
+              <strong>{{ request.clientName }}</strong> 
               quiere entrenar contigo.
             </div>
             <div class="req-actions">
-              <button class="btn-approve" (click)="gestionarSolicitud(r.idRequest, 'Accepted')">ACEPTAR</button>
-              <button class="btn-reject" (click)="gestionarSolicitud(r.idRequest, 'Rejected')">RECHAZAR</button>
+              <button class="btn-approve" (click)="manageRequestStatus(request.idRequest, 'Accepted')">ACEPTAR</button>
+              <button class="btn-reject" (click)="manageRequestStatus(request.idRequest, 'Rejected')">RECHAZAR</button>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="requests-section" *ngIf="rol === 'client' && peticionesEnviadas.length > 0">
-        <h2>⏳ Esperando respuesta de entrenadores</h2>
+      <section class="requests-section" *ngIf="userRole === 'client' && sentRequests.length > 0">
+        <h2> Esperando respuesta de entrenadores</h2>
         <div class="requests-list">
-          <div class="request-item pending-client" *ngFor="let p of peticionesEnviadas">
+          <div class="request-item pending-client" *ngFor="let req of sentRequests">
             <div class="req-info">
-              Solicitud enviada a <strong>{{ p.workerName }}</strong>
+              Solicitud enviada a <strong>{{ req.workerName }}</strong>
             </div>
             <span class="status-tag">PENDIENTE</span>
           </div>
@@ -71,44 +71,44 @@
       </section>
 
       <section class="sessions-section">
-        <h2>📅 Mis Sesiones de Entrenamiento Privado</h2>
+        <h2> Mis Sesiones de Entrenamiento Privado</h2>
         
-        <div *ngIf="sesiones.length === 0" class="empty-state-simple">
+        <div *ngIf="activeSessions.length === 0" class="empty-state-simple">
           No tienes sesiones privadas programadas en este momento.
         </div>
 
         <div class="sessions-grid">
-          <ng-container *ngFor="let s of sesiones">
+          <ng-container *ngFor="let session of activeSessions">
             <div class="session-card" 
-                 *ngIf="(s.status || s.Status) !== 'Completed'"
-                 [ngClass]="(s.status || s.Status)?.toLowerCase()">
+                 *ngIf="(session.status || session.Status) !== 'Completed'"
+                 [ngClass]="(session.status || session.Status)?.toLowerCase()">
               
               <div class="card-header">
-                <span class="status-pill">{{ s.status || s.Status }}</span>
-                <span class="time">{{ s.startTime || s.StartTime }}</span>
+                <span class="status-pill">{{ session.status || session.Status }}</span>
+                <span class="time">{{ session.startTime || session.StartTime }}</span>
               </div>
               
               <div class="card-content">
-                <h4>{{ rol === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}</h4>
+                <h4>{{ userRole === 'worker' ? (session.clientName || session.ClientName) : (session.workerName || session.WorkerName) }}</h4>
               </div>
 
               <div class="card-footer-split">
-                <button *ngIf="rol === 'client'" 
+                <button *ngIf="userRole === 'client'" 
                         class="btn-train-only" 
-                        [routerLink]="['/entrenamiento', s.idSession || s.IdSession]">
-                  🏋️ MI PLAN
+                        [routerLink]="['/entrenamiento', session.idSession || session.IdSession]">
+                   MI PLAN
                 </button>
                 
-                <button *ngIf="rol === 'worker'" 
+                <button *ngIf="userRole === 'worker'" 
                         class="btn-train-only" 
-                        [routerLink]="['/gestion-rutinas', s.idSession || s.IdSession]">
-                  📋 GESTIÓN
+                        [routerLink]="['/gestion-rutinas', session.idSession || session.IdSession]">
+                  GESTIÓN
                 </button>
                 
-                <button *ngIf="rol === 'worker'" 
+                <button *ngIf="userRole === 'worker'" 
                         class="btn-finish-small" 
-                        (click)="finalizarSesion(s.idSession || s.IdSession)">
-                  ✅ FINALIZAR
+                        (click)="finishActiveSession(session.idSession || session.IdSession)">
+                  ✅ 
                 </button>
               </div>
             </div>
@@ -117,28 +117,28 @@
       </section>
 
       <section class="sessions-section" style="margin-top: 35px;">
-        <h2>👥 Mis Clases Colectivas de la Semana</h2>
+        <h2> Mis Clases Colectivas de la Semana</h2>
         
-        <div *ngIf="clasesDashboard.length === 0" class="empty-state-simple">
+        <div *ngIf="weeklyClasses.length === 0" class="empty-state-simple">
           No tienes turnos ni clases grupales programadas para esta semana.
         </div>
 
         <div class="sessions-grid">
           <div class="session-card" 
-               *ngFor="let c of clasesDashboard"
+               *ngFor="let cls of weeklyClasses"
                style="border-left: 4px solid #00ff88; background: rgba(0, 255, 136, 0.03);">
             
             <div class="card-header">
               <span class="status-pill" style="background: #00ff88; color: #000; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 0.72rem;">
-                {{ rol === 'worker' ? 'IMPARTES' : 'RESERVADO' }}
+                {{ userRole === 'worker' ? 'IMPARTES' : 'RESERVADO' }}
               </span>
-              <span class="time">{{ c.classTime || c.ClassTime || c.class_time }}</span>
+              <span class="time">{{ cls.classTime || cls.ClassTime || cls.class_time }}</span>
             </div>
             
             <div class="card-content">
-              <h4 style="color: #fff; font-size: 1.1rem; margin: 0;">{{ c.className || c.ClassName || c.name }}</h4>
+              <h4 style="color: #fff; font-size: 1.1rem; margin: 0;">{{ cls.className || cls.ClassName || cls.name }}</h4>
               <p style="color: #00ff88; font-weight: 500; font-size: 0.88rem; margin: 6px 0 0 0; display: flex; align-items: center; gap: 4px;">
-                📅 Fecha: {{ c.bookingDate || c.BookingDate || c.dayOfWeek || c.DayOfWeek }}
+                 Fecha: {{ cls.bookingDate || cls.BookingDate || cls.dayOfWeek || cls.DayOfWeek }}
               </p>
             </div>
 
@@ -147,7 +147,7 @@
                       routerLink="/calendario"
                       [queryParams]="{ vista: 'clases' }"
                       style="background: #333; color: #fff; border: 1px solid #444; width: 100%; font-weight: bold; cursor: pointer; padding: 8px; border-radius: 4px; font-size: 0.82rem; transition: 0.2s;">
-                📅 VER EN AGENDA
+                 VER EN AGENDA
               </button>
             </div>
           </div>
@@ -155,7 +155,7 @@
       </section>
     </main>
 
-    <div class="overlay-lock" *ngIf="perfilIncompleto">
+    <div class="overlay-lock" *ngIf="isIncompleteProfile">
       <div class="modal-lock">
         <div class="alert-icon">⚠️</div>
         <h2>¡Perfil Incompleto!</h2>

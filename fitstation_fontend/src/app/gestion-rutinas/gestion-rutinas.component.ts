@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../profile.service';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router'; // 🚀 Importado Router
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-rutinas',
@@ -12,99 +12,118 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router'; // 🚀 
   styleUrl: './gestion-rutinas.component.css'
 })
 export class GestionRutinasComponent implements OnInit {
+  // sessionId: ID de la cita que estamos gestionando.
   sessionId!: number;
+  
+  // clientId: ID del alumno al que le queremos poner la rutina.
   clientId!: number;
-  nombreAlumno: string = 'Cargando...';
-  misRutinas: any[] = [];
+  
+  // studentName: Nombre que sale en la pantalla para saber a quién estamos asignando la rutina.
+  studentName: string = 'Cargando...';
+  
+  // myRoutines: La lista de todas las rutinas que el entrenador ha creado.
+  myRoutines: any[] = [];
 
-  rutinaParaAsignarId: number = 0;
-  mostrandoEjercicios: boolean = false;
-  nombreRutinaViendo: string = '';
-  ejerciciosDeLaRutina: any[] = []; // Array para la vista previa
+  // selectedRoutineId: El ID de la rutina que hemos elegido en el desplegable.
+  selectedRoutineId: number = 0;
+  
+  // isShowingPreview: Si es verdadero, abrimos la ventana flotante para ver los ejercicios.
+  isShowingPreview: boolean = false;
+  
+  // previewRoutineName: El nombre de la rutina que estamos visualizando en la ventana flotante.
+  previewRoutineName: string = '';
+  
+  // routineExercises: La lista de ejercicios que tiene la rutina que estamos viendo.
+  routineExercises: any[] = []; 
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router, // 🚀 Inyectamos el enrutador
+    private router: Router, 
     private profileService: ProfileService,
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Al entrar, obtenemos el ID de la sesión y cargamos los datos necesarios.
   ngOnInit() {
     this.sessionId = Number(this.route.snapshot.paramMap.get('id'));
-    this.cargarDatosSesion();
-    this.cargarBiblioteca();
+    this.loadSessionData();
+    this.loadRoutineLibrary();
   }
 
-  cargarDatosSesion() {
+  // Pide los datos de la sesión para saber quién es el alumno y su nombre.
+  loadSessionData() {
     this.profileService.getSessionDetails(this.sessionId).subscribe({
       next: (res: any) => {
-        // 🚀 Leemos directo de "res" (sin la caja 'session')
+        // Obtenemos el ID del cliente y su nombre desde la respuesta del backend.
         this.clientId = res.idClient || res.IdClient || 0;
-        // 🚀 Usamos 'nombre' porque así lo envía tu backend de C#
-        this.nombreAlumno = res.nombre || res.Nombre || 'Alumno';
+        this.studentName = res.nombre || res.Nombre || 'Alumno';
         this.cdr.detectChanges();
       },
       error: () => {
-        this.nombreAlumno = 'Alumno';
+        this.studentName = 'Alumno';
         this.cdr.detectChanges();
       }
     });
   }
 
-  cargarBiblioteca() {
+  // Descarga la biblioteca de rutinas que el entrenador ha creado previamente.
+  loadRoutineLibrary() {
     this.profileService.getWorkerRoutines(0).subscribe({
       next: (res) => {
-        this.misRutinas = res;
+        this.myRoutines = res;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error("Error cargando biblioteca:", err)
+      error: (err) => console.error("Error al cargar la biblioteca de rutinas:", err)
     });
   }
 
-  verContenidoRutina() {
-    const idRutina = Number(this.rutinaParaAsignarId);
-    if (!idRutina || idRutina === 0) return;
+  // Busca los ejercicios de la rutina elegida y abre la ventana para que el entrenador los vea.
+  previewRoutineContent() {
+    const routineId = Number(this.selectedRoutineId);
+    if (!routineId || routineId === 0) return;
 
-    const rutinaSeleccionada = this.misRutinas.find(r => (r.idRoutine || r.IdRoutine) === idRutina);
-    this.nombreRutinaViendo = rutinaSeleccionada?.name || rutinaSeleccionada?.Name || 'Vista Previa';
-    this.mostrandoEjercicios = true;
+    const selected = this.myRoutines.find(r => (r.idRoutine || r.IdRoutine) === routineId);
+    this.previewRoutineName = selected?.name || selected?.Name || 'Vista Previa';
+    this.isShowingPreview = true;
 
-    this.profileService.getRoutineDetails(idRutina).subscribe({
-      next: (ejerciciosDescargados) => {
-        this.ejerciciosDeLaRutina = ejerciciosDescargados;
+    // Pedimos al servicio los ejercicios detallados (series, repeticiones, etc.)
+    this.profileService.getRoutineDetails(routineId).subscribe({
+      next: (exercises) => {
+        this.routineExercises = exercises;
         this.cdr.detectChanges();
       },
       error: (err) => console.error("Error al descargar ejercicios:", err)
     });
   }
 
-  asignarRutina() {
-    if (this.rutinaParaAsignarId == 0) {
+  // Envía la orden al servidor para que la rutina quede asignada al alumno.
+  assignRoutine() {
+    if (this.selectedRoutineId == 0) {
       alert("Por favor, selecciona una rutina válida.");
       return;
     }
 
     const payload = {
       IdClient: this.clientId,
-      IdRoutine: Number(this.rutinaParaAsignarId)
+      IdRoutine: Number(this.selectedRoutineId)
     };
 
     this.profileService.assignRoutineToClient(payload).subscribe({
       next: () => {
         alert("✅ Rutina asignada con éxito al alumno.");
-        // 🚀 REDIRECCIÓN AUTOMÁTICA AL DASHBOARD
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard']); // Volvemos al panel principal tras asignar
       },
       error: (err) => {
-        const errorServidor = err.error?.message || err.error || err.message;
-        alert("Error al realizar la asignación: " + errorServidor);
+        const serverError = err.error?.message || err.error || err.message;
+        alert("Error al realizar la asignación: " + serverError);
       }
     });
   }
 
-  cerrarModal() {
-    this.mostrandoEjercicios = false;
-    this.ejerciciosDeLaRutina = [];
+  // Cierra la ventana de previsualización.
+  closePreviewModal() {
+    this.isShowingPreview = false;
+    this.routineExercises = [];
     this.cdr.detectChanges();
   }
 }

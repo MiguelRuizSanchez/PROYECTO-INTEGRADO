@@ -12,10 +12,17 @@ import { RouterModule, Router } from '@angular/router';
   styleUrls: ['./crear-rutina.component.css']
 })
 export class CrearRutinaComponent implements OnInit {
-  nombreRutina: string = '';
-  descripcion: string = '';
-  objetivoSeleccionado: string = 'Hipertrofia (Músculo)';
-  listaObjetivos: string[] = [
+  // routineName: Captures the primary identifier for the new routine directly from the input model.
+  routineName: string = '';
+  
+  // routineDescription: Stores contextual notes or instructions for the workout plan.
+  routineDescription: string = '';
+  
+  // selectedObjective: Binds to the UI select element to categorize the routine's primary fitness goal.
+  selectedObjective: string = 'Hipertrofia (Músculo)';
+  
+  // objectiveList: Static array defining the domain of valid fitness objectives.
+  objectiveList: string[] = [
     'Hipertrofia (Músculo)', 
     'Fuerza Máxima', 
     'Pérdida de Peso', 
@@ -23,24 +30,30 @@ export class CrearRutinaComponent implements OnInit {
     'Salud y Movilidad'
   ];
 
-  catalogoEjercicios: any[] = [];
-  ejerciciosEnRutina: any[] = [];
+  // exerciseCatalog: Array of available exercises fetched dynamically from the backend database.
+  exerciseCatalog: any[] = [];
+  
+  // routineExercises: Dynamic array managing the specific exercises, sets, and reps configured for the current routine.
+  routineExercises: any[] = [];
 
+  // Dependency injection for HTTP services, routing manipulation, and explicit change detection.
   constructor(
     private profileService: ProfileService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Component initialization lifecycle hook. Triggers the database catalog fetch upon rendering.
   ngOnInit() {
-    this.cargarEjerciciosDeBaseDeDatos();
+    this.loadExerciseCatalog();
   }
 
-  cargarEjerciciosDeBaseDeDatos() {
+  // Executes an HTTP GET request to retrieve the global exercise dictionary.
+  // Maps backend DTO properties to a consistent frontend model architecture.
+  loadExerciseCatalog() {
     this.profileService.getExercises().subscribe({
       next: (res: any[]) => {
-        // Mapeo para asegurar que los IDs y nombres se lean correctamente
-        this.catalogoEjercicios = res.map(e => ({
+        this.exerciseCatalog = res.map(e => ({
           id_exercise: e.idExercise || e.id_exercise || e.IdExercise,
           name: e.name || e.Name,
           muscle_group: e.muscleGroup || e.muscle_group || e.MuscleGroup
@@ -48,13 +61,14 @@ export class CrearRutinaComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Error al obtener ejercicios:", err);
+        console.error("Error retrieving exercise catalog:", err);
       }
     });
   }
 
-  agregarFilaEjercicio() {
-    this.ejerciciosEnRutina.push({
+  // Mutates the state array by appending a default exercise configuration object.
+  addExerciseRow() {
+    this.routineExercises.push({
       id_exercise: 0, 
       series: 3,
       repetitions: 12,
@@ -62,35 +76,38 @@ export class CrearRutinaComponent implements OnInit {
     });
   }
 
-  quitarFila(index: number) {
-    this.ejerciciosEnRutina.splice(index, 1);
+  // Mutates the state array by removing an exercise configuration object at the specified index.
+  removeExerciseRow(index: number) {
+    this.routineExercises.splice(index, 1);
   }
 
-  // 🛠️ FUNCIÓN CORREGIDA: Ahora se llama guardarRutina() para coincidir con el HTML
-  guardarRutina() {
-    if (!this.nombreRutina || this.ejerciciosEnRutina.length === 0) {
+  // Validates the component state and constructs the structured payload for backend submission.
+  saveRoutine() {
+    if (!this.routineName || this.routineExercises.length === 0) {
       alert("Por favor, completa el nombre y añade ejercicios.");
       return;
     }
 
+    // Payload construction matching the C# CreateRoutineDto mapping constraints.
     const payload = {
-      Name: this.nombreRutina,
-      Description: `[${this.objetivoSeleccionado}] ${this.descripcion}`,
-      Exercises: this.ejerciciosEnRutina.map(e => ({
+      Name: this.routineName,
+      Description: `[${this.selectedObjective}] ${this.routineDescription}`,
+      Exercises: this.routineExercises.map(e => ({
         IdExercise: Number(e.id_exercise),
-        Series: e.series,        // Mapeado a 'Sets' en C#
-        Repetitions: e.repetitions, // Mapeado a 'Reps' en C#
-        Rest: e.rest             // Mapeado a 'RestSeconds' en C#
+        Series: e.series,
+        Repetitions: e.repetitions,
+        Rest: e.rest
       }))
     };
 
+    // Executes HTTP POST to persist the new routine to the relational database.
     this.profileService.createFullRoutine(payload).subscribe({
       next: () => {
         alert("✅ Rutina guardada correctamente.");
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.error("Error al guardar:", err);
+        console.error("Error persisting routine:", err);
         alert("Error al guardar en la base de datos.");
       }
     });

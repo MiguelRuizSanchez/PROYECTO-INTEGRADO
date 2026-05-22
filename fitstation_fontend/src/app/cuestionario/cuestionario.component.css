@@ -1,11 +1,17 @@
+/* ==========================================================================
+   FITSTATION - COMPONENT: CUESTIONARIO (FORMULARIO)
+   Estilos corporativos aplicados: #5afeb2 (Verde) y #000000 (Negro)
+   ========================================================================== */
+
 .cuestionario-main {
   min-height: 100vh;
-  background: #0a0a0a;
+  background: #000000;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
+  font-family: 'Scale VF', sans-serif;
 }
 
 .form-container {
@@ -18,11 +24,21 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
-h1 { color: #2ecc71; text-align: center; margin-bottom: 5px; }
-p { text-align: center; color: #aaa; margin-bottom: 30px; }
+/* Títulos y textos */
+h1 { 
+  color: #5afeb2; /* Verde corporativo */
+  text-align: center; 
+  margin-bottom: 5px; 
+}
+
+p { 
+  text-align: center; 
+  color: #aaa; 
+  margin-bottom: 30px; 
+}
 
 h3 {
-  color: #2ecc71;
+  color: #5afeb2; /* Verde corporativo */
   border-bottom: 1px solid #333;
   padding-bottom: 10px;
   margin: 25px 0 15px;
@@ -30,12 +46,31 @@ h3 {
   font-size: 1rem;
 }
 
-.form-group { margin-bottom: 20px; display: flex; flex-direction: column; }
-.form-row { display: flex; gap: 20px; }
-.form-row .form-group { flex: 1; }
+/* Agrupaciones y filas */
+.form-group { 
+  margin-bottom: 20px; 
+  display: flex; 
+  flex-direction: column; 
+}
 
-label { margin-bottom: 8px; font-size: 0.85rem; color: #ccc; font-weight: bold; }
+.form-row { 
+  display: flex; 
+  gap: 20px; 
+}
 
+.form-row .form-group { 
+  flex: 1; 
+}
+
+/* Etiquetas */
+label { 
+  margin-bottom: 8px; 
+  font-size: 0.85rem; 
+  color: #ccc; 
+  font-weight: bold; 
+}
+
+/* Campos de formulario */
 .form-control {
   background: #1a1a1a;
   border: 1px solid #444;
@@ -43,22 +78,46 @@ label { margin-bottom: 8px; font-size: 0.85rem; color: #ccc; font-weight: bold; 
   padding: 12px;
   border-radius: 8px;
   font-size: 0.95rem;
+  transition: border-color 0.2s ease;
 }
 
-.form-control:focus { border-color: #2ecc71; outline: none; }
+.form-control:focus { 
+  border-color: #5afeb2; 
+  outline: none; 
+  box-shadow: 0 0 5px rgba(90, 254, 178, 0.2);
+}
 
+/* Botón de envío */
 .btn-submit {
   width: 100%;
   padding: 15px;
-  background: #2ecc71;
+  background: #5afeb2; /* Verde corporativo */
   color: #000;
   font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 20px;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
 }
 
-.btn-submit:hover:not(:disabled) { background: #27ae60; transform: translateY(-2px); }
-.btn-submit:disabled { background: #444; color: #777; cursor: not-allowed; }
+.btn-submit:hover:not(:disabled) { 
+  background: #46e098; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(90, 254, 178, 0.3);
+}
+
+.btn-submit:disabled { 
+  background: #444; 
+  color: #777; 
+  cursor: not-allowed; 
+}
+
+/* Espaciado para asegurar que ocupe espacio visual necesario */
+.spacer {
+  height: 20px;
+}
+
+/* Fin del estilo del módulo de Cuestionario */
+/* FitStation 2026 - TFG Adrián */

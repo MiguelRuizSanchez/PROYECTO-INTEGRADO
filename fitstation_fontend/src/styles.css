@@ -1,5 +1,14 @@
+:root {
+  --primary-color: #5afeb2; /* Tu verde corporativo */
+  --bg-color: #000000;      /* Fondo negro */
+  --card-bg: #121212;      /* Fondo de tarjetas (un gris muy oscuro) */
+  --text-color: #ffffff;    /* Texto blanco */
+  --text-muted: #aaaaaa;    /* Texto gris suave */
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Scale VF', sans-serif; /* Tu tipografía elegida */
   margin: 0;
 }

@@ -1,13 +1,13 @@
-/* Contenedor principal */
+/* Contenedor principal con tu negro corporativo */
 .calendar-container {
   min-height: 100vh;
-  background: #0a0a0a;
+  background: #000000; 
   color: white;
   padding: 30px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Scale VF', sans-serif;
 }
 
-/* Cabecera con navegación de meses */
+/* Cabecera con navegación */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -24,7 +24,7 @@
 
 .month-nav h2 {
   font-size: 1.8rem;
-  color: #2ecc71;
+  color: #5afeb2; /* Verde corporativo */
   min-width: 280px;
   text-align: center;
   margin: 0;
@@ -43,7 +43,7 @@
 }
 
 .month-nav button:hover {
-  background: #2ecc71;
+  background: #5afeb2;
   color: black;
 }
 
@@ -91,15 +91,15 @@
 }
 
 .day-cell:nth-child(7n) { border-right: none; }
-.day-cell.empty { background: #0d0d0d; }
+.day-cell.empty { background: #0a0a0a; }
 
 /* Resaltado del día actual */
 .day-cell.today {
-  background: rgba(46, 204, 113, 0.05);
+  background: rgba(90, 254, 178, 0.05);
 }
 
 .day-cell.today .day-number {
-  color: #2ecc71;
+  color: #5afeb2;
   font-weight: 900;
   font-size: 1.1rem;
 }
@@ -112,14 +112,8 @@
 }
 
 /* Etiquetas de sesiones (Eventos) */
-.day-events {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .event-pill {
-  background: #2ecc71;
+  background: #5afeb2; /* Verde corporativo */
   color: black;
   padding: 6px 10px;
   border-radius: 6px;
@@ -133,7 +127,7 @@
 
 .event-pill:hover {
   transform: translateY(-2px);
-  background: #27ae60;
+  background: #46e098;
 }
 
 .event-time {
@@ -170,12 +164,12 @@
 }
 
 .btn-back:hover {
-  border-color: #2ecc71;
-  color: #2ecc71;
+  border-color: #5afeb2;
+  color: #5afeb2;
 }
 
 .role-indicator span {
-  color: #2ecc71;
+  color: #5afeb2;
   font-weight: bold;
 }
 
@@ -205,21 +199,21 @@
 }
 
 .calendar-views-toggle button.active {
-  background: #2ecc71;
+  background: #5afeb2;
   color: black;
-  border-color: #2ecc71;
-  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+  border-color: #5afeb2;
+  box-shadow: 0 4px 15px rgba(90, 254, 178, 0.2);
 }
 
-/* Píldora especial para Clases Colectivas (Azul) */
+/* Píldora para Clases Colectivas (Mantenemos un azul suave o cambiamos a verde?) */
 .class-colective-pill {
-  background: #102030 !important;
-  border-left: 3px solid #3498db !important;
-  cursor: default !important; /* Indica que no es cliqueable */
+  background: #1a1a1a !important;
+  border-left: 3px solid #5afeb2 !important; /* Ahora resalta en tu verde */
+  cursor: default !important;
 }
 
 .class-time-badge {
-  color: #3498db !important;
+  color: #5afeb2 !important;
   font-weight: 800;
 }
 

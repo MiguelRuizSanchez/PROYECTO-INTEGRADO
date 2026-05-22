@@ -1,20 +1,20 @@
 <div class="perfil-container">
-  <div *ngIf="cargando" class="loader-view">
+  <div *ngIf="isLoading" class="loader-view">
     <div class="spinner"></div>
     <p>Cargando tus datos...</p>
   </div>
 
-  <div class="perfil-card" *ngIf="!cargando">
+  <div class="perfil-card" *ngIf="!isLoading">
     <header class="perfil-header">
       <div class="header-top">
         <button class="btn-back" routerLink="/dashboard">← VOLVER AL DASHBOARD</button>
-        <span class="role-pill">{{ rol | uppercase }}</span>
+        <span class="role-pill">{{ userRole | uppercase }}</span>
       </div>
       <h1>Mi Configuración</h1>
       <p>Actualiza tu información para que FitStation funcione a tu medida.</p>
     </header>
 
-    <form [formGroup]="profileForm" (ngSubmit)="guardar()">
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
       
       <div class="form-section">
         <h3 class="section-title">Información de Cuenta</h3>
@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="form-section animate-in" *ngIf="rol === 'client'">
+      <div class="form-section animate-in" *ngIf="userRole === 'client'">
         <h3 class="section-title">Configuración de Entrenamiento</h3>
         
         <div class="form-group">
@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      <div class="form-section animate-in" *ngIf="rol === 'worker'">
+      <div class="form-section animate-in" *ngIf="userRole === 'worker'">
         <h3 class="section-title">Perfil Profesional de Coach</h3>
         
         <div class="form-group">

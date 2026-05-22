@@ -1,11 +1,11 @@
 <div class="login-container">
   <div class="login-box">
     <div class="logo">
-      <h1>FIT<span>STATION</span></h1>
+      <img src="/logofit.png" alt="FitStation Logo" class="logo-img">
       <p>ENTRENAMIENTO INTELIGENTE</p>
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="realizarLogin()">
+    <form [formGroup]="loginForm" (ngSubmit)="executeLogin()">
       <div class="input-group">
         <label>CORREO ELECTRÓNICO</label>
         <input 
@@ -22,8 +22,8 @@
           placeholder="••••••••">
       </div>
 
-      <div *ngIf="mensaje" class="mensaje-info" [style.color]="mensaje.includes('¡') ? '#2ecc71' : '#e74c3c'">
-        {{ mensaje }}
+      <div *ngIf="feedbackMessage" class="mensaje-info" [style.color]="feedbackMessage.includes('¡') ? '#2ecc71' : '#e74c3c'">
+        {{ feedbackMessage }}
       </div>
 
       <button type="submit" class="btn-login" [disabled]="loginForm.invalid">ENTRAR</button>

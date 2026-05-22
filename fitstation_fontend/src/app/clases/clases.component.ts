@@ -12,61 +12,66 @@ import { RouterModule } from '@angular/router';
   styleUrl: './clases.component.css'
 })
 export class ClasesComponent implements OnInit {
-  // Almacenará las actividades agrupadas (Zumba, Natación...)
-  clasesAgrupadas: any[] = [];
+  // Agrupa las clases por su nombre (ej. junta todos los horarios de "Zumba" en un solo bloque).
+  groupedClasses: any[] = [];
   
-  // Guarda la fecha exacta elegida para cada actividad
-  fechasSeleccionadas: { [key: string]: string } = {};
+  // Guarda la fecha exacta que el alumno elige para asistir a la clase.
+  selectedDates: { [key: string]: string } = {};
   
-  // Guarda el idClass del horario seleccionado en cada tarjeta
-  horariosSeleccionados: { [key: string]: number } = {};
+  // Guarda qué hora concreta de la clase ha elegido el alumno.
+  selectedSchedules: { [key: string]: number } = {};
 
   constructor(
     private classService: ClassService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef // Nos ayuda a refrescar la pantalla para que no se quede colgada
   ) {}
 
+  // Lo primero que hace al cargar la página: pedir las clases disponibles.
   ngOnInit() {
-    this.cargarCatalogo();
+    this.loadCatalog();
   }
 
-  cargarCatalogo() {
+  // Descarga las clases de la base de datos y las organiza para que no salgan repetidas.
+  loadCatalog() {
     this.classService.getAvailableClasses().subscribe({
-      next: (datos: any[]) => {
-        const grupos: { [key: string]: any } = {};
+      next: (data: any[]) => {
+        const groups: { [key: string]: any } = {};
         
-        // 🚀 Algoritmo de Agrupación Avanzado
-        datos.forEach(clase => {
-          const nombre = clase.name || clase.Name;
-          const diaSemana = clase.dayOfWeek || clase.DayOfWeek;
+        // Revisamos cada clase que nos llega del servidor
+        data.forEach(classItem => {
+          const name = classItem.name || classItem.Name;
+          const dayOfWeek = classItem.dayOfWeek || classItem.DayOfWeek;
 
-          if (!grupos[nombre]) {
-            grupos[nombre] = {
-              name: nombre,
-              description: clase.description || clase.Description,
-              horarios: []
+          // Si es la primera vez que vemos esta clase (ej. "Zumba"), le creamos su propio grupo
+          if (!groups[name]) {
+            groups[name] = {
+              name: name,
+              description: classItem.description || classItem.Description,
+              schedules: []
             };
           }
 
-          grupos[nombre].horarios.push({
-            idClass: clase.idClass || clase.IdClass,
-            dayOfWeek: diaSemana,
-            classTime: clase.classTime || clase.ClassTime,
-            trainerName: clase.trainerName || clase.TrainerName,
-            // 🚀 MÁGICO: Genera las fechas reales de las próximas 2 semanas para este día
-            fechasValidas: this.calcularFechasParaDiaSemana(diaSemana)
+          // Añadimos el horario a su grupo y calculamos en qué fechas reales cae.
+          // (Error corregido: aquí usamos dayOfWeek en inglés)
+          groups[name].schedules.push({
+            idClass: classItem.idClass || classItem.IdClass,
+            dayOfWeek: dayOfWeek,
+            classTime: classItem.classTime || classItem.ClassTime,
+            trainerName: classItem.trainerName || classItem.TrainerName,
+            validDates: this.calculateDatesForWeekday(dayOfWeek) 
           });
         });
 
-        this.clasesAgrupadas = Object.values(grupos);
+        // Convertimos los grupos a una lista normal para poder pintarla en el HTML
+        this.groupedClasses = Object.values(groups);
 
-        // Pre-seleccionar el primer horario y su primera fecha válida por defecto
-        this.clasesAgrupadas.forEach(grupo => {
-          if (grupo.horarios.length > 0) {
-            const primerHorario = grupo.horarios[0];
-            this.horariosSeleccionados[grupo.name] = primerHorario.idClass;
-            if (primerHorario.fechasValidas.length > 0) {
-              this.fechasSeleccionadas[grupo.name] = primerHorario.fechasValidas[0];
+        // Seleccionamos la primera hora y la primera fecha por defecto para que no salga en blanco
+        this.groupedClasses.forEach(group => {
+          if (group.schedules.length > 0) {
+            const firstSchedule = group.schedules[0];
+            this.selectedSchedules[group.name] = firstSchedule.idClass;
+            if (firstSchedule.validDates.length > 0) {
+              this.selectedDates[group.name] = firstSchedule.validDates[0];
             }
           }
         });
@@ -80,71 +85,75 @@ export class ClasesComponent implements OnInit {
     });
   }
 
-  // 🗓️ Devuelve un array con las fechas (YYYY-MM-DD) de los días que coinciden en las próximas 2 semanas
-  calcularFechasParaDiaSemana(nombreDiaIngles: string): string[] {
-    const fechas: string[] = [];
-    const mapaDias: { [key: string]: number } = {
+  // Truco del calendario: si le pasas "Monday", te devuelve las fechas exactas de los próximos dos lunes.
+  calculateDatesForWeekday(englishDayName: string): string[] {
+    const validDates: string[] = [];
+    const dayMap: { [key: string]: number } = {
       'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6
     };
-    const diaDestino = mapaDias[nombreDiaIngles];
-    if (diaDestino === undefined) return fechas;
+    
+    const targetDay = dayMap[englishDayName];
+    if (targetDay === undefined) return validDates;
 
-    const hoy = new Date();
-    // Buscamos dentro de la ventana estricta de 14 días (2 semanas)
+    const today = new Date();
+    
+    // Miramos día por día desde hoy hasta dentro de 14 días
     for (let i = 0; i <= 14; i++) {
-      const copiaFecha = new Date();
-      copiaFecha.setDate(hoy.getDate() + i);
+      const futureDate = new Date();
+      futureDate.setDate(today.getDate() + i);
       
-      if (copiaFecha.getDay() === diaDestino) {
-        const yyyy = copiaFecha.getFullYear();
-        const mm = String(copiaFecha.getMonth() + 1).padStart(2, '0');
-        const dd = String(copiaFecha.getDate()).padStart(2, '0');
-        fechas.push(`${yyyy}-${mm}-${dd}`);
+      // Si el día de la semana coincide con el que buscamos, lo guardamos
+      if (futureDate.getDay() === targetDay) {
+        const yyyy = futureDate.getFullYear();
+        const mm = String(futureDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(futureDate.getDate()).padStart(2, '0');
+        validDates.push(`${yyyy}-${mm}-${dd}`);
       }
     }
-    return fechas;
+    return validDates;
   }
 
-  // 🚀 Obtiene las fechas válidas del turno que el usuario tiene seleccionado en el desplegable
-  getFechasDisponibles(grupo: any): string[] {
-    const idSeleccionado = this.horariosSeleccionados[grupo.name];
-    const horario = grupo.horarios.find((h: any) => h.idClass === Number(idSeleccionado));
-    return horario ? horario.fechasValidas : [];
+  // Busca qué fechas están disponibles según el turno de hora que haya elegido el usuario.
+  getAvailableDates(group: any): string[] {
+    const selectedId = this.selectedSchedules[group.name];
+    const schedule = group.schedules.find((h: any) => h.idClass === Number(selectedId));
+    return schedule ? schedule.validDates : [];
   }
 
-  // 🔄 Reinicia la fecha al primer día válido cuando el usuario cambia el turno de hora
-  onHorarioChange(nombreGrupo: string, grupo: any) {
-    const fechas = this.getFechasDisponibles(grupo);
-    if (fechas.length > 0) {
-      this.fechasSeleccionadas[nombreGrupo] = fechas[0];
+  // Cuando el usuario cambia la hora en pantalla, actualizamos la fecha automáticamente para que coincida.
+  onScheduleChange(groupName: string, group: any) {
+    const dates = this.getAvailableDates(group);
+    if (dates.length > 0) {
+      this.selectedDates[groupName] = dates[0];
     } else {
-      this.fechasSeleccionadas[nombreGrupo] = '';
+      this.selectedDates[groupName] = '';
     }
   }
 
-  // ❤️ Traduce y da un formato impecable a las fechas para el usuario
-  formatearFechaEspanol(fechaStr: string): string {
-    if (!fechaStr) return '';
-    const [year, month, day] = fechaStr.split('-').map(Number);
-    const fecha = new Date(year, month - 1, day);
-    return new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).format(fecha);
+  // Pone la fecha bonita en español para que el usuario la entienda mejor (ej: "Lunes, 15 de mayo").
+  formatDateToSpanish(dateStr: string): string {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).format(date);
   }
 
-  reservar(nombreActividad: string) {
-    const idClass = this.horariosSeleccionados[nombreActividad];
-    const fechaElegida = this.fechasSeleccionadas[nombreActividad];
+  // Envía la petición al servidor para guardar la plaza del alumno en la clase.
+  bookClass(activityName: string) {
+    const idClass = this.selectedSchedules[activityName];
+    const chosenDate = this.selectedDates[activityName];
 
     if (!idClass) {
       alert('⚠️ Por favor, selecciona un horario de la lista.');
       return;
     }
 
-    if (!fechaElegida) {
+    if (!chosenDate) {
       alert('⚠️ Por favor, selecciona una fecha válida para asistir.');
       return;
     }
 
-    this.classService.bookClass(idClass, fechaElegida).subscribe({
+    this.classService.bookClass(idClass, chosenDate).subscribe({
       next: (res) => {
         alert(res.message || '✅ ¡Reserva confirmada!');
       },

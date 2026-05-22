@@ -1,52 +1,126 @@
-.login-container {
+/* ==========================================================================
+   FITSTATION - REGISTER PAGE (Diseño centrado y profesional)
+   ========================================================================== */
+
+:host {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #0a0a0a;
+  min-height: 100vh;
+  background-color: #000000;
   color: white;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Scale VF', sans-serif;
+  padding: 20px;
 }
 
-.login-box {
+.logo-img {
+  max-width: 250px; /* Ajusta este valor al tamaño que quieras */
+  height: auto;
+  display: block;
+  margin: 0 auto 30px auto; /* Centrado horizontal y margen inferior */
+}
+
+/* Contenedor principal del formulario */
+.auth-container {
+  width: 100%;
+  max-width: 450px;
   background: #111;
   padding: 40px;
-  border-radius: 15px;
-  border: 1px solid #2ecc71;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
+  border-radius: 16px;
+  border: 1px solid #333;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.logo h1 { font-size: 32px; margin-bottom: 5px; }
-.logo span { color: #2ecc71; }
-.logo p { color: #555; font-size: 12px; letter-spacing: 2px; margin-bottom: 30px; }
+/* Cabecera logo */
+.logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
 
-.input-group { text-align: left; margin-bottom: 20px; }
-.input-group label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; }
+.logo h1 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.logo-img {
+  max-width: 200px; /* Ajusta el tamaño según necesites */
+  height: auto;
+  display: block;
+  margin: 0 auto 30px;
+}
+
+.logo span { color: #5afeb2; }
+.logo p { color: #555; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; margin-top: 5px; }
+
+/* Grupos de entrada */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.7rem;
+  color: #888;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
 
 input, select {
   width: 100%;
-  padding: 12px;
-  background: #1a1a1a;
+  padding: 14px;
+  background: #161616;
   border: 1px solid #333;
   color: white;
   border-radius: 8px;
   box-sizing: border-box;
+  font-size: 0.95rem;
+  transition: border-color 0.3s;
 }
 
+input:focus, select:focus {
+  border-color: #5afeb2;
+  outline: none;
+}
+
+/* Botón principal */
 .btn-login {
   width: 100%;
-  padding: 14px;
-  background: #2ecc71;
+  padding: 16px;
+  background: #5afeb2;
   border: none;
   color: black;
-  font-weight: bold;
+  font-weight: 800;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 0.9rem;
+  text-transform: uppercase;
   margin-top: 10px;
+  transition: background 0.3s;
 }
 
-.error-msg { color: #ff4757; font-size: 12px; margin-bottom: 10px; }
-.footer-links a { color: #555; text-decoration: none; font-size: 13px; }
-.footer-links a:hover { color: #2ecc71; }
+.btn-login:hover { background: #46e098; }
+
+/* Enlaces inferiores */
+.footer-links {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.footer-links a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: #5afeb2; }
+
+.error-msg {
+  color: #ff4757;
+  font-size: 0.75rem;
+  margin-bottom: 15px;
+  text-align: center;
+}

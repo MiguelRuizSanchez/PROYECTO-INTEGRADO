@@ -1,15 +1,15 @@
-/* 🚀 MÁGICO: Fuerza al componente a sangrar al 100% de la pantalla con fondo oscuro */
+/* 🚀 Estructura base con fondo negro profundo */
 :host {
   display: block;
   width: 100%;
   min-height: 100vh;
-  background-color: #0a0a0a; /* Mismo tono oscuro del Dashboard */
+  background-color: #000000; 
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Estructura del contenedor del buscador */
+/* Contenedor principal */
 .buscador-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -17,7 +17,7 @@
   color: white;
 }
 
-/* Rejilla adaptativa para las tarjetas de los entrenadores */
+/* Rejilla de tarjetas */
 .grid-coaches {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -37,14 +37,14 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-/* Efecto de elevación interactivo al pasar el cursor */
+/* Efecto hover con tu verde corporativo #5afeb2 */
 .card-coach:hover {
   transform: translateY(-5px);
-  border-color: #2ecc71;
-  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.15);
+  border-color: #5afeb2;
+  box-shadow: 0 6px 20px rgba(90, 254, 178, 0.15);
 }
 
-/* Ajustes finos para los selectores de los formularios */
+/* Inputs de fecha y hora */
 input[type="date"],
 input[type="time"] {
   background: #161616;
@@ -62,12 +62,12 @@ input[type="time"] {
 
 input[type="date"]:focus,
 input[type="time"]:focus {
-  border-color: #2ecc71;
+  border-color: #5afeb2;
 }
 
-/* Botón de envío de solicitud */
+/* Botón principal de solicitud en verde corporativo */
 .btn-solicitar {
-  background: #2ecc71;
+  background: #5afeb2;
   color: #000000;
   border: none;
   padding: 14px;
@@ -83,6 +83,6 @@ input[type="time"]:focus {
 }
 
 .btn-solicitar:hover {
-  background: #27ae60;
-  box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+  background: #46e098;
+  box-shadow: 0 0 15px rgba(90, 254, 178, 0.4);
 }

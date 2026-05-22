@@ -12,31 +12,31 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   styleUrls: ['./session-detail.component.css']
 })
 export class SessionDetailComponent implements OnInit, OnDestroy {
-  // Identificadores
+  // Identificadores de la sesión y los usuarios involucrados
   sessionId!: number;
   receiverId!: number;
-  myId = Number(localStorage.getItem('userId'));
-  miRol = (localStorage.getItem('userRole') || '').toLowerCase();
+  currentUserId = Number(localStorage.getItem('userId'));
+  userRole = (localStorage.getItem('userRole') || '').toLowerCase();
   
-  // Datos de Cabecera
+  // Datos principales de la cabecera de la pantalla
   receiverName: string = 'Cargando...';
-  modalidad: string = '';
-  detallesSesion: any = null;
+  sessionModality: string = ''; // AQUÍ ESTABA EL ERROR: Antes ponía modality
+  sessionDetails: any = null;
 
-  // Chat
-  mensajes: any[] = [];
-  nuevoMensaje: string = '';
-  polling: any;
+  // Variables para controlar el funcionamiento del chat en tiempo real
+  chatMessages: any[] = [];
+  newMessageContent: string = '';
+  pollingIntervalId: any;
 
-  // Rutinas
-  rutinasAsignadas: any[] = []; // Las que el alumno ya tiene
-  misRutinasBase: any[] = [];   // Las que el coach ha creado y puede asignar
-  rutinaSeleccionadaId: number = 0;
+  // Variables para controlar la asignación de tablas de entrenamiento
+  assignedRoutines: any[] = []; 
+  workerRoutineLibrary: any[] = [];   
+  selectedRoutineId: number = 0;
 
-  // Modal Visualizador
-  mostrandoModalRutina: boolean = false;
-  rutinaViendoInfo: any = null;
-  ejerciciosRutinaViendo: any[] = [];
+  // Variables para abrir y cerrar la ventana flotante que muestra los ejercicios
+  isShowingRoutineModal: boolean = false;
+  previewRoutineInfo: any = null;
+  previewRoutineExercises: any[] = [];
 
   constructor(
     private route: ActivatedRoute, 
@@ -44,102 +44,108 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Al entrar a la pantalla, saca el ID de la URL y activa el temporizador del chat
   ngOnInit() {
     this.sessionId = Number(this.route.snapshot.paramMap.get('id'));
-    this.cargarDatosIniciales();
+    this.loadInitialData();
     
-    // Polling: Miramos si hay mensajes nuevos cada 3 segundos
-    this.polling = setInterval(() => {
-      if (this.receiverId) this.cargarChat();
+    // Temporizador: cada 3 segundos busca si la otra persona nos ha escrito algo nuevo
+    this.pollingIntervalId = setInterval(() => {
+      if (this.receiverId) this.loadChatHistory();
     }, 3000);
   }
 
-  cargarDatosIniciales() {
-    // 1. Obtenemos los detalles de la sesión para saber con quién hablamos
+  // Descarga los datos de esta sesión para saber con quién hablamos y qué modalidad es
+  loadInitialData() {
     this.profileService.getSessionDetails(this.sessionId).subscribe({
       next: (res: any) => {
-        this.detallesSesion = res.session || res.Session;
+        this.sessionDetails = res.session || res.Session;
         this.receiverId = res.otherUserId || res.OtherUserId;
         this.receiverName = res.otherName || res.OtherName;
-        this.modalidad = res.modalidad || res.Modalidad;
+        this.sessionModality = res.modalidad || res.Modalidad;
         
-        this.cargarChat();
-        this.cargarRutinas();
+        this.loadChatHistory();
+        this.loadRoutines();
         this.cdr.detectChanges();
       }
     });
   }
 
-  cargarChat() {
+  // Descarga todos los mensajes de texto guardados entre tu usuario y la otra persona
+  loadChatHistory() {
     this.profileService.getChatHistory(this.receiverId).subscribe(msgs => {
-      this.mensajes = msgs;
+      this.chatMessages = msgs;
       this.cdr.detectChanges();
     });
   }
 
-  enviar() {
-    if (!this.nuevoMensaje.trim()) return;
+  // Recoge el texto escrito en la caja, lo manda a la base de datos y limpia la caja
+  sendMessage() {
+    if (!this.newMessageContent.trim()) return;
     
     const payload = {
       ReceiverId: this.receiverId,
-      Content: this.nuevoMensaje // 'Content' coincide con tu ChatController
+      Content: this.newMessageContent
     };
 
     this.profileService.sendMessage(payload).subscribe(() => {
-      this.nuevoMensaje = '';
-      this.cargarChat();
+      this.newMessageContent = '';
+      this.loadChatHistory();
     });
   }
 
-  cargarRutinas() {
-    const clientId = this.detallesSesion?.idClient || this.detallesSesion?.IdClient;
-    const workerId = this.detallesSesion?.idWorker || this.detallesSesion?.IdWorker;
+  // Carga las tablas de ejercicios del alumno. Si eres entrenador, también carga tu colección para poder enviarle una
+  loadRoutines() {
+    const clientId = this.sessionDetails?.idClient || this.sessionDetails?.IdClient;
+    const workerId = this.sessionDetails?.idWorker || this.sessionDetails?.IdWorker;
 
-    // El alumno ve sus rutinas asignadas
     this.profileService.getClientRoutines(clientId).subscribe(res => {
-      this.rutinasAsignadas = res;
+      this.assignedRoutines = res;
       this.cdr.detectChanges();
     });
 
-    // Si soy el Coach, cargo mis rutinas creadas para poder enviarlas
-    if (this.miRol === 'worker') {
+    if (this.userRole === 'worker') {
       this.profileService.getWorkerRoutines(workerId).subscribe(res => {
-        this.misRutinasBase = res;
+        this.workerRoutineLibrary = res;
         this.cdr.detectChanges();
       });
     }
   }
 
-  enviarRutina() {
-    if (!this.rutinaSeleccionadaId) return;
-    const clientId = this.detallesSesion.idClient || this.detallesSesion.IdClient;
+  // Envía la rutina seleccionada en el desplegable al alumno actual
+  assignRoutine() {
+    if (!this.selectedRoutineId) return;
+    const clientId = this.sessionDetails.idClient || this.sessionDetails.IdClient;
 
     this.profileService.assignRoutineToClient({
       IdClient: clientId,
-      IdRoutine: Number(this.rutinaSeleccionadaId)
+      IdRoutine: Number(this.selectedRoutineId)
     }).subscribe({
       next: () => {
-        alert("✅ Rutina asignada al alumno.");
-        this.cargarRutinas();
-        this.rutinaSeleccionadaId = 0;
+        alert("Rutina asignada al alumno.");
+        this.loadRoutines();
+        this.selectedRoutineId = 0;
       }
     });
   }
 
-  verDetalleRutina(id: number) {
+  // Abre la ventana emergente para ver la lista completa de ejercicios que componen una rutina
+  viewRoutineDetails(id: number) {
     this.profileService.getRoutineDetails(id).subscribe(exs => {
-      this.ejerciciosRutinaViendo = exs;
-      this.rutinaViendoInfo = this.rutinasAsignadas.find(r => (r.idRoutine || r.IdRoutine) === id);
-      this.mostrandoModalRutina = true;
+      this.previewRoutineExercises = exs;
+      this.previewRoutineInfo = this.assignedRoutines.find(r => (r.idRoutine || r.IdRoutine) === id);
+      this.isShowingRoutineModal = true;
       this.cdr.detectChanges();
     });
   }
 
-  cerrarModal() {
-    this.mostrandoModalRutina = false;
+  // Esconde la ventana flotante de los ejercicios de la pantalla
+  closeModal() {
+    this.isShowingRoutineModal = false;
   }
 
+  // Al salir de esta pantalla, destruye el temporizador del chat para que no siga gastando datos
   ngOnDestroy() {
-    if (this.polling) clearInterval(this.polling);
+    if (this.pollingIntervalId) clearInterval(this.pollingIntervalId);
   }
 }

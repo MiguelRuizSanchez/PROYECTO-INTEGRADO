@@ -1,9 +1,14 @@
+/* ==========================================================================
+   FITSTATION - COMPONENT: ENTRENAMIENTO (VISTA ALUMNO)
+   Paleta: Verde (#5afeb2) y Negro (#000000)
+   ========================================================================== */
+
 .entrenamiento-container {
   min-height: 100vh;
-  background-color: #0a0a0a;
+  background-color: #000000;
   color: white;
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Scale VF', sans-serif;
 }
 
 .header-entrenamiento {
@@ -28,8 +33,8 @@
 }
 
 .btn-volver:hover, .btn-atras:hover {
-  border-color: #2ecc71;
-  color: #2ecc71;
+  border-color: #5afeb2;
+  color: #5afeb2;
 }
 
 .info-sesion h1 {
@@ -45,7 +50,7 @@
 }
 
 .info-sesion span {
-  color: #2ecc71;
+  color: #5afeb2; /* Verde corporativo */
   font-weight: bold;
 }
 
@@ -53,7 +58,7 @@
 .seccion-rutinas h2 {
   max-width: 1200px;
   margin: 0 auto 20px;
-  color: #2ecc71;
+  color: #5afeb2; /* Verde corporativo */
 }
 
 .grid-rutinas {
@@ -74,7 +79,7 @@
 }
 
 .tarjeta-rutina:hover {
-  border-color: #2ecc71;
+  border-color: #5afeb2; /* Verde corporativo */
   transform: translateY(-5px);
 }
 
@@ -97,7 +102,7 @@
 }
 
 .btn-ver {
-  background: #2ecc71;
+  background: #5afeb2; /* Verde corporativo */
   color: black;
   border: none;
   padding: 12px 25px;
@@ -105,6 +110,11 @@
   font-weight: bold;
   cursor: pointer;
   width: 100%;
+  transition: background 0.2s;
+}
+
+.btn-ver:hover {
+  background: #46e098;
 }
 
 /* TABLA DE EJERCICIOS */
@@ -136,7 +146,7 @@
 
 .tabla-ejercicios th {
   background: #1a1a1a;
-  color: #2ecc71;
+  color: #5afeb2; /* Verde corporativo */
   padding: 15px;
   font-size: 0.8rem;
   text-transform: uppercase;

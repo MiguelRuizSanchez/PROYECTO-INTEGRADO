@@ -2,25 +2,25 @@
   <header class="header-gestion">
     <button routerLink="/dashboard" class="btn-back">← Volver</button>
     <h1>Gestión de Entrenamiento</h1>
-    <p>Alumno: <span>{{ nombreAlumno }}</span></p>
+    <p>Alumno: <span>{{ studentName }}</span></p>
   </header>
 
   <div class="main-content">
     <div class="card-gestion">
       <h2>Asignar Rutina de mi Biblioteca</h2>
       <div class="assign-box">
-        <select [(ngModel)]="rutinaParaAsignarId" class="select-dark">
+        <select [(ngModel)]="selectedRoutineId" class="select-dark">
           <option [value]="0">-- Seleccionar una rutina --</option>
-          <option *ngFor="let r of misRutinas" [value]="r.idRoutine || r.IdRoutine">
+          <option *ngFor="let r of myRoutines" [value]="r.idRoutine || r.IdRoutine">
             {{ r.name || r.Name }}
           </option>
         </select>
         
         <div class="actions">
-          <button class="btn-preview" (click)="verContenidoRutina()" [disabled]="rutinaParaAsignarId == 0">
+          <button class="btn-preview" (click)="previewRoutineContent()" [disabled]="selectedRoutineId == 0">
             👁️ Ver Tabla
           </button>
-          <button class="btn-assign" (click)="asignarRutina()" [disabled]="rutinaParaAsignarId == 0">
+          <button class="btn-assign" (click)="assignRoutine()" [disabled]="selectedRoutineId == 0">
             ASIGNAR AHORA
           </button>
         </div>
@@ -28,11 +28,11 @@
     </div>
   </div>
 
-  <div class="modal-overlay" *ngIf="mostrandoEjercicios">
+  <div class="modal-overlay" *ngIf="isShowingPreview">
     <div class="modal-content">
-      <h3>VISTA PREVIA: {{ nombreRutinaViendo }}</h3>
+      <h3>VISTA PREVIA: {{ previewRoutineName }}</h3>
       
-      <div class="tabla-preview-box" *ngIf="ejerciciosDeLaRutina.length > 0">
+      <div class="tabla-preview-box" *ngIf="routineExercises.length > 0">
         <table class="tabla-tecnica">
           <thead>
             <tr>
@@ -43,7 +43,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let ej of ejerciciosDeLaRutina">
+            <tr *ngFor="let ej of routineExercises">
               <td class="nombre-ej"><strong>{{ ej.exerciseName || ej.ExerciseName }}</strong></td>
               <td><span class="badge-musculo">{{ ej.muscle || ej.Muscle || 'General' }}</span></td>
               <td class="text-center series-num">{{ ej.series || ej.Series }}</td>
@@ -53,7 +53,7 @@
         </table>
       </div>
 
-      <button class="btn-close" (click)="cerrarModal()">CERRAR</button>
+      <button class="btn-close" (click)="closePreviewModal()">CERRAR</button>
     </div>
   </div>
 </div>
