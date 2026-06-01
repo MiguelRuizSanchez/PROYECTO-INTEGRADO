@@ -44,7 +44,7 @@
             <div *ngFor="let s of item.sessions" 
                  class="event-pill"
                  [ngStyle]="s.hasConflict ? {'border-left': '4px solid #ff4d4d', 'background': 'rgba(255, 77, 77, 0.15)'} : {}"
-                 [routerLink]="userRole === 'worker' ? ['/gestion-rutinas', s.idSession || s.IdSession] : ['/entrenamiento', s.idSession || s.IdSession]">
+                 [routerLink]="userRole === 'worker' ? ['/routine-management', s.idSession || s.IdSession] : ['/training', s.idSession || s.IdSession]">
               <span class="event-time">{{ s.startTime || s.StartTime }}</span>
               <span class="event-name">
                 {{ userRole === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}

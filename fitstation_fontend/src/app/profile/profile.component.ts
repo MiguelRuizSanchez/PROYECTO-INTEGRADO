@@ -8,10 +8,10 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-perfil',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './perfil.component.html',
-  styleUrls: ['./perfil.component.css']
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
-export class PerfilComponent implements OnInit {
+export class ProfileComponent implements OnInit {
   // profileForm: Es el molde del formulario que Angular usa para manejar los datos del usuario.
   profileForm: FormGroup;
   

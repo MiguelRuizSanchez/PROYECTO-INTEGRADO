@@ -8,10 +8,10 @@ import { RouterModule } from '@angular/router';
   selector: 'app-clases',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './clases.component.html',
-  styleUrl: './clases.component.css'
+  templateUrl: './classes.component.html',
+  styleUrl: './classes.component.css'
 })
-export class ClasesComponent implements OnInit {
+export class ClassesComponent implements OnInit {
   // Agrupa las clases por su nombre (ej. junta todos los horarios de "Zumba" en un solo bloque).
   groupedClasses: any[] = [];
   

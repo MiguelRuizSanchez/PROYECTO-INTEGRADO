@@ -7,10 +7,10 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   selector: 'app-entrenamiento',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './entrenamiento.component.html',
-  styleUrls: ['./entrenamiento.component.css']
+  templateUrl: './training.component.html',
+  styleUrls: ['./training.component.css']
 })
-export class EntrenamientoComponent implements OnInit {
+export class TrainingComponent implements OnInit {
   // sessionId: Guardamos el ID de la sesión actual que viene de la URL.
   sessionId!: number;
   

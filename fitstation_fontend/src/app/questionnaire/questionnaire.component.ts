@@ -5,13 +5,13 @@ import { ProfileService } from '../profile.service';
 import { RouterModule, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-crear-rutina',
+  selector: 'app-questionnaire',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './cuestionario.component.html',
-  styleUrl: './cuestionario.component.css'
+  templateUrl: './questionnaire.component.html',
+  styleUrl: './questionnaire.component.css'
 })
-export class CrearRutinaComponent implements OnInit {
+export class QuestionnaireComponent implements OnInit {
   nombreRutina: string = '';
   descripcion: string = '';
   objetivoSeleccionado: string = 'Hipertrofia (Músculo)';

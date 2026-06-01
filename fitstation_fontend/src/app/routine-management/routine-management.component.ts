@@ -8,10 +8,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   selector: 'app-gestion-rutinas',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './gestion-rutinas.component.html',
-  styleUrl: './gestion-rutinas.component.css'
+  templateUrl: './routine-management.component.html',
+  styleUrl: './routine-management.component.css'
 })
-export class GestionRutinasComponent implements OnInit {
+export class RoutineManagementComponent implements OnInit {
   // sessionId: ID de la cita que estamos gestionando.
   sessionId!: number;
   

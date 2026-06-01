@@ -8,10 +8,10 @@ import { RouterModule, Router } from '@angular/router';
   selector: 'app-crear-rutina',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './crear-rutina.component.html',
-  styleUrls: ['./crear-rutina.component.css']
+  templateUrl: './create-routine.component.html',
+  styleUrls: ['./create-routine.component.css']
 })
-export class CrearRutinaComponent implements OnInit {
+export class CreateRoutineComponent implements OnInit {
   // routineName: Captures the primary identifier for the new routine directly from the input model.
   routineName: string = '';
   

@@ -11,17 +11,17 @@
       <div class="user-area">
         <span class="badge">{{ userRole | uppercase }}</span>
         
-        <button class="btn-profile btn-nav-highlight" routerLink="/calendario">
+        <button class="btn-profile btn-nav-highlight" routerLink="/calendar">
            MI CALENDARIO
         </button>
 
-        <button *ngIf="userRole === 'client'" class="btn-profile" routerLink="/clases">
+        <button *ngIf="userRole === 'client'" class="btn-profile" routerLink="/classes">
            CLASES
         </button>
 
         <button *ngIf="userRole === 'worker'" 
                 class="btn-profile" 
-                routerLink="/crear-rutina">
+                routerLink="/create-routine">
            CREAR RUTINA
         </button>
 
@@ -31,7 +31,7 @@
            BUSCAR COACH
         </button>
 
-        <button class="btn-profile" routerLink="/perfil"> MI PERFIL</button>
+        <button class="btn-profile" routerLink="/profile"> MI PERFIL</button>
         <button class="btn-exit" (click)="logout()">SALIR</button>
       </div>
     </header>
@@ -95,13 +95,13 @@
               <div class="card-footer-split">
                 <button *ngIf="userRole === 'client'" 
                         class="btn-train-only" 
-                        [routerLink]="['/entrenamiento', session.idSession || session.IdSession]">
+                        [routerLink]="['/training', session.idSession || session.IdSession]">
                    MI PLAN
                 </button>
                 
                 <button *ngIf="userRole === 'worker'" 
                         class="btn-train-only" 
-                        [routerLink]="['/gestion-rutinas', session.idSession || session.IdSession]">
+                        [routerLink]="['/routine-management', session.idSession || session.IdSession]">
                   GESTIÓN
                 </button>
                 
@@ -144,7 +144,7 @@
 
             <div class="card-footer-split" style="justify-content: flex-end;">
               <button class="btn-train-only" 
-                      routerLink="/calendario"
+                      routerLink="/calendar"
                       [queryParams]="{ vista: 'clases' }"
                       style="background: #333; color: #fff; border: 1px solid #444; width: 100%; font-weight: bold; cursor: pointer; padding: 8px; border-radius: 4px; font-size: 0.82rem; transition: 0.2s;">
                  VER EN AGENDA
@@ -160,7 +160,7 @@
         <div class="alert-icon">⚠️</div>
         <h2>¡Perfil Incompleto!</h2>
         <p>Para poder usar todas las funciones de FitStation, necesitamos que termines de configurar tu perfil.</p>
-        <button class="btn-confirm" routerLink="/perfil">CONFIGURAR AHORA</button>
+        <button class="btn-confirm" routerLink="/profile">CONFIGURAR AHORA</button>
       </div>
     </div>
   </div>

@@ -6,13 +6,13 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http'; 
 
 @Component({
-  selector: 'app-calendario',
+  selector: 'app-calendar',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './calendario.component.html',
-  styleUrls: ['./calendario.component.css']
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.css']
 })
-export class CalendarioComponent implements OnInit {
+export class CalendarComponent implements OnInit {
   // Guarda la fecha del mes que estamos viendo en la pantalla.
   currentMonth: Date = new Date();
   

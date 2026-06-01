@@ -160,7 +160,7 @@ export class DashboardComponent implements OnInit {
 
   // Navegacion programatica hacia el componente de busqueda de entrenadores.
   navigateToSearch() {
-    this.router.navigate(['/buscador']); 
+    this.router.navigate(['/search']); 
   }
 
   // Elimina las credenciales almacenadas localmente y redirige al usuario a la vista de autenticacion.

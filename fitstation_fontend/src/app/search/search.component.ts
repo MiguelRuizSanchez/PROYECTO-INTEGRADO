@@ -8,10 +8,10 @@ import { RouterModule, Router } from '@angular/router';
   selector: 'app-buscador',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './buscador.component.html',
-  styleUrl: './buscador.component.css'
+  templateUrl: './search.component.html',
+  styleUrl: './search.component.css'
 })
-export class BuscadorComponent implements OnInit {
+export class SearchComponent implements OnInit {
   // Array de objetos que almacena los perfiles de los entrenadores devueltos por el algoritmo de matching del backend.
   suggestedCoaches: any[] = [];
   
