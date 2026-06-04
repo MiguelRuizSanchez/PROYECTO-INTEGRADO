@@ -1,16 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using fitstation_backend.Data;
-using fitstation_backend.Models;
-using fitstation_backend.DTOs;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Data;
 
 namespace fitstation_backend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class SessionController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -20,135 +22,135 @@ public class SessionController : ControllerBase
         _context = context;
     }
 
-    // 1. OBTENER LA AGENDA DE UN ENTRENADOR
-    [HttpGet("worker/{workerId}")]
-    public IActionResult GetWorkerSessions(int workerId)
+    private int GetCurrentUserId()
     {
-        // CAMBIO - comprueba que el que pide la agenda es dueño de la misma
-        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
-        var userId = int.Parse(claimValue);
-
-        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
-        if (workerProfile == null || workerProfile.IdWorker != workerId)
-            return Forbid();
-        // FIN DEL CAMBIO
-
-        var sessions = _context.Sessions
-            .Where(s => s.IdWorker == workerId)
-            .Join(_context.Clients,
-                session => session.IdClient,
-                client => client.IdClient,
-                (session, client) => new { session, client })
-            .Join(_context.Users,
-                sc => sc.client.IdUser,
-                user => user.IdUser,
-                (sc, user) => new SessionDetailsDto
-                {
-                    SessionId = sc.session.IdSession,
-                    ClientName = user.Name,
-                    DayOfWeek = sc.session.DayOfWeek,
-                    StartTime = sc.session.StartTime,
-                    Status = sc.session.Status
-                })
-            .ToList();
-
-        return Ok(sessions);
+        var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+        return string.IsNullOrEmpty(userIdStr) ? 0 : int.Parse(userIdStr);
     }
 
-    // 2. ACTUALIZAR EL ESTADO DE UNA SESIÓN (Completada / Cancelada)
-    [HttpPut("update-status/{sessionId}")]
-    public IActionResult UpdateSessionStatus(int sessionId, [FromBody] string newStatus)
-    {
-        // CAMBIO - antes cualquiera podía actualizar cualquier sesión
-
-        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
-        var userId = int.Parse(claimValue);
-
-        var session = _context.Sessions.Find(sessionId);
-        if (session == null) return NotFound("Sesión no encontrada");
-
-        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
-        if (workerProfile == null || session.IdWorker != workerProfile.IdWorker)
-            return Forbid("No tienes permiso para modificar esta sesión");
-        // FIN DEL CAMBIO
-
-        var validStatuses = new List<string> { "Scheduled", "Completed", "Cancelled", "Absent" };
-
-        if (!validStatuses.Contains(newStatus))
-        {
-            return BadRequest(new
-            {
-                message = $"Estado no válido. Usa uno de estos: {string.Join(", ", validStatuses)}"
-            });
-        }
-
-        session.Status = newStatus;
-        _context.SaveChanges();
-
-        return Ok(new { message = $"Sesión {sessionId} marcada como: {newStatus}" });
-    }
-
+    // HISTORIAL DE SESIONES
     [HttpGet("client/{clientId}")]
-    [Authorize]
-    public IActionResult GetClientSessions(int clientId)
+    public async Task<IActionResult> GetClientSessions(int clientId)
     {
-        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
-        var userId = int.Parse(claimValue);
+        var sessions = new List<object>();
+        try
+        {
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = @"
+                    SELECT s.id_session, u.name, s.scheduled_date, s.day_of_week, s.start_time, s.status
+                    FROM sessions s
+                    JOIN workers w ON s.id_worker = w.id_worker
+                    JOIN users u ON w.id_user = u.id_user
+                    WHERE s.id_client = @c";
+                
+                var p = command.CreateParameter(); p.ParameterName = "@c"; p.Value = clientId; command.Parameters.Add(p);
+                
+                if (command.Connection?.State != ConnectionState.Open) await command.Connection.OpenAsync();
+                
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        sessions.Add(new {
+                            idSession = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
+                            workerName = reader.IsDBNull(1) ? "Coach" : reader.GetString(1),
+                            scheduledDate = reader.IsDBNull(2) ? "" : reader.GetDateTime(2).ToString("yyyy-MM-dd"),
+                            dayOfWeek = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                            startTime = reader.IsDBNull(4) ? "" : reader.GetFieldValue<TimeSpan>(4).ToString(@"hh\:mm"),
+                            status = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                        });
+                    }
+                }
+            }
+            return Ok(sessions);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error al cargar sesiones: {ex.Message}");
+        }
+    }
 
-        // CAMBIO: Comparar clientId de la URL con el IdClient real del usuario
-        var clientProfile = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
-        if (clientProfile == null || clientProfile.IdClient != clientId)
-            return Forbid();
-        // FIN DEL CAMBIO
-
-        var sessions = _context.Sessions
-            .Where(s => s.IdClient == clientId)
-            .Select(s => new {
-                s.IdSession,
-                s.IdWorker,
-                // CAMBIO - arreglado el salto para buscar el nombre del trabajador correctamente
-                WorkerName = _context.Workers
-                    .Where(w => w.IdWorker == s.IdWorker)
-                    .Join(_context.Users, w => w.IdUser, u => u.IdUser, (w, u) => u.Name)
-                    .FirstOrDefault(),
-                // FIN DEL CAMBIO
-                s.DayOfWeek,
-                s.StartTime
-            })
-            .ToList();
-
+    // DETALLES DE LA SESIÓN
+    [HttpGet("details/{sessionId}")]
+    public async Task<IActionResult> GetDetails(int sessionId)
+    {
+        try
+        {
+            var result = new Dictionary<string, object>();
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = @"
+                    SELECT s.id_client, s.id_worker, c.modality, w.specialty, u.name
+                    FROM sessions s
+                    LEFT JOIN clients c ON s.id_client = c.id_client
+                    LEFT JOIN workers w ON s.id_worker = w.id_worker
+                    LEFT JOIN users u ON (u.id_user = c.id_user OR u.id_user = w.id_user)
+                    WHERE s.id_session = @id LIMIT 1";
+                
+                var p = command.CreateParameter(); p.ParameterName = "@id"; p.Value = sessionId; command.Parameters.Add(p);
+                if (command.Connection?.State != ConnectionState.Open) await command.Connection.OpenAsync();
+                
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync()) {
+                        result.Add("idClient", reader.IsDBNull(0) ? 0 : reader.GetInt32(0));
+                        result.Add("idWorker", reader.IsDBNull(1) ? 0 : reader.GetInt32(1));
+                        result.Add("modalidad", reader.IsDBNull(2) ? "Presencial" : reader.GetString(2));
+                        result.Add("especialidad", reader.IsDBNull(3) ? "General" : reader.GetString(3));
+                        result.Add("nombre", reader.IsDBNull(4) ? "Usuario" : reader.GetString(4));
+                        return Ok(result);
+                    }
+                    return NotFound("Sesión no encontrada");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error en detalles: {ex.Message}");
+        }
+    }
+    // SESIONES ASIGNADAS A WORKER
+    [HttpGet("worker/{workerId}")]
+    public async Task<IActionResult> GetWorkerSessions(int workerId)
+    {
+        var sessions = await _context.Sessions
+            .Where(s => s.IdWorker == workerId)
+            .Join(_context.Clients, s => s.IdClient, c => c.IdClient, (s, c) => new { s, c })
+            .Join(_context.Users, temp => temp.c.IdUser, u => u.IdUser, (temp, u) => new {
+                idSession = temp.s.IdSession,
+                clientName = u.Name,
+                scheduledDate = temp.s.ScheduledDate,
+                dayOfWeek = temp.s.DayOfWeek,
+                startTime = temp.s.StartTime.ToString(@"hh\:mm"),
+                status = temp.s.Status
+            }).ToListAsync();
         return Ok(sessions);
     }
 
-    [HttpPut("cancel/{sessionId}")]
-    public IActionResult CancelSession(int sessionId)
+    // FINALIZA SESIÓN 
+[HttpPut("finish/{sessionId}")]
+public async Task<IActionResult> FinishSession(int sessionId)
+{
+    try
     {
-        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
-        var userId = int.Parse(claimValue);
-
-        var session = _context.Sessions.Find(sessionId);
+        var session = await _context.Sessions.FindAsync(sessionId);
         if (session == null) return NotFound("Sesión no encontrada");
 
-        // CAMBIO - no comparar IdUser contra IdClient/IdWorker para ver la sesion 
-        var clientProfile = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
-        var workerProfile = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+        session.Status = "Completed";
 
-        bool isClientOwner = clientProfile != null && session.IdClient == clientProfile.IdClient;
-        bool isWorkerOwner = workerProfile != null && session.IdWorker == workerProfile.IdWorker;
-
-        if (!isClientOwner && !isWorkerOwner)
+        var request = await _context.WorkerRequests.FindAsync(session.IdRequest);
+        if (request != null)
         {
-            return Forbid("No tienes permiso para cancelar esta sesión");
+            request.Status = "Completed"; 
         }
-        // FIN DEL CAMBIO
 
-        session.Status = "Cancelled";
-        _context.SaveChanges();
-
-        return Ok(new { message = "La sesión ha sido cancelada correctamente." });
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "✅ Sesión finalizada. Slot liberado correctamente." });
     }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Error interno al finalizar la sesión: {ex.Message}");
+    }
+}
 }

@@ -11,12 +11,12 @@ public class Exercise
     public int IdExercise { get; set; }
 
     [Column("name")]
-    public string Name { get; set; } = null!;
-
-    [Column("muscle_group")]
-    public string? MuscleGroup { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Column("description")]
     public string? Description { get; set; }
 
+    [Column("muscle_group")]
+    public string? MuscleGroup { get; set; }
+    
 }

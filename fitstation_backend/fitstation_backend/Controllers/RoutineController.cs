@@ -1,124 +1,222 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using fitstation_backend.Data;
 using fitstation_backend.Models;
-using fitstation_backend.DTOs;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace fitstation_backend.Controllers;
-
-[Authorize]
-[ApiController]
-[Route("api/[controller]")]
-public class RoutineController : ControllerBase
+namespace fitstation_backend.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public RoutineController(ApplicationDbContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class RoutineController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    // CREAR UNA RUTINA NUEVA - ENTRENADOR
-    [HttpPost("create")]
-    [Authorize(Roles = "worker")]
-    public IActionResult CreateRoutine([FromBody] CreateRoutineDto dto)
-    {
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        var worker = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
-
-        if (worker == null) return Forbid("No tienes perfil de entrenador.");
-
-        var newRoutine = new Routine
+        public RoutineController(ApplicationDbContext context)
         {
-            IdWorker = worker.IdWorker,
-            Name = dto.Name,
-            Description = dto.Description
-        };
+            _context = context;
+        }
 
-        _context.Routines.Add(newRoutine);
-        _context.SaveChanges();
-
-        return Ok(new { message = "Rutina creada con éxito", routineId = newRoutine.IdRoutine });
-    }
-
-    // AÑADIR UN EJERCICIO A UNA RUTINA - ENTRENADOR
-    [HttpPost("{routineId}/add-exercise")]
-    [Authorize(Roles = "worker")]
-    public IActionResult AddExerciseToRoutine(int routineId, [FromBody] AddExerciseDto dto)
-    {
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        var worker = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
-
-        // comproba que la rutina exista y pertenezca a este entrenador
-        var routine = _context.Routines.FirstOrDefault(r => r.IdRoutine == routineId && r.IdWorker == worker!.IdWorker);
-        if (routine == null) return NotFound("Rutina no encontrada o no te pertenece.");
-
-        // comproba que el ejercicio exista en la base de datos
-        var exerciseExists = _context.Exercises.Any(e => e.IdExercise == dto.IdExercise);
-        if (!exerciseExists) return NotFound("El ejercicio indicado no existe en la base de datos.");
-
-        var routineExercise = new RoutineExercise
+        // CATÁLOGO DE EJERCICIOS
+        [HttpGet("exercises")]
+        public async Task<ActionResult<IEnumerable<Exercise>>> GetExercises()
         {
-            IdRoutine = routineId,
-            IdExercise = dto.IdExercise,
-            Reps = dto.Reps,
-            Sets = dto.Sets
-        };
+            return Ok(await _context.Exercises.ToListAsync());
+        }
 
-        _context.RoutineExercises.Add(routineExercise);
-        _context.SaveChanges();
+        // RUTINAS CREADAS
+        [HttpGet("worker/{workerId}")]
+        public async Task<ActionResult<IEnumerable<Routine>>> GetWorkerRoutines(int workerId)
+        {
+            try
+            {
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado");
 
-        return Ok(new { message = "Ejercicio añadido a la rutina correctamente." });
-    }
+                int userId = int.Parse(userIdStr);
+                var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
+                if (worker == null) return BadRequest("Perfil de entrenador no encontrado.");
 
-    // OBTENER LAS RUTINAS DEL ENTRENADOR LOGUEADO
-    [HttpGet("my-routines")]
-    [Authorize(Roles = "worker")]
-    public IActionResult GetMyRoutines()
-    {
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        var worker = _context.Workers.FirstOrDefault(w => w.IdUser == userId);
+                var routines = await _context.Routines.Where(r => r.IdWorker == worker.IdWorker).ToListAsync();
+                return Ok(routines);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al cargar biblioteca: {ex.Message}");
+            }
+        }
 
-        if (worker == null) return Forbid();
+        // OBTENER NOMBRE DEL ALUMNO 
+        [HttpGet("client-name/{clientId}")]
+        public async Task<IActionResult> GetClientName(int clientId)
+        {
+            try
+            {
+                var nombreAlumno = await _context.Clients
+                    .Where(c => c.IdClient == clientId)
+                    .Join(_context.Users, 
+                        c => c.IdUser, 
+                        u => u.IdUser, 
+                        (c, u) => u.Name)
+                    .FirstOrDefaultAsync();
 
-        var routines = _context.Routines
-            .Where(r => r.IdWorker == worker.IdWorker)
-            .ToList();
+                return Ok(new { name = nombreAlumno ?? "Alumno" });
+            }
+            catch
+            {
+                return Ok(new { name = "Alumno" });
+            }
+        }
 
-        return Ok(routines);
-    }
+        // CREACIÓN DE NUEVA RUTINA
+        [HttpPost("create-full")]
+        public async Task<IActionResult> CreateFullRoutine([FromBody] RoutineCreateDto dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("Token inválido");
 
-    // OBTENE TODA LA RUTINA 
-    [HttpGet("{routineId}")]
-    public IActionResult GetRoutineDetails(int routineId)
-    {
-        var routine = _context.Routines.FirstOrDefault(r => r.IdRoutine == routineId);
-        if (routine == null) return NotFound("Rutina no encontrada.");
+                int userId = int.Parse(userIdStr);
+                var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
+                if (worker == null) return BadRequest("Perfil de Worker no asociado.");
 
-        var exercises = _context.RoutineExercises
-            .Where(re => re.IdRoutine == routineId)
-            .Join(_context.Exercises,
-                re => re.IdExercise,
-                e => e.IdExercise,
-                (re, e) => new
+                var nuevaRutina = new Routine { IdWorker = worker.IdWorker, Name = dto.Name, Description = dto.Description };
+                _context.Routines.Add(nuevaRutina);
+                await _context.SaveChangesAsync();
+
+                foreach (var exDto in dto.Exercises)
                 {
-                    re.Id,
-                    e.IdExercise,
-                    ExerciseName = e.Name,
-                    e.MuscleGroup,
-                    re.Sets,
-                    re.Reps
-                })
-            .ToList();
+                    if (exDto.IdExercise <= 0) continue;
+                    _context.RoutineExercises.Add(new RoutineExercise {
+                        IdRoutine = nuevaRutina.IdRoutine,
+                        IdExercise = exDto.IdExercise,
+                        Reps = exDto.Repetitions,
+                        Sets = exDto.Series
+                    });
+                }
 
-        return Ok(new
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok(new { message = "✅ ¡Rutina guardada!" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
+
+        // ASIGNACIÓN DE RUTINA 
+        [HttpPost("assign")]
+        public async Task<IActionResult> AssignToClient([FromBody] AssignRoutineDto dto)
         {
-            routine.IdRoutine,
-            routine.Name,
-            routine.Description,
-            Exercises = exercises
-        });
+            try
+            {
+                var asignacion = new ClientRoutine
+                {
+                    IdClient = dto.IdClient,
+                    IdRoutine = dto.IdRoutine
+                };
+
+                _context.ClientRoutines.Add(asignacion);
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "✅ Rutina asignada con éxito" });
+            }
+            catch (Exception ex)
+            {
+                var sqlError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return StatusCode(500, $"Fallo físico en BD: {sqlError}");
+            }
+        }
+
+        // LISTADO DE RUTINAS ASIGNADAS
+        [HttpGet("client/{clientId}")]
+        public async Task<IActionResult> GetClientRoutines(int clientId)
+        {
+            try
+            {
+                var clientRoutines = await _context.ClientRoutines
+                    .Where(cr => cr.IdClient == clientId)
+                    .OrderByDescending(cr => cr.Id)
+                    .Join(_context.Routines,
+                        cr => cr.IdRoutine,
+                        r => r.IdRoutine,
+                        (cr, r) => new {
+                            IdRoutine = r.IdRoutine,
+                            Name = r.Name,
+                            Description = r.Description
+                        })
+                    .ToListAsync();
+
+                return Ok(clientRoutines);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar planes: {ex.Message}");
+            }
+        }
+
+        // DETALLES DE RUTINA 
+        [AllowAnonymous]
+        [HttpGet("details/{routineId}")]
+        [HttpGet("{routineId}/details")]
+        [HttpGet("{routineId}")]
+        public async Task<IActionResult> GetRoutineDetails(int routineId)
+        {
+            try
+            {
+                var routineExercises = await _context.RoutineExercises
+                    .Where(re => re.IdRoutine == routineId)
+                    .ToListAsync();
+
+                var exerciseIds = routineExercises.Select(re => re.IdExercise).Distinct().ToList();
+
+                var exercises = await _context.Exercises
+                    .Where(e => exerciseIds.Contains(e.IdExercise))
+                    .ToListAsync();
+
+                var detalles = routineExercises.Select(re => {
+                    var e = exercises.FirstOrDefault(ex => ex.IdExercise == re.IdExercise);
+                    return new {
+                        ExerciseName = e != null ? e.Name : "Ejercicio no encontrado",
+                        Muscle = e != null ? e.MuscleGroup : "General",
+                        Series = re.Sets,
+                        Repetitions = re.Reps,
+                        Rest = 60
+                    };
+                }).ToList();
+
+                return Ok(detalles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar ejercicios: {ex.Message}");
+            }
+        }
+    }
+
+    public class RoutineCreateDto {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public List<ExerciseDto> Exercises { get; set; } = new();
+    }
+
+    public class ExerciseDto {
+        public int IdExercise { get; set; }
+        public int Series { get; set; }
+        public int Repetitions { get; set; }
+    }
+
+    public class AssignRoutineDto {
+        public int IdClient { get; set; }
+        public int IdRoutine { get; set; }
     }
 }

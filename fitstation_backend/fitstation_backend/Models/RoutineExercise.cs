@@ -7,7 +7,7 @@ namespace fitstation_backend.Models;
 public class RoutineExercise
 {
     [Key]
-    [Column("id")]
+    [Column("id")] 
     public int Id { get; set; }
 
     [Column("id_routine")]
@@ -16,9 +16,10 @@ public class RoutineExercise
     [Column("id_exercise")]
     public int IdExercise { get; set; }
 
-    [Column("reps")]
+    [Column("reps")] 
     public int Reps { get; set; }
 
-    [Column("sets")]
+    [Column("sets")] 
     public int Sets { get; set; }
+
 }

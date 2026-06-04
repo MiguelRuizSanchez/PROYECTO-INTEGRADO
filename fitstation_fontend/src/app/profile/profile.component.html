@@ -1,0 +1,141 @@
+<div class="perfil-container">
+  <div *ngIf="isLoading" class="loader-view">
+    <div class="spinner"></div>
+    <p>Cargando tus datos...</p>
+  </div>
+
+  <div class="perfil-card" *ngIf="!isLoading">
+    <header class="perfil-header">
+      <div class="header-top">
+        <button class="btn-back" routerLink="/dashboard">← VOLVER AL DASHBOARD</button>
+        <span class="role-pill">{{ userRole | uppercase }}</span>
+      </div>
+      <h1>Mi Configuración</h1>
+      <p>Actualiza tu información para que FitStation funcione a tu medida.</p>
+    </header>
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      
+      <div class="form-section">
+        <h3 class="section-title">Información de Cuenta</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre Completo</label>
+            <input type="text" formControlName="name" class="form-control readonly" readonly>
+          </div>
+          <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input type="email" formControlName="email" class="form-control readonly" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section animate-in" *ngIf="userRole === 'client'">
+        <h3 class="section-title">Configuración de Entrenamiento</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Objetivo</label>
+            <select formControlName="objectives" class="form-control">
+              <option value="">Selecciona un objetivo...</option>
+              <option value="Musculacion">Musculación (Fuerza)</option>
+              <option value="Hipertrofia">Hipertrofia (Ganancia Muscular)</option>
+              <option value="PerdidaPeso">Pérdida de Peso / Definición</option>
+              <option value="Yoga">Yoga y Flexibilidad</option>
+              <option value="AltaIntensidad">Crossfit / HIIT</option>
+              <option value="Funcional">Entrenamiento Funcional</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Meta Principal (A corto/largo plazo)</label>
+            <input type="text" formControlName="goal" class="form-control" placeholder="Ej: Correr 5km, press banca 100kg...">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nivel de Experiencia</label>
+            <select formControlName="experienceLevel" class="form-control">
+              <option value="principiante">Principiante (0-6 meses)</option>
+              <option value="intermedio">Intermedio (1-2 años)</option>
+              <option value="avanzado">Avanzado (+2 años)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Modalidad Preferida</label>
+            <select formControlName="modality" class="form-control">
+              <option value="presencial">Presencial (Gimnasio)</option>
+              <option value="online">Online / Remoto</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Equipamiento Disponible</label>
+          <input type="text" formControlName="equipment" class="form-control" placeholder="Ej: Mancuernas, bandas, gimnasio completo...">
+        </div>
+
+        <div class="form-group">
+          <label>Notas Médicas / Lesiones / Alergias</label>
+          <textarea formControlName="medicalNotes" class="form-control" rows="2" placeholder="Indica si tienes alguna lesión o condición médica relevante..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Día Preferido</label>
+            <select formControlName="prefDay" class="form-control">
+              <option value="Monday">Lunes</option>
+              <option value="Tuesday">Martes</option>
+              <option value="Wednesday">Miércoles</option>
+              <option value="Thursday">Jueves</option>
+              <option value="Friday">Viernes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Hora Aproximada</label>
+            <input type="time" formControlName="prefTime" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section animate-in" *ngIf="userRole === 'worker'">
+        <h3 class="section-title">Perfil Profesional de Coach</h3>
+        
+        <div class="form-group">
+          <label>Especialidad Principal</label>
+          <select formControlName="specialization" class="form-control">
+            <option value="Musculacion">Especialista en Musculación (Fuerza)</option>
+            <option value="Hipertrofia">Especialista en Hipertrofia</option>
+            <option value="PerdidaPeso">Especialista en Pérdida de Peso</option>
+            <option value="Yoga">Instructor de Yoga/Pilates</option>
+            <option value="AltaIntensidad">Coach de Crossfit/HIIT</option>
+            <option value="Funcional">Entrenamiento Funcional</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Biografía / Presentación</label>
+          <textarea formControlName="bio" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio por Sesión (€)</label>
+            <input type="number" formControlName="pricePerSession" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Cupo Máximo de Alumnos</label>
+            <input type="number" formControlName="maxCapacity" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <button type="submit" class="btn-save" style="width: 100%; padding: 15px; background: #2ecc71; color: black; font-weight: bold; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase;">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

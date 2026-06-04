@@ -1,0 +1,81 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000000; 
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.buscador-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  color: white;
+}
+
+.grid-coaches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.card-coach {
+  background: #111111;
+  border: 1px solid #222222;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.card-coach:hover {
+  transform: translateY(-5px);
+  border-color: #5afeb2;
+  box-shadow: 0 6px 20px rgba(90, 254, 178, 0.15);
+}
+
+input[type="date"],
+input[type="time"] {
+  background: #161616;
+  border: 1px solid #333333;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+input[type="date"]:focus,
+input[type="time"]:focus {
+  border-color: #5afeb2;
+}
+
+.btn-solicitar {
+  background: #5afeb2;
+  color: #000000;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 15px;
+}
+
+.btn-solicitar:hover {
+  background: #46e098;
+  box-shadow: 0 0 15px rgba(90, 254, 178, 0.4);
+}

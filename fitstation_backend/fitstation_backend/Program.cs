@@ -12,7 +12,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-//  CONFIGURACIÓN DE SEGURIDAD (JWT)
+//CONFIGURACIÓN DE CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+//CONFIGURACIÓN DE SEGURIDAD (JWT)
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 
@@ -35,14 +46,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//SERVICIOS BASE, SWAGGER Y CORS
+//SERVICIOS BASE Y CONFIGURACIÓN DE SWAGGER
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FitStation API", Version = "v1" });
 
-    // Definimos CÓMO se entra (Bearer Token)
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Escribe: 'Bearer {tu_token}'",
@@ -68,29 +78,19 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngular", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
 var app = builder.Build();
 
-// CONFIGURACIÓN DEL PIPELINE
+//CONFIGURACIÓN DEL PIPELINE
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// USAMOS CORS AQUÍ
 app.UseCors("AllowAngular");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

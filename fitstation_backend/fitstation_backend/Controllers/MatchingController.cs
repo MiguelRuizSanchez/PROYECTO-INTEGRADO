@@ -1,76 +1,75 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using fitstation_backend.Data;
 using fitstation_backend.Models;
-using Microsoft.EntityFrameworkCore;
-// CAMBIO: Añadidos los usings para la seguridad
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-// FIN DEL CAMBIO
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace fitstation_backend.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-[Authorize] // CAMBIO: Ahora el endpoint exige estar logueado
-public class MatchingController : ControllerBase
+namespace fitstation_backend.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public MatchingController(ApplicationDbContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class MatchingController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    [HttpGet("suggested-workers/{clientId}")]
-    public IActionResult GetMatches(int clientId)
-    {
-        // CAMBIO - verificamos de forma segura la identidad del usuario logueado
-        var claimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(claimValue)) return Unauthorized();
-        var userId = int.Parse(claimValue);
-
-        var clientProfile = _context.Clients.FirstOrDefault(c => c.IdUser == userId);
-
-        // pregunta - si no tiene perfil de cliente, o si el IdClient de la URL no coincide con el suyo, le denegamos el acceso
-        if (clientProfile == null || clientProfile.IdClient != clientId)
-            return Forbid();
-        // FIN DEL CAMBIO
-
-        // 2. Normalizar objetivos
-        string clientObjectives = (clientProfile.Objectives ?? "").ToLower().Trim();
-
-        // evitar devolver TODOS los workers si está vacío
-        if (string.IsNullOrEmpty(clientObjectives))
+        public MatchingController(ApplicationDbContext context)
         {
-            return Ok(new List<object>());
+            _context = context;
         }
-
-        // 3. Query optimizada 
-        var matches = _context.Workers
-            .Join(_context.Users,
-                w => w.IdUser,
-                u => u.IdUser,
-                (w, u) => new { w, u })
-            .Where(joined =>
-                joined.w.MaxCapacity > 0 &&
-                (
-                    (joined.w.Specialization != null &&
-                     EF.Functions.Like(joined.w.Specialization.ToLower(), $"%{clientObjectives}%")) ||
-
-                    (joined.w.Specialty != null &&
-                     EF.Functions.Like(joined.w.Specialty.ToLower(), $"%{clientObjectives}%"))
-                )
-            )
-            .Select(joined => new
+        // ENTRENADORES QUE MATCHEAN CON OBJETIVO CLIENTE
+        [HttpGet("suggested-workers")]
+        public async Task<IActionResult> GetSuggestedWorkers()
+        {
+            try
             {
-                WorkerId = joined.w.IdWorker,
-                Name = joined.u.Name,
-                Specialty = joined.w.Specialty,
-                Bio = joined.w.Bio,
-                Price = joined.w.PricePerSession
-            })
-            .ToList();
+                // IDENTIFICA USUARIO MEDIANTE TOKEN
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado.");
 
-        return Ok(matches);
+                int userId = int.Parse(userIdStr);
+                
+                // CORROBORA QUE CLIENTE REGISTRADO
+                var client = await _context.Clients.FirstOrDefaultAsync(c => c.IdUser == userId);
+                if (client == null) return BadRequest("Perfil de cliente no encontrado. Completa tu perfil.");
+
+                // CLIENT-WORKER COMBINAR DATOS
+                var query = _context.Workers
+                    .Join(_context.Users,
+                        w => w.IdUser,
+                        u => u.IdUser, 
+                        (w, u) => new {
+                            WorkerId = w.IdWorker,
+                            Name = u.Name,
+                            Specialty = w.Specialty,
+                            Specialization = w.Specialization,
+                            Bio = w.Bio,
+                            Price = w.PricePerSession,
+                            Capacity = w.MaxCapacity
+                        });
+                // FILTRO
+                string? objetivoCliente = client.Objectives ?? client.Goal;
+
+                if (!string.IsNullOrEmpty(objetivoCliente))
+                {
+                    string objetivoMinusc = objetivoCliente.ToLower();
+                    
+                    query = query.Where(w => 
+                        (w.Specialty != null && w.Specialty.ToLower().Contains(objetivoMinusc)) || 
+                        (w.Specialization != null && w.Specialization.ToLower().Contains(objetivoMinusc))
+                    );
+                }
+
+                var entrenadoresFiltrados = await query.ToListAsync();
+                return Ok(entrenadoresFiltrados);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error en el motor de emparejamiento: {ex.Message}");
+            }
+        }
     }
 }

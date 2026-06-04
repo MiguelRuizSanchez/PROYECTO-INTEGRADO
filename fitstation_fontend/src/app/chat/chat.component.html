@@ -1,0 +1,50 @@
+<div class="chat-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <button routerLink="/dashboard" class="btn-back">← Volver</button>
+      <h2>Mensajes</h2>
+    </div>
+    <div class="contact-list">
+      <div *ngFor="let contact of contacts" 
+           (click)="selectContact(contact)"
+           [class.active]="selectedContact?.id === contact.id"
+           class="contact-item">
+        <div class="avatar">{{ contact.name[0] }}</div>
+        <div class="contact-info">
+          <span class="contact-name">{{ contact.name }}</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="chat-window">
+    <ng-container *ngIf="selectedContact; else noChat">
+      <header class="chat-header">
+        <h3>{{ selectedContact.name }}</h3>
+      </header>
+
+      <div class="messages-container">
+        <div *ngFor="let msg of messages" 
+             [class.my-message]="msg.idSender === myId || msg.IdSender === myId"
+             class="message-wrapper">
+          <div class="message-bubble">
+            <p>{{ msg.content || msg.Content }}</p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="chat-input-area">
+        <input [(ngModel)]="newMessage" 
+               (keyup.enter)="sendMessage()"
+               placeholder="Escribe un mensaje..." />
+        <button (click)="sendMessage()" class="btn-send">Enviar</button>
+      </footer>
+    </ng-container>
+
+    <ng-template #noChat>
+      <div class="empty-state">
+        <p>Selecciona un contacto para empezar a hablar</p>
+      </div>
+    </ng-template>
+  </main>
+</div>

@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fitstation_backend.Models;
 
@@ -16,12 +16,10 @@ public class Message
     [Column("id_sender")]
     public int IdSender { get; set; }
 
-    [Column("content")]
+    [Column("content")] 
     public string Content { get; set; } = string.Empty;
 
-    [Column("is_read")]
-    public bool IsRead { get; set; } = false;
-
     [Column("created_at")]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
+    public DateTime? CreatedAt { get; set; }
 }
