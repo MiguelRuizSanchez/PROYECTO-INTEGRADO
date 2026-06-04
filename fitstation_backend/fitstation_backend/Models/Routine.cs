@@ -19,5 +19,4 @@ public class Routine
     [Column("description")]
     public string? Description { get; set; }
     
-    // ❌ ELIMINADO CreatedAt porque no existe en tu SQL
 }

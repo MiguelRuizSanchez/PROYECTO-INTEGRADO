@@ -22,7 +22,6 @@ public class Worker
     [Column("bio")]
     public string? Bio { get; set; }
 
-    // BLINDAJE: Cambiamos 'int' a 'int?' y 'decimal' a 'decimal?'
     [Column("price_per_session")]
     public decimal? PricePerSession { get; set; }
 

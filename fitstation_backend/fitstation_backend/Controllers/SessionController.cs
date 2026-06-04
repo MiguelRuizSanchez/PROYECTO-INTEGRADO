@@ -28,7 +28,7 @@ public class SessionController : ControllerBase
         return string.IsNullOrEmpty(userIdStr) ? 0 : int.Parse(userIdStr);
     }
 
-    // 👨‍🎓 1. OBTENER SESIONES DEL ALUMNO (BLINDADO)
+    // HISTORIAL DE SESIONES
     [HttpGet("client/{clientId}")]
     public async Task<IActionResult> GetClientSessions(int clientId)
     {
@@ -71,7 +71,7 @@ public class SessionController : ControllerBase
         }
     }
 
-    // 🔍 4. OBTENER DETALLES (BLINDADO)
+    // DETALLES DE LA SESIÓN
     [HttpGet("details/{sessionId}")]
     public async Task<IActionResult> GetDetails(int sessionId)
     {
@@ -110,6 +110,7 @@ public class SessionController : ControllerBase
             return StatusCode(500, $"Error en detalles: {ex.Message}");
         }
     }
+    // SESIONES ASIGNADAS A WORKER
     [HttpGet("worker/{workerId}")]
     public async Task<IActionResult> GetWorkerSessions(int workerId)
     {
@@ -127,7 +128,7 @@ public class SessionController : ControllerBase
         return Ok(sessions);
     }
 
-    // 🏁 FINALIZAR SESIÓN Y LIBERAR EL CUPO
+    // FINALIZA SESIÓN 
 [HttpPut("finish/{sessionId}")]
 public async Task<IActionResult> FinishSession(int sessionId)
 {
@@ -136,10 +137,8 @@ public async Task<IActionResult> FinishSession(int sessionId)
         var session = await _context.Sessions.FindAsync(sessionId);
         if (session == null) return NotFound("Sesión no encontrada");
 
-        // 1. Marcar la sesión como completada
         session.Status = "Completed";
 
-        // 2. Buscar la petición original y cerrarla también
         var request = await _context.WorkerRequests.FindAsync(session.IdRequest);
         if (request != null)
         {
@@ -154,7 +153,4 @@ public async Task<IActionResult> FinishSession(int sessionId)
         return StatusCode(500, $"Error interno al finalizar la sesión: {ex.Message}");
     }
 }
-
-    // Mantén tus otros métodos existentes si los necesitas, pero asegúrate de aplicar el mismo patrón IsDBNull.
-    // Si necesitas ayuda con ellos, dímelo y los incluimos en el siguiente bloque.
 }

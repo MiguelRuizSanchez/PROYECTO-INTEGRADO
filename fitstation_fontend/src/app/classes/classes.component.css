@@ -25,7 +25,6 @@
   transition: 0.3s;
 }
 
-/* Efecto hover con tu verde corporativo */
 .btn-back:hover { 
   border-color: #5afeb2; 
   color: #5afeb2; 
@@ -45,7 +44,6 @@ h1 {
   font-size: 0.95rem; 
 }
 
-/* REJILLA DE TARJETAS */
 .grid-clases {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -64,7 +62,6 @@ h1 {
   transition: 0.3s ease;
 }
 
-/* Efecto hover con verde corporativo */
 .card-clase:hover { 
   border-color: #5afeb2; 
   transform: translateY(-3px); 
@@ -75,7 +72,7 @@ h1 {
   border-bottom: 1px solid #222;
   padding: 12px 20px;
   font-size: 0.85rem;
-  color: #5afeb2; /* Aplicado verde corporativo */
+  color: #5afeb2; 
   font-weight: 700;
 }
 
@@ -86,7 +83,6 @@ h1 {
 .trainer-info { font-size: 0.85rem; color: #555; border-top: 1px solid #1a1a1a; padding-top: 12px; }
 .trainer-info strong { color: #aaa; }
 
-/* Botón principal de reserva en verde corporativo */
 .btn-book {
   background: #5afeb2;
   color: #000000;

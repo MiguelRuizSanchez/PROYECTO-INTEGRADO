@@ -10,40 +10,44 @@
       
       <div class="user-area">
         <span class="badge">{{ userRole | uppercase }}</span>
-        
+
+        <button class="btn-profile" routerLink="/chat" style="background: #007bff; color: white; border: none;">
+          💬 CHAT
+        </button>
+
         <button class="btn-profile btn-nav-highlight" routerLink="/calendar">
-           MI CALENDARIO
+          MI CALENDARIO
         </button>
 
         <button *ngIf="userRole === 'client'" class="btn-profile" routerLink="/classes">
-           CLASES
+          CLASES
         </button>
 
         <button *ngIf="userRole === 'worker'" 
                 class="btn-profile" 
                 routerLink="/create-routine">
-           CREAR RUTINA
+          CREAR RUTINA
         </button>
 
         <button *ngIf="userRole === 'client'" 
                 class="btn-match-nav" 
                 (click)="navigateToSearch()">
-           BUSCAR COACH
+          BUSCAR COACH
         </button>
 
-        <button class="btn-profile" routerLink="/profile"> MI PERFIL</button>
+        <button class="btn-profile" routerLink="/profile">MI PERFIL</button>
         <button class="btn-exit" (click)="logout()">SALIR</button>
       </div>
     </header>
 
     <main class="dashboard-body">
       <div class="welcome">
-        <h1>Bienvenido, {{ userData?.name || userData?.Name }} </h1>
+        <h1>Bienvenido, {{ userData?.name || userData?.Name }}</h1>
         <p>Tu centro de control deportivo personalizado.</p>
       </div>
 
       <section class="requests-section" *ngIf="userRole === 'worker' && pendingRequests.length > 0">
-        <h2> Nuevas peticiones de alumnos</h2>
+        <h2>Nuevas peticiones de alumnos</h2>
         <div class="requests-list">
           <div class="request-item" *ngFor="let request of pendingRequests">
             <div class="req-info">
@@ -59,7 +63,7 @@
       </section>
 
       <section class="requests-section" *ngIf="userRole === 'client' && sentRequests.length > 0">
-        <h2> Esperando respuesta de entrenadores</h2>
+        <h2>Esperando respuesta de entrenadores</h2>
         <div class="requests-list">
           <div class="request-item pending-client" *ngFor="let req of sentRequests">
             <div class="req-info">
@@ -71,7 +75,7 @@
       </section>
 
       <section class="sessions-section">
-        <h2> Mis Sesiones de Entrenamiento Privado</h2>
+        <h2>Mis Sesiones de Entrenamiento Privado</h2>
         
         <div *ngIf="activeSessions.length === 0" class="empty-state-simple">
           No tienes sesiones privadas programadas en este momento.
@@ -96,13 +100,20 @@
                 <button *ngIf="userRole === 'client'" 
                         class="btn-train-only" 
                         [routerLink]="['/training', session.idSession || session.IdSession]">
-                   MI PLAN
+                    MI PLAN
                 </button>
                 
                 <button *ngIf="userRole === 'worker'" 
                         class="btn-train-only" 
                         [routerLink]="['/routine-management', session.idSession || session.IdSession]">
                   GESTIÓN
+                </button>
+
+                <button class="btn-finish-small" 
+                        style="background: #444;"
+                        [routerLink]="['/chat', userRole === 'worker' ? (session.idUser || session.IdUser) : (session.idUserWorker || session.IdUserWorker)]"
+                        title="Enviar mensaje">
+                  ✉️
                 </button>
                 
                 <button *ngIf="userRole === 'worker'" 
@@ -117,7 +128,7 @@
       </section>
 
       <section class="sessions-section" style="margin-top: 35px;">
-        <h2> Mis Clases Colectivas de la Semana</h2>
+        <h2>Mis Clases Colectivas de la Semana</h2>
         
         <div *ngIf="weeklyClasses.length === 0" class="empty-state-simple">
           No tienes turnos ni clases grupales programadas para esta semana.
@@ -138,7 +149,7 @@
             <div class="card-content">
               <h4 style="color: #fff; font-size: 1.1rem; margin: 0;">{{ cls.className || cls.ClassName || cls.name }}</h4>
               <p style="color: #00ff88; font-weight: 500; font-size: 0.88rem; margin: 6px 0 0 0; display: flex; align-items: center; gap: 4px;">
-                 Fecha: {{ cls.bookingDate || cls.BookingDate || cls.dayOfWeek || cls.DayOfWeek }}
+                  Fecha: {{ cls.bookingDate || cls.BookingDate || cls.dayOfWeek || cls.DayOfWeek }}
               </p>
             </div>
 
@@ -147,7 +158,7 @@
                       routerLink="/calendar"
                       [queryParams]="{ vista: 'clases' }"
                       style="background: #333; color: #fff; border: 1px solid #444; width: 100%; font-weight: bold; cursor: pointer; padding: 8px; border-radius: 4px; font-size: 0.82rem; transition: 0.2s;">
-                 VER EN AGENDA
+                  VER EN AGENDA
               </button>
             </div>
           </div>

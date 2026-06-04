@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
             this.loadWorkerData(internalId); 
           }
         } else if (this.userRole === 'client') {
-          const obj = details?.objectives || details?.Objectives || '';
+          const obj = details?.objectives || '';
           this.isIncompleteProfile = (obj.trim() === ''); 
           
           if (!this.isIncompleteProfile) {

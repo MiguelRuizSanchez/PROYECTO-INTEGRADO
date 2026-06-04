@@ -23,14 +23,14 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // 1. Catálogo global de ejercicios
+        // CATÁLOGO DE EJERCICIOS
         [HttpGet("exercises")]
         public async Task<ActionResult<IEnumerable<Exercise>>> GetExercises()
         {
             return Ok(await _context.Exercises.ToListAsync());
         }
 
-        // 2. Biblioteca de rutinas del Coach
+        // RUTINAS CREADAS
         [HttpGet("worker/{workerId}")]
         public async Task<ActionResult<IEnumerable<Routine>>> GetWorkerRoutines(int workerId)
         {
@@ -52,7 +52,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 3. Obtener el nombre del alumno específico
+        // OBTENER NOMBRE DEL ALUMNO 
         [HttpGet("client-name/{clientId}")]
         public async Task<IActionResult> GetClientName(int clientId)
         {
@@ -74,7 +74,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 4. Guardar rutina completa en la biblioteca
+        // CREACIÓN DE NUEVA RUTINA
         [HttpPost("create-full")]
         public async Task<IActionResult> CreateFullRoutine([FromBody] RoutineCreateDto dto)
         {
@@ -114,7 +114,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 🚀 5. ASIGNACIÓN REPARADA: Cambiado "assign-to-client" por "assign" para fulminar el Error 404
+        // ASIGNACIÓN DE RUTINA 
         [HttpPost("assign")]
         public async Task<IActionResult> AssignToClient([FromBody] AssignRoutineDto dto)
         {
@@ -137,7 +137,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 6. LISTADO CORREGIDO: Ordena por la ID autoincremental de la tabla
+        // LISTADO DE RUTINAS ASIGNADAS
         [HttpGet("client/{clientId}")]
         public async Task<IActionResult> GetClientRoutines(int clientId)
         {
@@ -164,8 +164,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 7. Obtener detalles de ejercicios de una rutina
-        // 🚀 SOPORTE DE RUTAS BLINDADO: Responde de forma segura a cualquier variante de URL de Angular
+        // DETALLES DE RUTINA 
         [AllowAnonymous]
         [HttpGet("details/{routineId}")]
         [HttpGet("{routineId}/details")]

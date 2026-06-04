@@ -1,8 +1,3 @@
-/* ==========================================================================
-   FITSTATION - COMPONENT: ENTRENAMIENTO (VISTA ALUMNO)
-   Paleta: Verde (#5afeb2) y Negro (#000000)
-   ========================================================================== */
-
 .entrenamiento-container {
   min-height: 100vh;
   background-color: #000000;
@@ -50,7 +45,7 @@
 }
 
 .info-sesion span {
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   font-weight: bold;
 }
 
@@ -58,7 +53,7 @@
 .seccion-rutinas h2 {
   max-width: 1200px;
   margin: 0 auto 20px;
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
 }
 
 .grid-rutinas {
@@ -79,7 +74,7 @@
 }
 
 .tarjeta-rutina:hover {
-  border-color: #5afeb2; /* Verde corporativo */
+  border-color: #5afeb2; 
   transform: translateY(-5px);
 }
 
@@ -102,7 +97,7 @@
 }
 
 .btn-ver {
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2; 
   color: black;
   border: none;
   padding: 12px 25px;
@@ -117,7 +112,6 @@
   background: #46e098;
 }
 
-/* TABLA DE EJERCICIOS */
 .detalle-rutina {
   max-width: 1200px;
   margin: 0 auto;
@@ -146,7 +140,7 @@
 
 .tabla-ejercicios th {
   background: #1a1a1a;
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   padding: 15px;
   font-size: 0.8rem;
   text-transform: uppercase;

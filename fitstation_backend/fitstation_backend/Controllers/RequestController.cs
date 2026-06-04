@@ -17,7 +17,7 @@ public class RequestController : ControllerBase
     {
         _context = context;
     }
-
+    // NUEVA SOLICITUD SI NO HAY CONFLICTOS
     [HttpPost("send")]
     public IActionResult SendRequest([FromBody] SendRequestDto dto)
     {
@@ -26,13 +26,12 @@ public class RequestController : ControllerBase
         
         if (client == null) return BadRequest(new { message = "Debes ser un cliente para solicitar un coach." });
 
-     // 1. Comprobar si hay una petición "Pending" (Esperando respuesta)
+     
 var tienePeticionPendiente = _context.WorkerRequests.Any(r => 
     r.IdClient == client.IdClient && 
     r.IdWorker == dto.WorkerId && 
     r.Status == "Pending");
 
-// 2. Comprobar si hay una sesión "Scheduled" (En curso)
 var tieneSesionActiva = _context.Sessions.Any(s => 
     s.IdClient == client.IdClient && 
     s.IdWorker == dto.WorkerId && 
@@ -58,7 +57,7 @@ if (tienePeticionPendiente || tieneSesionActiva)
 
         return Ok(new { message = "¡Solicitud enviada correctamente!" });
     }
-
+    // SOLICITUDES RECIBIDAS WORKER
     [HttpGet("worker/{workerId}")]
     public IActionResult GetWorkerRequests(int workerId)
     {
@@ -78,7 +77,7 @@ if (tienePeticionPendiente || tieneSesionActiva)
         return Ok(requests);
     }
 
-    // 🚀 NUEVO: Endpoint para el Cliente
+    // SOLICITUDES ENVIADAS CLIENTE
     [HttpGet("client/{clientId}")]
     public IActionResult GetClientRequests(int clientId)
     {
@@ -96,7 +95,7 @@ if (tienePeticionPendiente || tieneSesionActiva)
 
         return Ok(requests);
     }
-
+    // SI SE ACEPTA, SE CREA LA SESIÓN
     [HttpPut("update-status/{requestId}")]
     public IActionResult UpdateStatus(int requestId, [FromBody] string newStatus)
     {

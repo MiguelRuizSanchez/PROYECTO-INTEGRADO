@@ -12,13 +12,8 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  // profileForm: Es el molde del formulario que Angular usa para manejar los datos del usuario.
   profileForm: FormGroup;
-  
-  // userRole: Define si el usuario es alumno ('client') o entrenador ('worker').
   userRole: string = '';
-  
-  // isLoading: Indica si la aplicación está esperando la respuesta del servidor.
   isLoading: boolean = true;
 
   constructor(
@@ -27,60 +22,53 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef 
   ) {
-    // Inicializamos el formulario con campos vacíos. 
-    // Algunos campos están desactivados (disabled) porque no queremos que el usuario cambie su email o nombre.
     this.profileForm = this.fb.group({
       name: [{ value: '', disabled: true }],
       email: [{ value: '', disabled: true }],
-      
-      // Campos específicos para Entrenadores (Worker)
       specialization: [''],
       bio: [''],
       pricePerSession: [0],
       maxCapacity: [10],
-
-      // Campos específicos para Alumnos (Client)
       objectives: [''],
+      goal: [''],
       experienceLevel: [''],
       modality: [''],
-      
-      // Preferencias generales
+      medicalNotes: [''],
+      equipment: [''],
       prefDay: ['Monday'],
       prefTime: ['10:00']
     });
   }
 
-  // Al cargar el componente, solicitamos los datos del perfil actual.
   ngOnInit() {
     this.loadProfileData();
   }
 
-  // Función para obtener los datos desde el servicio y rellenar el formulario.
   loadProfileData() {
     this.profileService.getMyProfile().subscribe({
       next: (res: any) => {
-        // Obtenemos el rol y los detalles, normalizando los nombres para evitar problemas de mayúsculas.
         this.userRole = (res?.role || res?.Role || '').toLowerCase().trim();
         const details = res?.details || res?.Details || {};
-        
-        // Ajustamos el formato de la hora para el input time.
-        let timeString = details?.prefTime || details?.PrefTime || '10:00';
+
+        let timeString = details?.pref_time || details?.prefTime || details?.PrefTime || '10:00';
         if (typeof timeString === 'string' && timeString.includes(':')) {
             timeString = timeString.substring(0, 5);
         }
 
-        // Cargamos los datos recibidos en el formulario.
         this.profileForm.patchValue({
           name: res?.name || res?.Name || '',
           email: res?.email || res?.Email || '',
-          specialization: details?.specialization || details?.Specialization || details?.specialty || details?.Specialty || '',
+          specialization: details?.specialization || details?.Specialization || details?.specialty || '',
           bio: details?.bio || details?.Bio || '',
-          pricePerSession: details?.pricePerSession || details?.PricePerSession || 0,
-          maxCapacity: details?.maxCapacity || details?.MaxCapacity || 10,
+          pricePerSession: details?.price_per_session || details?.pricePerSession || 0,
+          maxCapacity: details?.max_capacity || details?.maxCapacity || 10,
           objectives: details?.objectives || details?.Objectives || '',
-          experienceLevel: details?.experienceLevel || details?.ExperienceLevel || 'principiante',
+          goal: details?.goal || details?.Goal || '',
+          experienceLevel: details?.experience_level || details?.experienceLevel || 'principiante',
           modality: details?.modality || details?.Modality || 'presencial',
-          prefDay: details?.prefDay || details?.PrefDay || 'Monday',
+          medicalNotes: details?.medical_notes || details?.medicalNotes || '',
+          equipment: details?.equipment || details?.Equipment || '',
+          prefDay: details?.pref_day || details?.prefDay || 'Monday',
           prefTime: timeString
         });
         
@@ -95,19 +83,15 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Función para guardar los cambios realizados en el formulario.
   saveProfile() {
     if (this.profileForm.valid) {
-      // Obtenemos todos los valores, incluyendo los campos deshabilitados (nombre/email).
       const formData = this.profileForm.getRawValue();
 
-      // Validación simple para asegurar que el entrenador defina su especialidad.
       if (this.userRole === 'worker' && (!formData.specialization || formData.specialization.trim() === '')) {
         alert('Por favor, indica tu especialidad.');
         return;
       }
 
-      // Enviamos los datos al backend para actualizar la base de datos.
       this.profileService.updateProfile(formData).subscribe({
         next: () => {
           alert('¡Perfil guardado con éxito!');

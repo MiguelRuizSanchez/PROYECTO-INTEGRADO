@@ -16,7 +16,6 @@ namespace fitstation_backend.Models
         [Column("description")]
         public string Description { get; set; } = string.Empty;
 
-        // 🚀 Columnas para los turnos de trabajo del entrenador
         [Column("id_worker")]
         public int? IdWorker { get; set; }
 

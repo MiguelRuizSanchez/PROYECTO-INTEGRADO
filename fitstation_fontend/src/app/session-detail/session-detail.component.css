@@ -1,9 +1,4 @@
-/* ==========================================================================
-   FITSTATION - COMPONENT: ROUTINE MODAL (SESSION DETAIL)
-   Estilos corporativos: #5afeb2 (Verde) y #000000 (Negro)
-   ========================================================================== */
 
-/* MODAL DE RUTINA */
 .modal-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.9); 
@@ -15,7 +10,7 @@
   background: #111; 
   padding: 30px; 
   border-radius: 15px; 
-  border: 1px solid #5afeb2; /* Verde corporativo */
+  border: 1px solid #5afeb2; 
   width: 90%; 
   max-width: 600px; 
   box-shadow: 0 15px 40px rgba(0,0,0,0.9);
@@ -35,7 +30,7 @@
 
 .modal-header h2 { 
   margin: 0; 
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   font-size: 1.5rem; 
 }
 
@@ -74,8 +69,8 @@
 }
 
 .routine-table th { 
-  background: #0a1f15; /* Tono oscuro verdoso corporativo */
-  color: #5afeb2; /* Verde corporativo */
+  background: #0a1f15; 
+  color: #5afeb2; 
   padding: 12px; 
   text-align: left; 
   font-size: 0.85rem; 

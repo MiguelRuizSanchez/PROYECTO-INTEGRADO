@@ -17,13 +17,13 @@ public class AuthController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _config;
 
-    // Inyectamos IConfiguration para leer la clave secreta del appsettings.json
+
     public AuthController(ApplicationDbContext context, IConfiguration config)
     {
         _context = context;
         _config = config;
     }
-
+    // REGISTRA NUEVO USUARIO 
     [HttpPost("register")]
     public IActionResult Register(RegisterDto dto)
     {
@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "Usuario creado correctamente", userId = user.IdUser });
     }
-
+    // VALIDACIÓN Y GENERA TOKEN
     [HttpPost("login")]
     public IActionResult Login(LoginDto dto)
     {
@@ -59,7 +59,6 @@ public class AuthController : ControllerBase
             return Unauthorized("Credenciales incorrectas.");
         }
 
-        //  GENERACIÓN DEL TOKEN JWT 
         var jwtSettings = _config.GetSection("Jwt");
         var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 
@@ -82,7 +81,6 @@ public class AuthController : ControllerBase
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var tokenString = tokenHandler.WriteToken(token);
 
-        // Devolvemos el Token junto con la info del usuario
         return Ok(new LoginResponseDto
         {
             Message = "Login exitoso",

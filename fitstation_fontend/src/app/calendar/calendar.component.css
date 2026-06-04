@@ -1,4 +1,3 @@
-/* Contenedor principal con tu negro corporativo */
 .calendar-container {
   min-height: 100vh;
   background: #000000; 
@@ -7,7 +6,6 @@
   font-family: 'Scale VF', sans-serif;
 }
 
-/* Cabecera con navegación */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -24,7 +22,7 @@
 
 .month-nav h2 {
   font-size: 1.8rem;
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   min-width: 280px;
   text-align: center;
   margin: 0;
@@ -47,7 +45,6 @@
   color: black;
 }
 
-/* Tarjeta del calendario */
 .calendar-card {
   max-width: 1200px;
   margin: 0 auto;
@@ -58,7 +55,6 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* Rejilla de nombres de días */
 .weekdays-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -75,7 +71,6 @@
   text-transform: uppercase;
 }
 
-/* Rejilla de días numéricos */
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -93,7 +88,6 @@
 .day-cell:nth-child(7n) { border-right: none; }
 .day-cell.empty { background: #0a0a0a; }
 
-/* Resaltado del día actual */
 .day-cell.today {
   background: rgba(90, 254, 178, 0.05);
 }
@@ -111,9 +105,8 @@
   display: block;
 }
 
-/* Etiquetas de sesiones (Eventos) */
 .event-pill {
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2; 
   color: black;
   padding: 6px 10px;
   border-radius: 6px;
@@ -144,7 +137,6 @@
   font-weight: bold;
 }
 
-/* Footer y botones */
 .calendar-footer {
   text-align: center;
   margin-top: 25px;
@@ -173,7 +165,6 @@
   font-weight: bold;
 }
 
-/* Selector de doble vista */
 .calendar-views-toggle {
   display: flex;
   justify-content: center;
@@ -205,10 +196,9 @@
   box-shadow: 0 4px 15px rgba(90, 254, 178, 0.2);
 }
 
-/* Píldora para Clases Colectivas (Mantenemos un azul suave o cambiamos a verde?) */
 .class-colective-pill {
   background: #1a1a1a !important;
-  border-left: 3px solid #5afeb2 !important; /* Ahora resalta en tu verde */
+  border-left: 3px solid #5afeb2 !important; 
   cursor: default !important;
 }
 

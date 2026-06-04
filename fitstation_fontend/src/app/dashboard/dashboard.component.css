@@ -1,8 +1,3 @@
-/* ==========================================================================
-   FITSTATION - COMPONENT: DASHBOARD
-   Estilos corporativos aplicados: #5afeb2 (Verde) y #000000 (Negro)
-   ========================================================================== */
-
 .dashboard-main {
   min-height: 100vh;
   background-color: #000000;
@@ -10,10 +5,9 @@
   font-family: 'Scale VF', sans-serif;
 }
 
-/* 1. BARRA DE NAVEGACIÓN - AJUSTE DE PRECISIÓN */
 .top-nav {
   display: flex;
-  justify-content: space-between; /* Mantenemos el espacio entre logo y botones */
+  justify-content: space-between; 
   align-items: center;
   padding: 20px 5%;
   background: #111;
@@ -23,17 +17,16 @@
   z-index: 100;
 }
 
-/* Contenedor que agrupa el logo */
 .logo-container {
   display: flex;
-  justify-content: flex-start; /* Fuerza a que el contenido de este bloque empiece a la izquierda */
-  flex: 1; /* Permite que el logo ocupe el espacio disponible a la izquierda */
+  justify-content: flex-start; 
+  flex: 1; 
 }
 .logo-img {
   max-width: 180px;
   height: auto;
   display: block;
-  margin: 0; /* Aseguramos que no tenga márgenes que lo centren */
+  margin: 0; 
 }
 
 .user-area {
@@ -49,19 +42,18 @@
 }
 
 .brand span {
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2;
 }
 
-/* Para empujar los botones a la derecha si es necesario */
 .user-area {
   display: flex;
   gap: 15px;
   align-items: center;
-  margin-left: auto; /* Esto empuja todo el bloque de botones al extremo derecho */
+  margin-left: auto; 
 }
 .badge {
   background: #222;
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   padding: 5px 12px;
   border-radius: 5px;
   font-size: 0.7rem;
@@ -70,10 +62,10 @@
 }
 
 .logo-img {
-  max-width: 200px; /* Ajusta este valor al tamaño que quieras */
+  max-width: 200px; 
   height: auto;
   display: block;
-  margin: 0 auto 30px auto; /* Centrado horizontal y margen inferior */
+  margin: 0 auto 30px auto;
 }
 
 .btn-profile, .btn-match-nav, .btn-exit {
@@ -92,12 +84,12 @@
 }
 
 .btn-nav-highlight {
-  border-color: #5afeb2 !important; /* Verde corporativo */
+  border-color: #5afeb2 !important; 
   color: #5afeb2 !important;
 }
 
 .btn-match-nav {
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2;
   color: black;
   border: none;
 }
@@ -108,7 +100,6 @@
   border: none;
 }
 
-/* 2. CUERPO DEL DASHBOARD */
 .dashboard-body {
   padding: 40px 5%;
   max-width: 1400px;
@@ -125,10 +116,9 @@
   margin-bottom: 40px;
 }
 
-/* 3. SECCIÓN DE PETICIONES */
 .requests-section {
   margin-bottom: 50px;
-  background: rgba(90, 254, 178, 0.05); /* Verde corporativo suave */
+  background: rgba(90, 254, 178, 0.05); 
   padding: 25px;
   border-radius: 15px;
   border: 1px solid rgba(90, 254, 178, 0.2);
@@ -152,14 +142,13 @@
 }
 
 .highlight {
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   font-weight: bold;
 }
 
 .btn-approve { background: #5afeb2; color: black; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 .btn-reject { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-left: 10px; }
 
-/* 4. GRID DE SESIONES */
 .sessions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -211,7 +200,6 @@
   font-size: 0.9rem;
 }
 
-/* 5. FOOTER DE TARJETA */
 .card-footer-split {
   display: flex;
   gap: 10px;
@@ -232,7 +220,7 @@
   justify-content: center;
   gap: 5px;
   transition: 0.2s;
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2; 
   color: black;
   border: none;
 }
@@ -250,7 +238,6 @@
   font-size: 1rem;
 }
 
-/* 6. MODAL DE BLOQUEO */
 .overlay-lock {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -267,12 +254,12 @@
   padding: 40px;
   border-radius: 20px;
   text-align: center;
-  border: 1px solid #5afeb2; /* Verde corporativo */
+  border: 1px solid #5afeb2; 
   max-width: 400px;
 }
 
 .btn-confirm {
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2; 
   color: black;
   border: none;
   padding: 15px 30px;
@@ -283,7 +270,6 @@
   width: 100%;
 }
 
-/* COLORES DE ESTADO */
 .completed { border-left: 4px solid #5afeb2; }
 .scheduled { border-left: 4px solid #3498db; }
 .pending { border-left: 4px solid #f1c40f; }

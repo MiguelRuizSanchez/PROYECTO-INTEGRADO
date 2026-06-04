@@ -23,6 +23,6 @@ namespace fitstation_backend.Models
         public DateTime BookingDate { get; set; }
 
         [Column("status")]
-        public string Status { get; set; } = "Pending"; // Pendiente por defecto
+        public string Status { get; set; } = "Pending"; 
     }
 }

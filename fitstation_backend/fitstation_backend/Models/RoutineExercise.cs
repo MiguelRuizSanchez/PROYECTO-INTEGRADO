@@ -16,11 +16,10 @@ public class RoutineExercise
     [Column("id_exercise")]
     public int IdExercise { get; set; }
 
-    [Column("reps")] // Coincide con tu captura
+    [Column("reps")] 
     public int Reps { get; set; }
 
-    [Column("sets")] // Coincide con tu captura
+    [Column("sets")] 
     public int Sets { get; set; }
 
-    // ❌ He eliminado RestSeconds porque no aparece en tu tabla física
 }

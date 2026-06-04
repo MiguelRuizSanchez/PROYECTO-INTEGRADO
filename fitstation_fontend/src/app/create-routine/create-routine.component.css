@@ -1,4 +1,3 @@
-/* Contenedor principal: Fondo negro */
 .crear-rutina-container {
   min-height: 100vh;
   background-color: #000000;
@@ -7,7 +6,6 @@
   font-family: 'Scale VF', sans-serif;
 }
 
-/* Cabecera */
 .header-crear {
   margin-bottom: 40px;
   border-bottom: 1px solid #1a1a1a;
@@ -26,13 +24,11 @@
   transition: 0.3s;
 }
 
-/* Efecto hover con tu verde corporativo */
 .btn-cancel:hover { 
   border-color: #5afeb2; 
   color: #5afeb2; 
 }
 
-/* Tarjetas de formulario */
 .card-form {
   background: #111;
   border: 1px solid #222;
@@ -60,7 +56,6 @@
   font-weight: 800;
 }
 
-/* Inputs y Selects */
 input, select {
   background: #161616;
   border: 1px solid #333;
@@ -75,7 +70,6 @@ input:focus, select:focus {
   outline: none;
 }
 
-/* Grilla de ejercicios */
 .grid-header {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
@@ -93,7 +87,6 @@ input:focus, select:focus {
   margin-bottom: 10px;
 }
 
-/* Botones específicos de la rutina */
 .btn-add-row {
   background: #1a1a1a;
   border: 1px solid #5afeb2;
@@ -125,13 +118,8 @@ input:focus, select:focus {
 
 .btn-save-all:hover {
   background: #46e098;
-}/* ==========================================================================
-   FITSTATION - COMPONENT: CREAR RUTINA
-   Descripción: Estilos corporativos para el módulo de creación de rutinas.
-   Paleta: Verde (#5afeb2) y Negro (#000000)
-   ========================================================================== */
+}
 
-/* Contenedor principal: Fondo negro */
 .crear-rutina-container {
   min-height: 100vh;
   background-color: #000000;
@@ -141,7 +129,6 @@ input:focus, select:focus {
   box-sizing: border-box;
 }
 
-/* Cabecera del módulo */
 .header-crear {
   margin-bottom: 40px;
   border-bottom: 1px solid #1a1a1a;
@@ -163,7 +150,6 @@ input:focus, select:focus {
   font-size: 0.95rem;
 }
 
-/* Botón de volver/cancelar */
 .btn-cancel {
   background: #111;
   border: 1px solid #333;
@@ -182,7 +168,6 @@ input:focus, select:focus {
   background: #1a1a1a;
 }
 
-/* Tarjetas de formulario */
 .card-form {
   background: #111;
   border: 1px solid #222;
@@ -205,7 +190,6 @@ input:focus, select:focus {
   align-items: center;
 }
 
-/* Círculo de paso (step indicator) */
 .step {
   background: #5afeb2;
   color: #000000;
@@ -218,7 +202,6 @@ input:focus, select:focus {
   font-weight: 800;
 }
 
-/* Inputs y Selects globales */
 input, select {
   background: #161616;
   border: 1px solid #333;
@@ -253,7 +236,6 @@ input:focus, select:focus {
   gap: 20px;
 }
 
-/* Grilla de ejercicios */
 .ejercicios-grid {
   margin-top: 15px;
 }
@@ -279,7 +261,6 @@ input:focus, select:focus {
 
 .center { text-align: center; }
 
-/* Botones de acción */
 .btn-add-row {
   background: #1a1a1a;
   border: 1px solid #5afeb2;
@@ -333,7 +314,6 @@ input:focus, select:focus {
   box-shadow: 0 4px 15px rgba(90, 254, 178, 0.3);
 }
 
-/* Espaciado extra para rellenar líneas hasta las 233 */
 .empty-state {
   text-align: center;
   padding: 40px;
@@ -341,5 +321,3 @@ input:focus, select:focus {
   font-style: italic;
 }
 
-/* Fin del archivo CSS corporativo */
-/* FitStation TFG 2026 */

@@ -1,4 +1,3 @@
-/* 🚀 Estructura base con fondo negro profundo */
 :host {
   display: block;
   width: 100%;
@@ -9,7 +8,6 @@
   box-sizing: border-box;
 }
 
-/* Contenedor principal */
 .buscador-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -17,14 +15,12 @@
   color: white;
 }
 
-/* Rejilla de tarjetas */
 .grid-coaches {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
 }
 
-/* Tarjeta individual del Coach */
 .card-coach {
   background: #111111;
   border: 1px solid #222222;
@@ -37,14 +33,12 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-/* Efecto hover con tu verde corporativo #5afeb2 */
 .card-coach:hover {
   transform: translateY(-5px);
   border-color: #5afeb2;
   box-shadow: 0 6px 20px rgba(90, 254, 178, 0.15);
 }
 
-/* Inputs de fecha y hora */
 input[type="date"],
 input[type="time"] {
   background: #161616;
@@ -65,7 +59,6 @@ input[type="time"]:focus {
   border-color: #5afeb2;
 }
 
-/* Botón principal de solicitud en verde corporativo */
 .btn-solicitar {
   background: #5afeb2;
   color: #000000;

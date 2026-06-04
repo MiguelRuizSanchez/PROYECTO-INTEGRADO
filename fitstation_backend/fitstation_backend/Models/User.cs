@@ -19,7 +19,7 @@ public class User
     [Column("password_hash")]
     public string PasswordHash { get; set; } = null!;
 
-    [Column("role")] // se puede poner como trigger
+    [Column("role")] 
     public string Role { get; set; } = null!;
 
     [Column("created_at")]

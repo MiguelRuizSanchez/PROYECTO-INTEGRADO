@@ -13,7 +13,7 @@ namespace fitstation_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // 🔐 Protegido globalmente por token JWT
+    [Authorize] 
     public class ClassController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -23,7 +23,7 @@ namespace fitstation_backend.Controllers
             _context = context;
         }
 
-        // 📋 1. CATÁLOGO GLOBAL: Abierto al público para ver horarios semanales recurrentes
+        // CLASES DISPONIBLES PARA EL PÚBLICO
         [HttpGet("available")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAvailableClasses()
@@ -63,7 +63,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 🎯 2. RESERVA CON FECHA DEL ALUMNO
+        // RESERVA VALIDANDO FECHA Y DUPLICADO
         [HttpPost("book")]
         public async Task<IActionResult> BookClass([FromBody] BookClassDto dto)
         {
@@ -113,7 +113,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 📅 3. VISTA CALENDARIO CLIENTE
+        // CALENDARIO CLIENTE
         [HttpGet("client-calendar")]
         public async Task<IActionResult> GetClientClassCalendar()
         {
@@ -148,7 +148,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 👔 4. VISTA CALENDARIO ENTRENADOR: Horarios por fecha única asignada
+        // CALENDARIO ENTRENADOR
         [HttpGet("worker-calendar")]
         public async Task<IActionResult> GetWorkerClassCalendar()
         {
@@ -161,7 +161,6 @@ namespace fitstation_backend.Controllers
                 var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
                 if (worker == null) return BadRequest("Perfil de entrenador no encontrado.");
 
-                // Escudo de creación automatizada de tabla relacional
                 string createTableSql = @"
                     CREATE TABLE IF NOT EXISTS `worker_class_assignments` (
                         `id_assignment` INT AUTO_INCREMENT PRIMARY KEY,
@@ -199,7 +198,6 @@ namespace fitstation_backend.Controllers
                                 IdClass = reader.GetInt32(2),
                                 ClassName = reader.GetString(3),
                                 DayOfWeek = reader.GetString(4),
-                                // 🚀 REPARADO: Usamos GetValue().ToString() para evitar la ausencia de GetTimeSpan en DbDataReader
                                 ClassTime = reader.GetValue(5)?.ToString() ?? "00:00:00",
                                 IdWorker = worker.IdWorker
                             });
@@ -214,7 +212,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // ❌ 5. Cancelar reserva del Alumno
+        // CANCELA RESERVA
         [HttpDelete("cancel/{idBooking}")]
         public async Task<IActionResult> CancelBooking(int idBooking)
         {
@@ -244,7 +242,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // 🚀 6. ASIGNAR INSTRUCTOR CON FECHA FIJA (No recurrente)
+        // ASIGNACION ENTRENADOR - CLASE - FECHA
         [HttpPost("assign/{idClass}")]
         public async Task<IActionResult> AssignTrainerToClass(int idClass, [FromQuery] string chosenDate)
         {
@@ -309,7 +307,7 @@ namespace fitstation_backend.Controllers
             }
         }
 
-        // ❌ 7. DESASIGNAR INSTRUCTOR CON FECHA FIJA
+        // LIBERA ENTRENADOR
         [HttpPost("unassign/{idClass}")]
         public async Task<IActionResult> UnassignTrainerFromClass(int idClass, [FromQuery] string chosenDate)
         {

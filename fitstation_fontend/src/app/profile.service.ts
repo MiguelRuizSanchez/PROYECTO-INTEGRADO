@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProfileService {
-  // 🌐 URLs de conexión hacia tus controladores del Backend de C#
   private profileUrl = 'http://localhost:5038/api/Profile';
   private sessionUrl = 'http://localhost:5038/api/Session';
   private exerciseUrl = 'http://localhost:5038/api/Exercise';
@@ -15,7 +14,6 @@ export class ProfileService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 Generador de Cabeceras Seguro: Adjunta el token JWT del usuario logueado
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') || '';
     return new HttpHeaders({
@@ -23,10 +21,6 @@ export class ProfileService {
       'Content-Type': 'application/json'
     });
   }
-
-  // ==========================================
-  // 👤 SECCIÓN A: CONTROL DE PERFIL Y ROLES
-  // ==========================================
 
   getMyProfile(): Observable<any> {
     return this.http.get<any>(`${this.profileUrl}/my-profile`, { headers: this.getHeaders() });
@@ -36,13 +30,7 @@ export class ProfileService {
     return this.http.put<any>(`${this.profileUrl}/update`, payload, { headers: this.getHeaders() });
   }
 
-  // ==========================================
-  // 📩 SECCIÓN B: SOLICITUDES DE COACH PRIVADO
-  // ==========================================
-
-  // 🚀 Actualizado: Ahora transmite la fecha exacta y la hora de reserva elegida por el atleta
   requestCoach(idWorker: number, requestedDate: string, requestedTime: string): Observable<any> {
-    // Obtenemos el día de la semana en inglés para que encaje con tu Base de Datos
     const dateObj = new Date(requestedDate);
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const dayName = days[dateObj.getDay()];
@@ -50,10 +38,9 @@ export class ProfileService {
     const payload = {
       WorkerId: Number(idWorker),
       RequestedDay: dayName,
-      RequestedTime: requestedTime + ":00" // Añadimos segundos para el TimeSpan de C#
+      RequestedTime: requestedTime + ":00" 
     };
 
-    // Llamamos al RequestController, que es el que gestiona esto correctamente
     return this.http.post<any>(`http://localhost:5038/api/Request/send`, payload, { headers: this.getHeaders() });
   }
 
@@ -66,9 +53,7 @@ export class ProfileService {
   }
 
   updateStatus(requestId: number, status: string): Observable<any> {
-    // 🚀 CORRECCIÓN: Apuntamos al RequestController que es el que fabrica la Session.
-    // Además, enviamos el status entre comillas dobles `"${status}"` para que C#
-    // lo reciba como un string JSON válido.
+  
     return this.http.put<any>(
       `http://localhost:5038/api/Request/update-status/${requestId}`,
       `"${status}"`,
@@ -87,9 +72,6 @@ export class ProfileService {
     return this.http.post<any>(`${this.profileUrl}/match-request`, payload, { headers: this.getHeaders() });
   }
 
-  // ==========================================
-  // 📅 SECCIÓN C: GESTIÓN DE SESIONES ACTIVAS
-  // ==========================================
 
   getWorkerSessions(idWorker: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.sessionUrl}/worker/${idWorker}`, { headers: this.getHeaders() });
@@ -107,9 +89,6 @@ export class ProfileService {
     return this.http.put<any>(`${this.sessionUrl}/finish/${idSession}`, {}, { headers: this.getHeaders() });
   }
 
-  // ==========================================
-  // 🏋️ SECCIÓN D: BIBLIOTECA DE EJERCICIOS Y RUTINAS
-  // ==========================================
 
   getExercises(): Observable<any[]> {
     return this.http.get<any[]>(`${this.exerciseUrl}`, { headers: this.getHeaders() });
@@ -135,9 +114,6 @@ export class ProfileService {
     return this.http.post<any>(`${this.routineUrl}/assign`, payload, { headers: this.getHeaders() });
   }
 
-  // ==========================================
-  // 💬 SECCIÓN E: SISTEMA DE CHAT PRIVADO
-  // ==========================================
 
   getChatHistory(receiverId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.chatUrl}/history/${receiverId}`, { headers: this.getHeaders() });

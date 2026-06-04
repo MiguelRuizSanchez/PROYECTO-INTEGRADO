@@ -1,8 +1,3 @@
-/* ==========================================================================
-   FITSTATION - COMPONENT: CUESTIONARIO (FORMULARIO)
-   Estilos corporativos aplicados: #5afeb2 (Verde) y #000000 (Negro)
-   ========================================================================== */
-
 .cuestionario-main {
   min-height: 100vh;
   background: #000000;
@@ -24,9 +19,8 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
-/* Títulos y textos */
 h1 { 
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   text-align: center; 
   margin-bottom: 5px; 
 }
@@ -38,7 +32,7 @@ p {
 }
 
 h3 {
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   border-bottom: 1px solid #333;
   padding-bottom: 10px;
   margin: 25px 0 15px;
@@ -46,7 +40,6 @@ h3 {
   font-size: 1rem;
 }
 
-/* Agrupaciones y filas */
 .form-group { 
   margin-bottom: 20px; 
   display: flex; 
@@ -62,7 +55,6 @@ h3 {
   flex: 1; 
 }
 
-/* Etiquetas */
 label { 
   margin-bottom: 8px; 
   font-size: 0.85rem; 
@@ -70,7 +62,6 @@ label {
   font-weight: bold; 
 }
 
-/* Campos de formulario */
 .form-control {
   background: #1a1a1a;
   border: 1px solid #444;
@@ -87,11 +78,10 @@ label {
   box-shadow: 0 0 5px rgba(90, 254, 178, 0.2);
 }
 
-/* Botón de envío */
 .btn-submit {
   width: 100%;
   padding: 15px;
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2; 
   color: #000;
   font-weight: bold;
   border: none;
@@ -114,10 +104,6 @@ label {
   cursor: not-allowed; 
 }
 
-/* Espaciado para asegurar que ocupe espacio visual necesario */
 .spacer {
   height: 20px;
 }
-
-/* Fin del estilo del módulo de Cuestionario */
-/* FitStation 2026 - TFG Adrián */

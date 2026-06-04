@@ -20,25 +20,23 @@ namespace fitstation_backend.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Matching/suggested-workers
-        // Ahora es universal: no necesita el clientId por URL, lo extrae del Token.
+        // ENTRENADORES QUE MATCHEAN CON OBJETIVO CLIENTE
         [HttpGet("suggested-workers")]
         public async Task<IActionResult> GetSuggestedWorkers()
         {
             try
             {
-                // 1. Identificar al usuario real desde el token
+                // IDENTIFICA USUARIO MEDIANTE TOKEN
                 var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("No identificado.");
 
                 int userId = int.Parse(userIdStr);
                 
-                // 2. Obtener el cliente real asociado a este usuario
+                // CORROBORA QUE CLIENTE REGISTRADO
                 var client = await _context.Clients.FirstOrDefaultAsync(c => c.IdUser == userId);
                 if (client == null) return BadRequest("Perfil de cliente no encontrado. Completa tu perfil.");
 
-                // 3. Consulta base: Unir Workers con Users para obtener nombres y datos
+                // CLIENT-WORKER COMBINAR DATOS
                 var query = _context.Workers
                     .Join(_context.Users,
                         w => w.IdUser,
@@ -52,16 +50,13 @@ namespace fitstation_backend.Controllers
                             Price = w.PricePerSession,
                             Capacity = w.MaxCapacity
                         });
-
-                // 4. Filtrado Inteligente Universal: 
-                // Usamos los objetivos reales que el cliente guardó en su perfil
+                // FILTRO
                 string? objetivoCliente = client.Objectives ?? client.Goal;
 
                 if (!string.IsNullOrEmpty(objetivoCliente))
                 {
                     string objetivoMinusc = objetivoCliente.ToLower();
                     
-                    // Filtramos entrenadores que coincidan con la especialidad o especialización
                     query = query.Where(w => 
                         (w.Specialty != null && w.Specialty.ToLower().Contains(objetivoMinusc)) || 
                         (w.Specialization != null && w.Specialization.ToLower().Contains(objetivoMinusc))

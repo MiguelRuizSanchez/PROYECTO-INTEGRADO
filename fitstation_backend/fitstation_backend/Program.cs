@@ -7,13 +7,12 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. CONFIGURACIÓN DE LA BASE DE DATOS
+//CONFIGURACIÓN DE LA BASE DE DATOS
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// 2. CONFIGURACIÓN DE CORS
-// Mantenemos la política para que tu Angular (4200) pueda comunicarse con el Backend
+//CONFIGURACIÓN DE CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
@@ -24,7 +23,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// 3. CONFIGURACIÓN DE SEGURIDAD (JWT)
+//CONFIGURACIÓN DE SEGURIDAD (JWT)
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 
@@ -47,14 +46,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// 4. SERVICIOS BASE Y CONFIGURACIÓN DE SWAGGER
+//SERVICIOS BASE Y CONFIGURACIÓN DE SWAGGER
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FitStation API", Version = "v1" });
 
-    // Definimos el uso de Bearer Token en Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Escribe: 'Bearer {tu_token}'",
@@ -82,14 +80,13 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// 5. CONFIGURACIÓN DEL PIPELINE
+//CONFIGURACIÓN DEL PIPELINE
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// IMPORTANTE: El CORS debe ir siempre ANTES de Authentication y Authorization
 app.UseCors("AllowAngular");
 
 app.UseAuthentication();

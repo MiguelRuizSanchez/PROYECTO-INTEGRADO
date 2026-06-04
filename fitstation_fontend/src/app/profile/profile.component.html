@@ -33,17 +33,23 @@
       <div class="form-section animate-in" *ngIf="userRole === 'client'">
         <h3 class="section-title">Configuración de Entrenamiento</h3>
         
-        <div class="form-group">
-          <label>Mi Objetivo Principal</label>
-          <select formControlName="objectives" class="form-control">
-            <option value="">Selecciona un objetivo...</option>
-            <option value="Musculacion">Musculación (Fuerza)</option>
-            <option value="Hipertrofia">Hipertrofia (Ganancia Muscular)</option>
-            <option value="PerdidaPeso">Pérdida de Peso / Definición</option>
-            <option value="Yoga">Yoga y Flexibilidad</option>
-            <option value="AltaIntensidad">Crossfit / HIIT</option>
-            <option value="Funcional">Entrenamiento Funcional</option>
-          </select>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Objetivo</label>
+            <select formControlName="objectives" class="form-control">
+              <option value="">Selecciona un objetivo...</option>
+              <option value="Musculacion">Musculación (Fuerza)</option>
+              <option value="Hipertrofia">Hipertrofia (Ganancia Muscular)</option>
+              <option value="PerdidaPeso">Pérdida de Peso / Definición</option>
+              <option value="Yoga">Yoga y Flexibilidad</option>
+              <option value="AltaIntensidad">Crossfit / HIIT</option>
+              <option value="Funcional">Entrenamiento Funcional</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Meta Principal (A corto/largo plazo)</label>
+            <input type="text" formControlName="goal" class="form-control" placeholder="Ej: Correr 5km, press banca 100kg...">
+          </div>
         </div>
 
         <div class="form-row">
@@ -62,6 +68,16 @@
               <option value="online">Online / Remoto</option>
             </select>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label>Equipamiento Disponible</label>
+          <input type="text" formControlName="equipment" class="form-control" placeholder="Ej: Mancuernas, bandas, gimnasio completo...">
+        </div>
+
+        <div class="form-group">
+          <label>Notas Médicas / Lesiones / Alergias</label>
+          <textarea formControlName="medicalNotes" class="form-control" rows="2" placeholder="Indica si tienes alguna lesión o condición médica relevante..."></textarea>
         </div>
 
         <div class="form-row">

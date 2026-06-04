@@ -1,14 +1,9 @@
-/* ==========================================================================
-   FITSTATION - COMPONENT: LOGIN
-   Estilos corporativos: #5afeb2 (Verde) y #000000 (Negro)
-   ========================================================================== */
-
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #000000; /* Fondo corporativo */
+  background-color: #000000; 
   color: white;
   font-family: 'Scale VF', sans-serif;
 }
@@ -17,7 +12,7 @@
   background: #111;
   padding: 40px;
   border-radius: 15px;
-  border: 1px solid #5afeb2; /* Verde corporativo */
+  border: 1px solid #5afeb2;
   width: 100%;
   max-width: 380px;
   text-align: center;
@@ -25,15 +20,15 @@
 }
 
 .logo h1 { font-size: 32px; margin-bottom: 5px; letter-spacing: 1px; }
-.logo span { color: #5afeb2; } /* Verde corporativo */
+.logo span { color: #5afeb2; } 
 .logo p { color: #555; font-size: 11px; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; }
 
 
 .logo-img {
-  max-width: 250px; /* Ajusta este valor al tamaño que quieras */
+  max-width: 250px; 
   height: auto;
   display: block;
-  margin: 0 auto 30px auto; /* Centrado horizontal y margen inferior */
+  margin: 0 auto 30px auto; 
 }
 
 .input-group { text-align: left; margin-bottom: 20px; }
@@ -51,12 +46,12 @@ input {
   transition: border 0.3s;
 }
 
-input:focus { border-color: #5afeb2; } /* Verde corporativo */
+input:focus { border-color: #5afeb2; } 
 
 .btn-login {
   width: 100%;
   padding: 14px;
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2; 
   border: none;
   color: black;
   font-weight: bold;
@@ -70,7 +65,6 @@ input:focus { border-color: #5afeb2; } /* Verde corporativo */
 .btn-login:hover { background: #46e098; }
 .btn-login:active { transform: scale(0.98); }
 
-/* Estilo del mensaje de error */
 .error-msg {
   background-color: rgba(255, 71, 87, 0.1);
   color: #ff4757;
@@ -90,4 +84,4 @@ input:focus { border-color: #5afeb2; } /* Verde corporativo */
 
 .footer-links { margin-top: 25px; }
 .footer-links a { color: #555; text-decoration: none; font-size: 13px; transition: color 0.3s; }
-.footer-links a:hover { color: #5afeb2; } /* Verde corporativo */
+.footer-links a:hover { color: #5afeb2; } 

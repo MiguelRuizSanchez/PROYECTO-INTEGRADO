@@ -10,15 +10,13 @@ namespace fitstation_backend.Data
         {
         }
 
-        // 👥 1. Modelos del núcleo de usuarios y clases colectivas
+        //TABLAS
         public DbSet<User> Users { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Class> Classes { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Session> Sessions { get; set; }
-
-        // 🚀 2. RESTAURACIÓN: Devolvemos todas tus tablas originales de FitStation
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Routine> Routines { get; set; }
         public DbSet<RoutineExercise> RoutineExercises { get; set; }
@@ -26,13 +24,14 @@ namespace fitstation_backend.Data
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationUser> ConversationUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<WorkerRequest> WorkerRequests { get; set; } // Tus peticiones originales de coach privado
+        public DbSet<WorkerRequest> WorkerRequests { get; set; }
 
+        // RELACIÓN DE LAS TABLAS
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Enlazar los modelos con sus tablas reales en MySQL
+            
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Worker>().ToTable("workers");
             modelBuilder.Entity<Client>().ToTable("clients");
@@ -40,17 +39,14 @@ namespace fitstation_backend.Data
             modelBuilder.Entity<Booking>().ToTable("bookings");
             modelBuilder.Entity<Session>().ToTable("sessions");
 
-            // Asegurar el mapeo correcto de tus tablas previas
             modelBuilder.Entity<Exercise>().ToTable("exercises");
             modelBuilder.Entity<Conversation>().ToTable("conversations");
             modelBuilder.Entity<ConversationUser>().ToTable("conversationusers");
             modelBuilder.Entity<Message>().ToTable("messages");
 
-            // 🚀 REPARADO: Nombre de tablas exactos tal y como están creadas en tu MySQL de HeidiSQL
             modelBuilder.Entity<WorkerRequest>().ToTable("worker_requests");
-            modelBuilder.Entity<ClientRoutine>().ToTable("client_routines"); // <-- ¡Corregido el guion infiltrado aquí!
+            modelBuilder.Entity<ClientRoutine>().ToTable("client_routines"); 
 
-            // 🚀 MAPEO ANATÓMICO: Vinculamos las propiedades con tus columnas reales en minúsculas
             modelBuilder.Entity<Routine>(entity =>
             {
                 entity.ToTable("routines");

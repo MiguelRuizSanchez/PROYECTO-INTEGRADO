@@ -16,7 +16,7 @@ public class ExerciseController : ControllerBase
         _context = context;
     }
 
-    // OBTENER TODOS LOS EJERCICIOS
+    // LISTA DE EJERCICIOS ORDENADOS
     [HttpGet]
     public IActionResult GetAllExercises()
     {
@@ -28,7 +28,7 @@ public class ExerciseController : ControllerBase
         return Ok(exercises);
     }
 
-    // BUSCAR EJERCICIOS POR GRUPO MUSCULAR (api/exercise/muscle/pecho)
+    // BUSCAR EJERCICIOS POR GRUPO MUSCULAR
     [HttpGet("muscle/{muscleGroup}")]
     public IActionResult GetExercisesByMuscleGroup(string muscleGroup)
     {

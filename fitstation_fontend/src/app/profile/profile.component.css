@@ -1,11 +1,6 @@
-/* ==========================================================================
-   FITSTATION - COMPONENT: PERFIL
-   Estilos corporativos: #5afeb2 (Verde) y #000000 (Negro)
-   ========================================================================== */
-
 .perfil-container { 
   min-height: 100vh; 
-  background: #000000; /* Fondo corporativo */
+  background: #000000; 
   display: flex; 
   justify-content: center; 
   padding: 40px 20px; 
@@ -32,7 +27,7 @@
 .btn-back { 
   background: none; 
   border: none; 
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2; 
   font-weight: bold; 
   cursor: pointer; 
   margin-bottom: 10px; 
@@ -42,7 +37,7 @@
 
 h1 { 
   font-size: 2rem; 
-  color: #5afeb2; /* Verde corporativo */
+  color: #5afeb2;
   margin: 0; 
 }
 
@@ -53,7 +48,7 @@ h3 {
   text-transform: uppercase; 
   color: #888; 
   margin-bottom: 15px; 
-  border-left: 3px solid #5afeb2; /* Verde corporativo */
+  border-left: 3px solid #5afeb2;
   padding-left: 10px; 
 }
 
@@ -78,13 +73,13 @@ label {
   transition: border-color 0.2s;
 }
 
-.form-control:focus { border-color: #5afeb2; } /* Verde corporativo */
+.form-control:focus { border-color: #5afeb2; }
 
 .readonly { opacity: 0.5; cursor: not-allowed; }
 
 .btn-save { 
   width: 100%; 
-  background: #5afeb2; /* Verde corporativo */
+  background: #5afeb2; 
   color: black; 
   border: none; 
   padding: 15px; 

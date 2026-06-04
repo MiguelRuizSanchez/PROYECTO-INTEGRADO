@@ -52,7 +52,6 @@ export class ClassesComponent implements OnInit {
           }
 
           // Añadimos el horario a su grupo y calculamos en qué fechas reales cae.
-          // (Error corregido: aquí usamos dayOfWeek en inglés)
           groups[name].schedules.push({
             idClass: classItem.idClass || classItem.IdClass,
             dayOfWeek: dayOfWeek,

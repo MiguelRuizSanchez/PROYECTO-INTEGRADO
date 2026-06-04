@@ -3697,24 +3697,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\juanm\\.nuget\\packages\\": {}
+    "C:\\Users\\mrste\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
+      "projectUniqueName": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
       "projectName": "fitstation_backend",
-      "projectPath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
-      "packagesPath": "C:\\Users\\juanm\\.nuget\\packages\\",
-      "outputPath": "D:\\adrian ASIR\\2ºASIR\\fctproyectoweb_ahora\\PROYECTO-ARREGLOANA\\PROYECTO-INTEGRADO\\fitstation_backend\\fitstation_backend\\obj\\",
+      "projectPath": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\fitstation_backend.csproj",
+      "packagesPath": "C:\\Users\\mrste\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\mrste\\OneDrive\\Escritorio\\CARPETA PROYECTO FINAL\\fitstation_backend\\fitstation_backend\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\juanm\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\mrste\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3733,7 +3740,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -3797,24 +3804,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[9.0.13, 9.0.13]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[9.0.13, 9.0.13]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[9.0.13, 9.0.13]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[9.0.13, 9.0.13]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -3823,7 +3812,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
