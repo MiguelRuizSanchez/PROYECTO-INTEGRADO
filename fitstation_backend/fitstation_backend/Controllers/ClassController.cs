@@ -49,7 +49,7 @@ namespace fitstation_backend.Controllers
                             Name = x.c.Name,
                             Description = x.c.Description,
                             DayOfWeek = x.c.DayOfWeek,
-                            ClassTime = x.c.ClassTime,
+                            ClassTime = x.c.ClassTime.HasValue ? x.c.ClassTime.Value.ToString(@"hh\:mm") : null,
                             TrainerName = u != null ? u.Name : "Por asignar",
                             IdWorker = x.c.IdWorker 
                         })
@@ -99,13 +99,13 @@ namespace fitstation_backend.Controllers
                     IdClient = client.IdClient,
                     IdClass = dto.IdClass,
                     BookingDate = dto.ChosenDate.Date,
-                    Status = "Accepted"
+                    Status = "active"
                 };
 
                 _context.Bookings.Add(nuevaReserva);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "✅ ¡Reserva confirmada con éxito para el día elegido!" });
+                return Ok(new { message = " ¡Reserva confirmada con éxito para el día elegido!" });
             }
             catch (Exception ex)
             {
@@ -234,7 +234,7 @@ namespace fitstation_backend.Controllers
                 _context.Bookings.Remove(reserva);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "❌ Reserva de clase grupal cancelada correctamente." });
+                return Ok(new { message = " Reserva de clase grupal cancelada correctamente." });
             }
             catch (Exception ex)
             {
@@ -299,11 +299,44 @@ namespace fitstation_backend.Controllers
                     await command.ExecuteNonQueryAsync();
                 }
 
-                return Ok(new { message = "✅ ¡Te has asignado este turno de forma exclusiva para el día elegido!" });
+                return Ok(new { message = " ¡Te has asignado este turno de forma exclusiva para el día elegido!" });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error interno al guardar la asignación: {ex.Message}");
+            }
+        }
+        // CREAR UNA CLASE COLECTIVA (solo workers)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateClass([FromBody] CreateClassDto dto)
+        {
+            try
+            {
+                var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                                User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdStr)) return Unauthorized("Token no válido");
+
+                int userId = int.Parse(userIdStr);
+                var worker = await _context.Workers.FirstOrDefaultAsync(w => w.IdUser == userId);
+                if (worker == null) return BadRequest("Solo los entrenadores pueden crear clases colectivas.");
+
+                var nuevaClase = new Class
+                {
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    DayOfWeek = dto.DayOfWeek,
+                    ClassTime = TimeSpan.TryParse(dto.ClassTime, out var ts) ? ts : (TimeSpan?)null,
+                    IdWorker = worker.IdWorker
+                };
+
+                _context.Classes.Add(nuevaClase);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Clase creada correctamente.", idClass = nuevaClase.IdClass });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al crear la clase: {ex.Message}");
             }
         }
 

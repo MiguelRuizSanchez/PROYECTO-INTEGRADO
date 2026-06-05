@@ -13,7 +13,7 @@
         <span class="step">1</span>
         <h2>Detalles de la Rutina</h2>
       </div>
-      
+
       <div class="card-body">
         <div class="input-group full-width">
           <label>NOMBRE DE LA RUTINA</label>
@@ -27,7 +27,7 @@
               <option *ngFor="let obj of listaObjetivos" [value]="obj">{{ obj }}</option>
             </select>
           </div>
-          
+
           <div class="input-group">
             <label>DESCRIPCIÓN / NOTAS</label>
             <input type="text" [(ngModel)]="descripcion" placeholder="Ej: Enfoque en pectoral mayor y tríceps.">
@@ -91,7 +91,7 @@
 
     <footer class="form-footer">
       <button class="btn-save-all" (click)="guardarRutina()">
-        💾 GUARDAR EN MI BIBLIOTECA
+         GUARDAR EN MI BIBLIOTECA
       </button>
     </footer>
   </div>

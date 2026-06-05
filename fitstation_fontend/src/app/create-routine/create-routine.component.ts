@@ -14,25 +14,25 @@ import { RouterModule, Router } from '@angular/router';
 export class CreateRoutineComponent implements OnInit {
   // routineName: Captura el identificador principal de la nueva rutina directamente desde el modelo del input.
   routineName: string = '';
-  
+
   // routineDescription: Almacena notas contextuales o instrucciones para el plan de entrenamiento.
   routineDescription: string = '';
-  
+
   // selectedObjective: Se vincula al elemento select de la UI para categorizar el objetivo físico principal de la rutina.
   selectedObjective: string = 'Hipertrofia (Músculo)';
-  
+
   // objectiveList: Array estático que define el dominio de objetivos físicos válidos.
   objectiveList: string[] = [
-    'Hipertrofia (Músculo)', 
-    'Fuerza Máxima', 
-    'Pérdida de Peso', 
-    'Resistencia / Cardio', 
+    'Hipertrofia (Músculo)',
+    'Fuerza Máxima',
+    'Pérdida de Peso',
+    'Resistencia / Cardio',
     'Salud y Movilidad'
   ];
 
   // exerciseCatalog: Array de ejercicios disponibles obtenidos dinámicamente de la base de datos del backend.
   exerciseCatalog: any[] = [];
-  
+
   // routineExercises: Array dinámico que gestiona los ejercicios específicos, series y repeticiones configurados para la rutina actual.
   routineExercises: any[] = [];
 
@@ -69,7 +69,7 @@ export class CreateRoutineComponent implements OnInit {
   // Muta el array de estado añadiendo un objeto de configuración de ejercicio predeterminado.
   addExerciseRow() {
     this.routineExercises.push({
-      id_exercise: 0, 
+      id_exercise: 0,
       series: 3,
       repetitions: 12,
       rest: 60
@@ -103,7 +103,7 @@ export class CreateRoutineComponent implements OnInit {
     // Ejecuta HTTP POST para persistir la nueva rutina en la base de datos relacional.
     this.profileService.createFullRoutine(payload).subscribe({
       next: () => {
-        alert("✅ Rutina guardada correctamente.");
+        alert(" Rutina guardada correctamente.");
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

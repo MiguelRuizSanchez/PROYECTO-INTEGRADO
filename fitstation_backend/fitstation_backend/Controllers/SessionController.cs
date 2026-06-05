@@ -146,7 +146,7 @@ public async Task<IActionResult> FinishSession(int sessionId)
         }
 
         await _context.SaveChangesAsync();
-        return Ok(new { message = "✅ Sesión finalizada. Slot liberado correctamente." });
+        return Ok(new { message = " Sesión finalizada. Slot liberado correctamente." });
     }
     catch (Exception ex)
     {

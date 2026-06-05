@@ -14,6 +14,9 @@ public class ConversationUser
     [Column("id_conversation")]
     public int IdConversation { get; set; }
 
-    [Column("id_user")]
-    public int IdUser { get; set; }
+    [Column("id_worker")]
+    public int IdWorker { get; set; }
+
+    [Column("id_client")]
+    public int IdClient { get; set; }
 }

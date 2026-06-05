@@ -23,6 +23,6 @@ namespace fitstation_backend.Models
         public string? DayOfWeek { get; set; }
 
         [Column("class_time")]
-        public string? ClassTime { get; set; }
+        public TimeSpan? ClassTime { get; set; }
     }
 }

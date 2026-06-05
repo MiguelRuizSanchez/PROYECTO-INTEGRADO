@@ -1,53 +1,54 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileService } from '../profile.service';
-import { ClassService } from '../class.service'; 
-import { RouterModule, ActivatedRoute } from '@angular/router'; 
-import { HttpClient, HttpHeaders } from '@angular/common/http'; 
+import { ClassService } from '../class.service';
+import { RouterModule, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
   // Guarda la fecha del mes que estamos viendo en la pantalla.
   currentMonth: Date = new Date();
-  
+
   // Lista con los días del mes. Cada día guardará sus propias clases y entrenamientos.
   calendarDays: any[] = [];
-  
+
   // Lista de todas las sesiones de entrenamiento privado (1 a 1).
   sessions: any[] = [];
-  
+
   // Lista de las clases grupales que el usuario tiene reservadas o va a dar.
-  assignedClasses: any[] = []; 
-  
+  assignedClasses: any[] = [];
+
   // Lista general con todas las clases que ofrece el gimnasio (para el panel de abajo del entrenador).
-  globalClasses: any[] = []; 
-  
+  globalClasses: any[] = [];
+
   // Controla qué pestaña estamos viendo: la de sesiones privadas o la de clases grupales.
   currentView: 'entrenamientos' | 'clases' = 'entrenamientos';
-  
+
   // Datos básicos del usuario para saber qué información cargar.
   userRole: string = '';
   internalId: number = 0;
   monthName: string = '';
 
   constructor(
-    private profileService: ProfileService, 
-    private classService: ClassService, 
-    private http: HttpClient, 
-    private route: ActivatedRoute, 
+    private profileService: ProfileService,
+    private classService: ClassService,
+    private http: HttpClient,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {}
 
-  // Se ejecuta al abrir el calendario. 
+  // Se ejecuta al abrir el calendario.
   ngOnInit() {
     this.userRole = (localStorage.getItem('userRole') || '').toLowerCase().trim();
-    
+
     // Si en la barra de direcciones de arriba pone "?vista=clases", marcamos esa pestaña directamente.
     this.route.queryParams.subscribe(params => {
       if (params['vista'] === 'clases') {
@@ -80,8 +81,8 @@ export class CalendarComponent implements OnInit {
 
   // Pide a la base de datos las clases y los entrenamientos al mismo tiempo para pintarlos juntos.
   loadFullCalendar() {
-    const peticionSesiones = this.userRole === 'worker' 
-      ? this.profileService.getWorkerSessions(this.internalId) 
+    const peticionSesiones = this.userRole === 'worker'
+      ? this.profileService.getWorkerSessions(this.internalId)
       : this.profileService.getClientSessions(this.internalId);
 
     const peticionClases = this.userRole === 'worker'
@@ -91,11 +92,11 @@ export class CalendarComponent implements OnInit {
     peticionSesiones.subscribe({
       next: (resSesiones) => {
         this.sessions = resSesiones || [];
-        
+
         peticionClases.subscribe({
           next: (resClases) => {
             this.assignedClasses = resClases || [];
-            
+
             // Pide también el catálogo general de clases para el panel de abajo.
             this.http.get('http://localhost:5038/api/Class/available').subscribe({
               next: (resGlobales: any) => {
@@ -125,11 +126,11 @@ export class CalendarComponent implements OnInit {
   generateCalendar() {
     const year = this.currentMonth.getFullYear();
     const month = this.currentMonth.getMonth();
-    
+
     // Pone el nombre del mes en español (ej. "mayo 2026").
     this.monthName = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(this.currentMonth);
 
-    const firstDayOfMonth = new Date(year, month, 1).getDay(); 
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
     const totalDaysMonth = new Date(year, month + 1, 0).getDate();
     // Ajustamos para que la semana empiece en Lunes
     const offset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
@@ -149,7 +150,7 @@ export class CalendarComponent implements OnInit {
     for (let i = 1; i <= totalDaysMonth; i++) {
       const dateOfDay = new Date(year, month, i);
       const nameOfDay = weekDaysMap[dateOfDay.getDay()];
-      
+
       // Filtra las sesiones privadas de este día en concreto (ignorando las ya terminadas).
       const dailySessions = this.sessions.filter(s => {
         const sDate = s.scheduledDate || s.ScheduledDate;
@@ -221,12 +222,12 @@ export class CalendarComponent implements OnInit {
 
     const today = new Date();
     const currentDay = today.getDay();
-    
+
     let distance = targetDay - currentDay;
     if (distance < 0) {
-      distance += 7; 
+      distance += 7;
     }
-    
+
     today.setDate(today.getDate() + distance);
 
     const yyyy = today.getFullYear();
@@ -238,18 +239,18 @@ export class CalendarComponent implements OnInit {
   // Sirve para que el entrenador se apunte a dar una clase del gimnasio.
   assignClassToWorker(idClass: number, weekDayName: string) {
     const exactDate = this.calculateDateForWeekday(weekDayName);
-    
+
     if (confirm(`¿Deseas impartir esta clase colectiva únicamente el día ${exactDate}?`)) {
       const tokenStr = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('jwt');
       const headers = new HttpHeaders({ 'Authorization': `Bearer ${tokenStr}` });
 
       this.http.post(`http://localhost:5038/api/Class/assign/${idClass}?chosenDate=${exactDate}`, {}, { headers }).subscribe({
         next: (res: any) => {
-          alert(res.message || '✅ Clase asignada con éxito para esa fecha.');
+          alert(res.message || ' Clase asignada con éxito para esa fecha.');
           this.loadFullCalendar();
         },
         error: (err) => {
-          alert(err.error?.message || err.error || '⚠️ Ya estás asignado o hay un conflicto de horarios.');
+          alert(err.error?.message || err.error || ' Ya estás asignado o hay un conflicto de horarios.');
         }
       });
     }
@@ -261,7 +262,7 @@ export class CalendarComponent implements OnInit {
       alert("No se puede determinar la fecha de esta asignación.");
       return;
     }
-    
+
     const d = new Date(assignedDate);
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -278,7 +279,7 @@ export class CalendarComponent implements OnInit {
           this.loadFullCalendar();
         },
         error: (err) => {
-          alert(err.error || '⚠️ No se pudo procesar la liberación en el servidor.');
+          alert(err.error || ' No se pudo procesar la liberación en el servidor.');
         }
       });
     }
@@ -289,14 +290,34 @@ export class CalendarComponent implements OnInit {
     if (confirm('¿Estás seguro de que deseas cancelar tu reserva en esta clase colectiva?')) {
       this.classService.cancelBooking(idBooking).subscribe({
         next: (res) => {
-          alert(res.message || '❌ Reserva cancelada.');
+          alert(res.message || ' Reserva cancelada.');
           this.loadFullCalendar();
         },
         error: (err) => {
-          alert('⚠️ No se pudo procesar la cancelación: ' + (err.error || err.message));
+          alert(' No se pudo procesar la cancelación: ' + (err.error || err.message));
         }
       });
     }
+  }
+
+  // Modelo para el formulario de nueva clase
+  newClass = { name: '', description: '', dayOfWeek: '', classTime: '' };
+
+  submitNewClass() {
+    if (!this.newClass.name || !this.newClass.dayOfWeek || !this.newClass.classTime) {
+      alert('Por favor, rellena el nombre, el día y la hora.');
+      return;
+    }
+    this.classService.createClass(this.newClass).subscribe({
+      next: (res: any) => {
+        alert(res.message || ' Clase creada correctamente.');
+        this.newClass = { name: '', description: '', dayOfWeek: '', classTime: '' };
+        this.loadFullCalendar(); // Recarga el catálogo para que aparezca la nueva clase
+      },
+      error: (err) => {
+        alert(' Error al crear la clase: ' + (err.error || err.message));
+      }
+    });
   }
 
   // Cambia la pestaña visible entre sesiones privadas y clases grupales.

@@ -5,39 +5,50 @@
       <h2>Mensajes</h2>
     </div>
     <div class="contact-list">
-      <div *ngFor="let contact of contacts" 
+
+      <div *ngFor="let contact of contacts"
            (click)="selectContact(contact)"
-           [class.active]="selectedContact?.id === contact.id"
+           [class.active]="selectedContact?.otherUserId === contact.otherUserId"
            class="contact-item">
-        <div class="avatar">{{ contact.name[0] }}</div>
+
+        <div class="avatar">
+          {{ (contact.otherUserName ? contact.otherUserName.charAt(0) : 'U') | uppercase }}
+        </div>
+
         <div class="contact-info">
-          <span class="contact-name">{{ contact.name }}</span>
+          <span class="contact-name">{{ contact.otherUserName || 'Usuario' }}</span>
         </div>
       </div>
+
+      <div *ngIf="contacts.length === 0" style="padding: 20px; color:#666; font-size:0.85rem; text-align:center;">
+        No tienes contactos aún. Reserva una cita o clase para habilitar el chat.
+      </div>
+
     </div>
   </aside>
 
   <main class="chat-window">
     <ng-container *ngIf="selectedContact; else noChat">
       <header class="chat-header">
-        <h3>{{ selectedContact.name }}</h3>
+        <h3>{{ selectedContact.otherUserName }}</h3>
       </header>
 
       <div class="messages-container">
-        <div *ngFor="let msg of messages" 
-             [class.my-message]="msg.idSender === myId || msg.IdSender === myId"
+        <div *ngFor="let msg of messages"
+             [class.my-message]="msg.idSender == myId"
              class="message-wrapper">
           <div class="message-bubble">
-            <p>{{ msg.content || msg.Content }}</p>
+            {{ msg.content }}
+            <span class="timestamp">{{ msg.createdAt | date:'HH:mm' }}</span>
           </div>
         </div>
       </div>
 
       <footer class="chat-input-area">
-        <input [(ngModel)]="newMessage" 
+        <input [(ngModel)]="newMessage"
                (keyup.enter)="sendMessage()"
                placeholder="Escribe un mensaje..." />
-        <button (click)="sendMessage()" class="btn-send">Enviar</button>
+        <button (click)="sendMessage()" class="btn-send" [disabled]="!newMessage.trim()">Enviar</button>
       </footer>
     </ng-container>
 

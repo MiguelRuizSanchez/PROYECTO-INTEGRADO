@@ -23,7 +23,7 @@ export class ClassService {
   }
 
   bookClass(idClass: number, chosenDate: string): Observable<any> {
-    const payload = { 
+    const payload = {
       idClass: Number(idClass),
       chosenDate: chosenDate
     };
@@ -36,6 +36,12 @@ export class ClassService {
 
   getWorkerClassCalendar(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/worker-calendar`, { headers: this.getHeaders() });
+  }
+
+  createClass(payload: { name: string; description: string; dayOfWeek: string; classTime: string }): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.apiUrl}/create`, payload, { headers });
   }
 
   cancelBooking(idBooking: number): Observable<any> {
