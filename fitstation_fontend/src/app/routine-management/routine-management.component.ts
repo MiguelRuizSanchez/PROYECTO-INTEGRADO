@@ -14,31 +14,31 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 export class RoutineManagementComponent implements OnInit {
   // sessionId: ID de la cita que estamos gestionando.
   sessionId!: number;
-  
+
   // clientId: ID del alumno al que le queremos poner la rutina.
   clientId!: number;
-  
+
   // studentName: Nombre que sale en la pantalla para saber a quién estamos asignando la rutina.
   studentName: string = 'Cargando...';
-  
+
   // myRoutines: La lista de todas las rutinas que el entrenador ha creado.
   myRoutines: any[] = [];
 
   // selectedRoutineId: El ID de la rutina que hemos elegido en el desplegable.
   selectedRoutineId: number = 0;
-  
+
   // isShowingPreview: Si es verdadero, abrimos la ventana flotante para ver los ejercicios.
   isShowingPreview: boolean = false;
-  
+
   // previewRoutineName: El nombre de la rutina que estamos visualizando en la ventana flotante.
   previewRoutineName: string = '';
-  
+
   // routineExercises: La lista de ejercicios que tiene la rutina que estamos viendo.
-  routineExercises: any[] = []; 
+  routineExercises: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router, 
+    private router: Router,
     private profileService: ProfileService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -110,7 +110,7 @@ export class RoutineManagementComponent implements OnInit {
 
     this.profileService.assignRoutineToClient(payload).subscribe({
       next: () => {
-        alert("✅ Rutina asignada con éxito al alumno.");
+        alert(" Rutina asignada con éxito al alumno.");
         this.router.navigate(['/dashboard']); // Volvemos al panel principal tras asignar
       },
       error: (err) => {

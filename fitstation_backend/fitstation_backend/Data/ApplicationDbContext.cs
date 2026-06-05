@@ -41,7 +41,14 @@ namespace fitstation_backend.Data
 
             modelBuilder.Entity<Exercise>().ToTable("exercises");
             modelBuilder.Entity<Conversation>().ToTable("conversations");
-            modelBuilder.Entity<ConversationUser>().ToTable("conversationusers");
+            modelBuilder.Entity<ConversationUser>(entity =>
+            {
+                entity.ToTable("conversation_users");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.IdConversation).HasColumnName("id_conversation");
+                entity.Property(e => e.IdWorker).HasColumnName("id_worker");
+                entity.Property(e => e.IdClient).HasColumnName("id_client");
+            });
             modelBuilder.Entity<Message>().ToTable("messages");
 
             modelBuilder.Entity<WorkerRequest>().ToTable("worker_requests");

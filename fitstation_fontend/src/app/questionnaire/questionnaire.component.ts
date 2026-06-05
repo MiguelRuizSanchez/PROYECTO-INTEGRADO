@@ -70,7 +70,7 @@ export class QuestionnaireComponent implements OnInit {
 
     this.profileService.createFullRoutine(payload).subscribe({
       next: () => {
-        alert("✅ Rutina guardada correctamente.");
+        alert(" Rutina guardada correctamente.");
         this.router.navigate(['/dashboard']);
       },
       error: (err) => alert("Error al guardar: " + err.error)

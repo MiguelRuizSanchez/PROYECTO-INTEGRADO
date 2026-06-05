@@ -14,16 +14,16 @@ import { RouterModule } from '@angular/router';
 export class ClassesComponent implements OnInit {
   // Agrupa las clases por su nombre (ej. junta todos los horarios de "Zumba" en un solo bloque).
   groupedClasses: any[] = [];
-  
+
   // Guarda la fecha exacta que el alumno elige para asistir a la clase.
   selectedDates: { [key: string]: string } = {};
-  
+
   // Guarda qué hora concreta de la clase ha elegido el alumno.
   selectedSchedules: { [key: string]: number } = {};
 
   constructor(
     private classService: ClassService,
-    private cdr: ChangeDetectorRef // Nos ayuda a refrescar la pantalla para que no se quede colgada
+    private cdr: ChangeDetectorRef
   ) {}
 
   // Lo primero que hace al cargar la página: pedir las clases disponibles.
@@ -36,7 +36,7 @@ export class ClassesComponent implements OnInit {
     this.classService.getAvailableClasses().subscribe({
       next: (data: any[]) => {
         const groups: { [key: string]: any } = {};
-        
+
         // Revisamos cada clase que nos llega del servidor
         data.forEach(classItem => {
           const name = classItem.name || classItem.Name;
@@ -57,7 +57,7 @@ export class ClassesComponent implements OnInit {
             dayOfWeek: dayOfWeek,
             classTime: classItem.classTime || classItem.ClassTime,
             trainerName: classItem.trainerName || classItem.TrainerName,
-            validDates: this.calculateDatesForWeekday(dayOfWeek) 
+            validDates: this.calculateDatesForWeekday(dayOfWeek)
           });
         });
 
@@ -90,17 +90,17 @@ export class ClassesComponent implements OnInit {
     const dayMap: { [key: string]: number } = {
       'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6
     };
-    
+
     const targetDay = dayMap[englishDayName];
     if (targetDay === undefined) return validDates;
 
     const today = new Date();
-    
+
     // Miramos día por día desde hoy hasta dentro de 14 días
     for (let i = 0; i <= 14; i++) {
       const futureDate = new Date();
       futureDate.setDate(today.getDate() + i);
-      
+
       // Si el día de la semana coincide con el que buscamos, lo guardamos
       if (futureDate.getDay() === targetDay) {
         const yyyy = futureDate.getFullYear();
@@ -143,21 +143,22 @@ export class ClassesComponent implements OnInit {
     const chosenDate = this.selectedDates[activityName];
 
     if (!idClass) {
-      alert('⚠️ Por favor, selecciona un horario de la lista.');
+      alert(' Por favor, selecciona un horario de la lista.');
       return;
     }
 
     if (!chosenDate) {
-      alert('⚠️ Por favor, selecciona una fecha válida para asistir.');
+      alert('Por favor, selecciona una fecha válida para asistir.');
       return;
     }
 
     this.classService.bookClass(idClass, chosenDate).subscribe({
       next: (res) => {
-        alert(res.message || '✅ ¡Reserva confirmada!');
+        alert(res.message || ' ¡Reserva confirmada!');
       },
       error: (err) => {
-        alert('⚠️ No se pudo reservar: ' + (err.error || err.message));
+        const mensaje = typeof err.error === 'string' ? err.error : (err.error?.message || 'Error al realizar la reserva.');
+        alert(mensaje);
       }
     });
   }

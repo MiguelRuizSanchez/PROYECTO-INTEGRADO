@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Versión del servidor:         12.2.2-MariaDB - MariaDB Server
+-- Versión del servidor:         11.4.9-MariaDB - MariaDB Server
 -- SO del servidor:              Win64
--- HeidiSQL Versión:             12.14.0.7165
+-- HeidiSQL Versión:             12.11.0.7065
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -19,70 +19,32 @@
 CREATE DATABASE IF NOT EXISTS `fitstation` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci */;
 USE `fitstation`;
 
--- Volcando estructura para tabla fitstation.availabilities
-CREATE TABLE IF NOT EXISTS `availabilities` (
-  `id_availability` int(11) NOT NULL AUTO_INCREMENT,
-  `id_user` int(11) NOT NULL,
-  `day_of_week` tinyint(4) NOT NULL COMMENT '1:Lunes, 7:Domingo',
-  `start_time` time NOT NULL,
-  `is_taken` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`id_availability`),
-  KEY `id_user` (`id_user`),
-  CONSTRAINT `fk_availability_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.availabilities: ~0 rows (aproximadamente)
-
 -- Volcando estructura para tabla fitstation.bookings
 CREATE TABLE IF NOT EXISTS `bookings` (
   `id_booking` int(11) NOT NULL AUTO_INCREMENT,
   `id_client` int(11) NOT NULL,
   `id_class` int(11) DEFAULT NULL,
-  `id_service` int(11) DEFAULT NULL,
   `booking_date` datetime NOT NULL,
   `status` enum('active','cancelled') NOT NULL,
   PRIMARY KEY (`id_booking`),
   KEY `id_client` (`id_client`),
   KEY `id_class` (`id_class`),
-  KEY `id_service` (`id_service`),
   CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE,
-  CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`id_class`) REFERENCES `classes` (`id_class`) ON DELETE SET NULL,
-  CONSTRAINT `bookings_ibfk_3` FOREIGN KEY (`id_service`) REFERENCES `services` (`id_service`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.bookings: ~0 rows (aproximadamente)
+  CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`id_class`) REFERENCES `classes` (`id_class`) ON DELETE SET NULL
+  ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando estructura para tabla fitstation.classes
 CREATE TABLE IF NOT EXISTS `classes` (
   `id_class` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
-  PRIMARY KEY (`id_class`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.classes: ~1 rows (aproximadamente)
-INSERT INTO `classes` (`id_class`, `name`, `description`) VALUES
-	(1, 'zumba', 'clase de cardio al ritmo de musica latina');
-
--- Volcando estructura para tabla fitstation.client_routines
-CREATE TABLE IF NOT EXISTS `client_routines` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_client` int(11) NOT NULL,
-  `id_routine` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_client` (`id_client`),
-  KEY `id_routine` (`id_routine`),
-  CONSTRAINT `client_routines_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE,
-  CONSTRAINT `client_routines_ibfk_2` FOREIGN KEY (`id_routine`) REFERENCES `routines` (`id_routine`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.client_routines: ~5 rows (aproximadamente)
-INSERT INTO `client_routines` (`id`, `id_client`, `id_routine`) VALUES
-	(1, 3, 1),
-	(2, 3, 1),
-	(3, 4, 1),
-	(4, 3, 1),
-	(5, 3, 1);
+  `id_worker` int(11) DEFAULT NULL,
+  `day_of_week` enum('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') DEFAULT NULL,
+  `class_time` time DEFAULT NULL,
+  PRIMARY KEY (`id_class`),
+  KEY `fk_classes_worker` (`id_worker`),
+  CONSTRAINT `fk_classes_worker` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando estructura para tabla fitstation.clients
 CREATE TABLE IF NOT EXISTS `clients` (
@@ -99,37 +61,41 @@ CREATE TABLE IF NOT EXISTS `clients` (
   PRIMARY KEY (`id_client`),
   UNIQUE KEY `id_user` (`id_user`),
   CONSTRAINT `clients_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.clients: ~4 rows (aproximadamente)
-INSERT INTO `clients` (`id_client`, `id_user`, `goal`, `objectives`, `experience_level`, `modality`, `medical_notes`, `equipment`, `pref_day`, `pref_time`) VALUES
-	(3, 9, NULL, 'Musculacion', 'principiante', 'presencial', NULL, NULL, 'Monday', '10:00:00'),
-	(4, 11, NULL, 'Musculacion', 'principiante', 'presencial', NULL, NULL, 'Monday', '10:00:00'),
-	(5, 13, NULL, 'Musculacion', 'principiante', 'presencial', NULL, NULL, 'Monday', '10:00:00'),
-	(6, 17, 'Ganar musculo', 'Musculacion', 'principiante', 'presencial', 'Asma', 'gimnasio completo', 'Monday', '10:00:00');
-
--- Volcando estructura para tabla fitstation.conversation_users
-CREATE TABLE IF NOT EXISTS `conversation_users` (
+-- Volcando estructura para tabla fitstation.client_routines
+CREATE TABLE IF NOT EXISTS `client_routines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_conversation` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL,
+  `id_routine` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `id_conversation` (`id_conversation`),
-  KEY `id_user` (`id_user`),
-  CONSTRAINT `conversation_users_ibfk_1` FOREIGN KEY (`id_conversation`) REFERENCES `conversations` (`id_conversation`) ON DELETE CASCADE,
-  CONSTRAINT `conversation_users_ibfk_2` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.conversation_users: ~0 rows (aproximadamente)
+  KEY `id_client` (`id_client`),
+  KEY `id_routine` (`id_routine`),
+  CONSTRAINT `client_routines_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE,
+  CONSTRAINT `client_routines_ibfk_2` FOREIGN KEY (`id_routine`) REFERENCES `routines` (`id_routine`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando estructura para tabla fitstation.conversations
 CREATE TABLE IF NOT EXISTS `conversations` (
   `id_conversation` int(11) NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_conversation`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.conversations: ~0 rows (aproximadamente)
+-- Volcando estructura para tabla fitstation.conversation_users
+CREATE TABLE IF NOT EXISTS `conversation_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_conversation` int(11) NOT NULL,
+  `id_worker` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_cu_conversation` (`id_conversation`),
+  KEY `fk_cu_worker` (`id_worker`),
+  KEY `fk_cu_client` (`id_client`),
+  CONSTRAINT `fk_cu_client` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cu_conversation` FOREIGN KEY (`id_conversation`) REFERENCES `conversations` (`id_conversation`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cu_worker` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando estructura para tabla fitstation.exercises
 CREATE TABLE IF NOT EXISTS `exercises` (
@@ -141,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `exercises` (
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando datos para la tabla fitstation.exercises: ~44 rows (aproximadamente)
+DELETE FROM `exercises`;
 INSERT INTO `exercises` (`id_exercise`, `name`, `description`, `muscle_group`) VALUES
 	(1, 'Pullover con Mancuerna', 'Acostado en un banco transversalmente, se baja una mancuerna por detrás de la cabeza con los brazos semiflexionados. Expande la caja torácica y trabaja pectorales y dorsales.', 'Pecho'),
 	(2, 'Press Declinado', 'Press de banca en un banco con inclinación negativa. Pone el enfoque en la porción inferior del pectoral mayor.', 'Pecho'),
@@ -193,7 +160,6 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `id_conversation` int(11) NOT NULL,
   `id_sender` int(11) NOT NULL,
   `content` text NOT NULL,
-  `is_read` tinyint(1) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_message`),
   KEY `id_conversation` (`id_conversation`),
@@ -202,9 +168,18 @@ CREATE TABLE IF NOT EXISTS `messages` (
   CONSTRAINT `fk_msg_sender` FOREIGN KEY (`id_sender`) REFERENCES `users` (`id_user`),
   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`id_conversation`) REFERENCES `conversations` (`id_conversation`) ON DELETE CASCADE,
   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`id_sender`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.messages: ~0 rows (aproximadamente)
+-- Volcando estructura para tabla fitstation.routines
+CREATE TABLE IF NOT EXISTS `routines` (
+  `id_routine` int(11) NOT NULL AUTO_INCREMENT,
+  `id_worker` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  PRIMARY KEY (`id_routine`),
+  KEY `id_worker` (`id_worker`),
+  CONSTRAINT `routines_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando estructura para tabla fitstation.routine_exercises
 CREATE TABLE IF NOT EXISTS `routine_exercises` (
@@ -220,35 +195,6 @@ CREATE TABLE IF NOT EXISTS `routine_exercises` (
   CONSTRAINT `routine_exercises_ibfk_2` FOREIGN KEY (`id_exercise`) REFERENCES `exercises` (`id_exercise`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.routine_exercises: ~1 rows (aproximadamente)
-INSERT INTO `routine_exercises` (`id`, `id_routine`, `id_exercise`, `reps`, `sets`) VALUES
-	(1, 1, 37, 12, 3);
-
--- Volcando estructura para tabla fitstation.routines
-CREATE TABLE IF NOT EXISTS `routines` (
-  `id_routine` int(11) NOT NULL AUTO_INCREMENT,
-  `id_worker` int(11) DEFAULT NULL,
-  `name` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL,
-  PRIMARY KEY (`id_routine`),
-  KEY `id_worker` (`id_worker`),
-  CONSTRAINT `routines_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.routines: ~1 rows (aproximadamente)
-INSERT INTO `routines` (`id_routine`, `id_worker`, `name`, `description`) VALUES
-	(1, 5, 'Rutina1', '[Hipertrofia (Músculo)] Notas rutina 1');
-
--- Volcando estructura para tabla fitstation.services
-CREATE TABLE IF NOT EXISTS `services` (
-  `id_service` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL,
-  PRIMARY KEY (`id_service`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.services: ~0 rows (aproximadamente)
-
 -- Volcando estructura para tabla fitstation.sessions
 CREATE TABLE IF NOT EXISTS `sessions` (
   `id_session` int(11) NOT NULL AUTO_INCREMENT,
@@ -263,13 +209,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   PRIMARY KEY (`id_session`),
   KEY `FK_session_request` (`id_request`),
   CONSTRAINT `FK_session_request` FOREIGN KEY (`id_request`) REFERENCES `worker_requests` (`id_request`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Volcando datos para la tabla fitstation.sessions: ~3 rows (aproximadamente)
-INSERT INTO `sessions` (`id_session`, `id_request`, `id_client`, `id_worker`, `scheduled_date`, `duration_minutes`, `day_of_week`, `start_time`, `status`) VALUES
-	(7, 5, 3, 5, '2026-06-08 18:39:58', 60, 'Monday', '10:00:00', 'Completed'),
-	(8, 6, 4, 5, '2026-06-08 18:54:10', 60, 'Monday', '18:00:00', 'Completed'),
-	(9, 7, 3, 5, '2026-06-10 22:09:44', 60, 'Thursday', '14:00:00', 'Scheduled');
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Volcando estructura para tabla fitstation.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -281,31 +221,25 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.users: ~10 rows (aproximadamente)
+DELETE FROM `users`;
 INSERT INTO `users` (`id_user`, `name`, `email`, `password_hash`, `role`, `created_at`) VALUES
-	(9, 'Miguel', 'miguel@fitstation.com', '$2a$11$3SUX9h/jGjbiFVxnSMf6/.dy20rHqVwjPWklJ.okzur/aBbw5XcSS', 'client', '2026-06-01 16:19:43'),
-	(10, 'Entrenador1', 'entrenador1@fitstation.com', '$2a$11$1mEzPqXySiIvZlSZg.1EOOx60.e77bY09G/CAlBb6rd4kVT2GKbGu', 'worker', '2026-06-01 16:32:53'),
-	(11, 'Alumno1', 'alumno@fitstation.com', '$2a$11$70hc7YLSEIxeO6CZhHbh2OO3FPf4jN6k04LFWogjhGPS0QqVebzey', 'client', '2026-06-01 16:49:59'),
-	(12, 'css', 'css@fitstation.com', '$2a$11$AHXVMZvuWaxXC9swtx.5fO8aVBzy0SV2PytKIDhpw7mL/mx9jpsR6', 'client', '2026-06-01 21:23:08'),
-	(13, 'prueba1', 'prueba1@fitstation.com', '$2a$11$2HlrNcjaNWxMMzszvnReAuvvxAHzfVnqnxzr5p3Hz1Yc4ypGPLWc6', 'client', '2026-06-02 17:40:59'),
-	(14, 'prueba2', 'prueba2@fitstation.com', '$2a$11$Lrm6rAtCJx8gTI8FnMxMk.7UTFwg.trrpaNuiKRqd7KOOhv85h3se', 'worker', '2026-06-02 17:48:00'),
-	(15, 'prueba3', 'prueba3@fitstation.com', '$2a$11$94vx18/MXrF1fFyEZy2hiuAf57/5MholsfSmvC.ar8r4vsjPF/3iq', 'worker', '2026-06-02 18:00:58'),
-	(16, 'dashboard', 'dashboard@fitstation.com', '$2a$11$TV7KLFZJCECHvYfz/DjEweONMEsaBAi6WJ0x1xr.oji6CAlH1Gasu', 'client', '2026-06-03 17:04:18'),
-	(17, 'rut', 'rut@fitstation.com', '$2a$11$D0Hqj0w0hzq.fXWJFY8ULOC1A.ZgN5wL82a7gTTZKJahAsPXg3U1q', 'client', '2026-06-03 17:42:51'),
-	(18, 'mama', 'mama@fitstation.com', '$2a$11$4oAlTjQ2pB3/XOhKi8/P/.4Vb/P9vcR.P0AYSlk5QoszifjLfX6Ma', 'worker', '2026-06-03 18:02:17');
+	(1, 'admin', 'admin@admin', '$2a$11$MH8RWHyxBT5KvW8JkLr37eqUMtw9ToSLIIkjaXLByWm0fKOXLkqB6', 'admin', '2026-06-05 12:36:51');
 
--- Volcando estructura para tabla fitstation.worker_class_assignments
-CREATE TABLE IF NOT EXISTS `worker_class_assignments` (
-  `id_assignment` int(11) NOT NULL AUTO_INCREMENT,
-  `id_worker` int(11) NOT NULL,
-  `id_class` int(11) NOT NULL,
-  `assignment_date` date NOT NULL,
-  PRIMARY KEY (`id_assignment`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Volcando datos para la tabla fitstation.worker_class_assignments: ~0 rows (aproximadamente)
+-- Volcando estructura para tabla fitstation.workers
+CREATE TABLE IF NOT EXISTS `workers` (
+  `id_worker` int(11) NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) NOT NULL,
+  `specialty` varchar(100) DEFAULT NULL,
+  `specialization` varchar(255) DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `price_per_session` decimal(10,2) DEFAULT NULL,
+  `max_capacity` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_worker`),
+  UNIQUE KEY `id_user` (`id_user`),
+  CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando estructura para tabla fitstation.worker_classes
 CREATE TABLE IF NOT EXISTS `worker_classes` (
@@ -319,7 +253,15 @@ CREATE TABLE IF NOT EXISTS `worker_classes` (
   CONSTRAINT `worker_classes_ibfk_2` FOREIGN KEY (`id_class`) REFERENCES `classes` (`id_class`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.worker_classes: ~0 rows (aproximadamente)
+
+-- Volcando estructura para tabla fitstation.worker_class_assignments
+CREATE TABLE IF NOT EXISTS `worker_class_assignments` (
+  `id_assignment` int(11) NOT NULL AUTO_INCREMENT,
+  `id_worker` int(11) NOT NULL,
+  `id_class` int(11) NOT NULL,
+  `assignment_date` date NOT NULL,
+  PRIMARY KEY (`id_assignment`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Volcando estructura para tabla fitstation.worker_requests
 CREATE TABLE IF NOT EXISTS `worker_requests` (
@@ -335,46 +277,19 @@ CREATE TABLE IF NOT EXISTS `worker_requests` (
   KEY `FK_worker_request` (`id_worker`),
   CONSTRAINT `FK_client_request` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE,
   CONSTRAINT `FK_worker_request` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Volcando datos para la tabla fitstation.worker_requests: ~3 rows (aproximadamente)
-INSERT INTO `worker_requests` (`id_request`, `id_client`, `id_worker`, `request_date`, `status`, `requested_day`, `requested_time`) VALUES
-	(5, 3, 5, '2026-06-01 18:38:38', 'Completed', 'Monday', '10:00:00'),
-	(6, 4, 5, '2026-06-01 18:51:50', 'Completed', 'Monday', '18:00:00'),
-	(7, 3, 5, '2026-06-03 22:09:33', 'Accepted', 'Thursday', '14:00:00');
-
--- Volcando estructura para tabla fitstation.worker_services
-CREATE TABLE IF NOT EXISTS `worker_services` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_worker` int(11) NOT NULL,
-  `id_service` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_worker` (`id_worker`),
-  KEY `id_service` (`id_service`),
-  CONSTRAINT `worker_services_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE,
-  CONSTRAINT `worker_services_ibfk_2` FOREIGN KEY (`id_service`) REFERENCES `services` (`id_service`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.worker_services: ~0 rows (aproximadamente)
-
--- Volcando estructura para tabla fitstation.workers
-CREATE TABLE IF NOT EXISTS `workers` (
-  `id_worker` int(11) NOT NULL AUTO_INCREMENT,
-  `id_user` int(11) NOT NULL,
-  `specialty` varchar(100) DEFAULT NULL,
-  `specialization` varchar(255) DEFAULT NULL,
-  `bio` text DEFAULT NULL,
-  `price_per_session` decimal(10,2) DEFAULT NULL,
-  `max_capacity` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_worker`),
-  UNIQUE KEY `id_user` (`id_user`),
-  CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.workers: ~2 rows (aproximadamente)
-INSERT INTO `workers` (`id_worker`, `id_user`, `specialty`, `specialization`, `bio`, `price_per_session`, `max_capacity`) VALUES
-	(5, 10, 'Musculacion', 'Musculacion', 'Soy el primer entrenador en registrarse', 3.00, 2),
-	(6, 18, 'Musculacion', 'Musculacion', 'Hola soy mama', 15.00, 10);
+-- Volcando estructura para disparador fitstation.trg_check_session_date
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `trg_check_session_date` BEFORE INSERT ON `sessions` FOR EACH ROW BEGIN
+    IF NEW.scheduled_date < CURDATE() THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error BD: No se puede agendar una sesión en una fecha pasada.';
+    END IF;
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

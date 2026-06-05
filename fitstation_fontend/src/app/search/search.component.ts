@@ -14,10 +14,10 @@ import { RouterModule, Router } from '@angular/router';
 export class SearchComponent implements OnInit {
   // Array de objetos que almacena los perfiles de los entrenadores devueltos por el algoritmo de matching del backend.
   suggestedCoaches: any[] = [];
-  
+
   // Identificador unico del cliente actual en el sistema, necesario para realizar las peticiones de reserva.
   clientId: number = 0;
-  
+
   // Bandera de control de estado de la interfaz de usuario durante las llamadas asincronas.
   isLoading: boolean = true;
 
@@ -29,7 +29,7 @@ export class SearchComponent implements OnInit {
   // Permiten gestionar multiples tarjetas de entrenador de forma independiente sin cruzar datos.
   selectedDates: { [key: number]: string } = {};
   selectedTimes: { [key: number]: string } = {};
-  
+
   // Diccionario que almacena los arrays de horas no disponibles por cada entrenador consultado.
   occupiedSlotsPerCoach: { [key: number]: string[] } = {};
 
@@ -93,9 +93,9 @@ export class SearchComponent implements OnInit {
 
         this.suggestedCoaches.forEach(coach => {
           const id = coach.idWorker || coach.IdWorker;
-          this.selectedDates[id] = this.minDate; 
-          this.selectedTimes[id] = '';           
-          this.occupiedSlotsPerCoach[id] = [];   
+          this.selectedDates[id] = this.minDate;
+          this.selectedTimes[id] = '';
+          this.occupiedSlotsPerCoach[id] = [];
 
           // Evaluacion inmediata de la disponibilidad para la fecha cargada por defecto.
           this.checkOccupiedSlots(id);
@@ -134,7 +134,7 @@ export class SearchComponent implements OnInit {
   // Actualiza el modelo de datos de la interfaz cuando el usuario hace clic en un tramo horario especifico.
   // Ignora la accion si el tramo evaluado se encuentra en la coleccion de ocupados.
   selectTimeSlot(workerId: number, time: string) {
-    if (this.isTimeSlotOccupied(workerId, time)) return; 
+    if (this.isTimeSlotOccupied(workerId, time)) return;
     this.selectedTimes[workerId] = time;
     this.cdr.detectChanges();
   }
@@ -151,25 +151,25 @@ export class SearchComponent implements OnInit {
     const time = this.selectedTimes[workerId];
 
     if (!date) {
-      alert('⚠️ Por favor, selecciona una fecha válida en el calendario.');
+      alert('Por favor, selecciona una fecha válida en el calendario.');
       return;
     }
 
     if (!time) {
-      alert('⚠️ Por favor, elige un tramo horario que esté disponible.');
+      alert('Por favor, elige un tramo horario que esté disponible.');
       return;
     }
 
     this.profileService.requestCoach(workerId, date, time).subscribe({
       next: (res: any) => {
-        alert(res.message || '✅ ¡Solicitud enviada al entrenador con éxito!');
+        alert(res.message || '¡Solicitud enviada al entrenador con éxito!');
         this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {
         const backendMessage = err.error?.message ||
           (typeof err.error === 'string' ? err.error : 'Ya tienes una cita o petición en curso con este coach.');
 
-        alert('⚠️ No se pudo enviar la solicitud: ' + backendMessage);
+        alert(' No se pudo enviar la solicitud: ' + backendMessage);
       }
     });
   }

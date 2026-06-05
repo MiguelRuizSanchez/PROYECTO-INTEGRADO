@@ -105,7 +105,7 @@ namespace fitstation_backend.Controllers
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return Ok(new { message = "✅ ¡Rutina guardada!" });
+                return Ok(new { message = " ¡Rutina guardada!" });
             }
             catch (Exception ex)
             {
@@ -128,7 +128,7 @@ namespace fitstation_backend.Controllers
 
                 _context.ClientRoutines.Add(asignacion);
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "✅ Rutina asignada con éxito" });
+                return Ok(new { message = " Rutina asignada con éxito" });
             }
             catch (Exception ex)
             {

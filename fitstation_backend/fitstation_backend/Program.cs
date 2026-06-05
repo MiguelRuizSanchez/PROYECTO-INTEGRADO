@@ -18,8 +18,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngular", policy =>
     {
         policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowCredentials();
     });
 });
 
@@ -48,6 +49,7 @@ builder.Services.AddAuthentication(options =>
 
 //SERVICIOS BASE Y CONFIGURACIÓN DE SWAGGER
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -93,4 +95,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<fitstation_backend.Hubs.ChatHub>("/hubs/chat");
 app.Run();
