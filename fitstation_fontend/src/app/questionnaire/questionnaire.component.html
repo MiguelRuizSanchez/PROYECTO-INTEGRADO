@@ -1,0 +1,98 @@
+<div class="crear-rutina-container">
+  <header class="header-crear">
+    <button routerLink="/dashboard" class="btn-cancel">← CANCELAR</button>
+    <div class="titles">
+      <h1>Crear Rutina Predefinida</h1>
+      <p>Configura un entrenamiento nuevo para tu biblioteca personal de coach.</p>
+    </div>
+  </header>
+
+  <div class="main-form">
+    <section class="card-form">
+      <div class="card-header">
+        <span class="step">1</span>
+        <h2>Detalles de la Rutina</h2>
+      </div>
+
+      <div class="card-body">
+        <div class="input-group full-width">
+          <label>NOMBRE DE LA RUTINA</label>
+          <input type="text" [(ngModel)]="nombreRutina" placeholder="Ej: Rutina de Empuje A">
+        </div>
+
+        <div class="flex-row">
+          <div class="input-group">
+            <label>OBJETIVO</label>
+            <select [(ngModel)]="objetivoSeleccionado">
+              <option *ngFor="let obj of listaObjetivos" [value]="obj">{{ obj }}</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>DESCRIPCIÓN / NOTAS</label>
+            <input type="text" [(ngModel)]="descripcion" placeholder="Ej: Enfoque en pectoral mayor y tríceps.">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card-form">
+      <div class="card-header split">
+        <div class="left">
+          <span class="step">2</span>
+          <h2>Ejercicios de la Rutina</h2>
+        </div>
+        <button class="btn-add-row" (click)="agregarFilaEjercicio()">+ AÑADIR EJERCICIO</button>
+      </div>
+
+      <div class="card-body">
+        <div *ngIf="ejerciciosEnRutina.length === 0" class="empty-state">
+          La lista está vacía. Pulsa "+ Añadir Ejercicio".
+        </div>
+
+        <div class="ejercicios-grid" *ngIf="ejerciciosEnRutina.length > 0">
+          <div class="grid-header">
+            <span>EJERCICIO (CATÁLOGO)</span>
+            <span class="center">SERIES</span>
+            <span class="center">REPETICIONES</span>
+            <span class="center">DESCANSO (S)</span>
+            <span></span>
+          </div>
+
+          <div class="fila-ejercicio" *ngFor="let item of ejerciciosEnRutina; let i = index">
+            <div class="col">
+              <select [(ngModel)]="item.id_exercise" class="select-exercise">
+                <option [value]="0">-- Seleccionar ejercicio --</option>
+                <option *ngFor="let cat of catalogoEjercicios" [value]="cat.id_exercise">
+                  {{ cat.name }} ({{ cat.muscle || 'General' }})
+                </option>
+              </select>
+            </div>
+
+            <div class="col center">
+              <input type="number" [(ngModel)]="item.series" min="1">
+            </div>
+
+            <div class="col center">
+              <input type="number" [(ngModel)]="item.repetitions" min="1">
+            </div>
+
+            <div class="col center">
+              <input type="number" [(ngModel)]="item.rest" min="0">
+            </div>
+
+            <div class="col actions">
+              <button class="btn-remove" (click)="quitarFila(i)">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="form-footer">
+      <button class="btn-save-all" (click)="guardarRutina()">
+         GUARDAR EN MI BIBLIOTECA
+      </button>
+    </footer>
+  </div>
+</div>

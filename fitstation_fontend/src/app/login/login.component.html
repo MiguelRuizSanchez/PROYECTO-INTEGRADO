@@ -1,0 +1,36 @@
+<div class="login-container">
+  <div class="login-box">
+    <div class="logo">
+      <img src="/logofit.png" alt="FitStation Logo" class="logo-img">
+      <p>ENTRENAMIENTO INTELIGENTE</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="executeLogin()">
+      <div class="input-group">
+        <label>CORREO ELECTRÓNICO</label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="ejemplo@fitstation.com">
+      </div>
+
+      <div class="input-group">
+        <label>CONTRASEÑA</label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••">
+      </div>
+
+      <div *ngIf="feedbackMessage" class="mensaje-info" [style.color]="feedbackMessage.includes('¡') ? '#2ecc71' : '#e74c3c'">
+        {{ feedbackMessage }}
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loginForm.invalid">ENTRAR</button>
+    </form>
+
+    <div class="footer-links">
+      <a routerLink="/register">¿No tienes cuenta? Regístrate aquí</a>
+    </div>
+  </div>
+</div>

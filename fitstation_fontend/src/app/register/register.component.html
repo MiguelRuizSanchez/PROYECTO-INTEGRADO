@@ -1,0 +1,43 @@
+<div class="auth-container">
+  <div class="auth-box">
+    <div class="logo">
+      <img src="/logofit.png" alt="FitStation Logo" class="logo-img">
+      <p>NUEVO REGISTRO</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="executeRegistration()">
+      <div class="input-group">
+        <label>NOMBRE COMPLETO</label>
+        <input type="text" formControlName="name" placeholder="Tu nombre real">
+      </div>
+
+      <div class="input-group">
+        <label>CORREO ELECTRÓNICO</label>
+        <input type="email" formControlName="email" placeholder="ejemplo@fitstation.com">
+      </div>
+
+      <div class="input-group">
+        <label>CONTRASEÑA</label>
+        <input type="password" formControlName="password" placeholder="Mínimo 6 caracteres">
+      </div>
+
+      <div class="input-group">
+        <label>TIPO DE PERFIL</label>
+        <select formControlName="role" class="form-control" style="background: #1a1a1a; color: white; border: 1px solid #333; padding: 10px; width: 100%; border-radius: 8px;">
+          <option value="client">Cliente</option>
+          <option value="worker">Entrenador</option>
+        </select>
+      </div>
+
+      <p *ngIf="feedbackMessage" class="error-msg" style="color: #e74c3c; font-size: 0.8rem; margin-bottom: 10px;">
+        {{ feedbackMessage }}
+      </p>
+
+      <button type="submit" class="btn-login" [disabled]="registerForm.invalid">CREAR CUENTA</button>
+    </form>
+
+    <div class="footer-links">
+      <a routerLink="/login">Ya tengo cuenta. Volver al Login</a>
+    </div>
+  </div>
+</div>

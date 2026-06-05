@@ -1,0 +1,84 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <button routerLink="/dashboard" class="btn-back">← Volver</button>
+    <h1>Panel de Control <span>ADMIN</span></h1>
+  </header>
+
+  <nav class="admin-tabs">
+    <button [class.active]="activeTab === 'users'" (click)="setTab('users')">Usuarios</button>
+    <button [class.active]="activeTab === 'classes'" (click)="setTab('classes')">Clases</button>
+    <button [class.active]="activeTab === 'sessions'" (click)="setTab('sessions')">Sesiones</button>
+    <button [class.active]="activeTab === 'requests'" (click)="setTab('requests')">Peticiones</button>
+    <button [class.active]="activeTab === 'routines'" (click)="setTab('routines')">Rutinas</button>
+    <button [class.active]="activeTab === 'chats'" (click)="setTab('chats')">Auditoría Chats</button>
+  </nav>
+
+  <main class="admin-content">
+
+    <div *ngIf="activeTab === 'users'" class="table-wrapper">
+      <table>
+        <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th></tr>
+        <tr *ngFor="let u of users">
+          <td>{{u.idUser}}</td><td>{{u.name}}</td><td>{{u.email}}</td>
+          <td><span class="badge">{{u.role | uppercase}}</span></td>
+          <td>
+            <button class="btn-del" *ngIf="u.role !== 'admin'" (click)="deleteUser(u.idUser)">Eliminar</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div *ngIf="activeTab === 'classes'" class="table-wrapper">
+      <table>
+        <tr><th>ID</th><th>Nombre</th><th>Día</th><th>Hora</th><th>Acciones</th></tr>
+        <tr *ngFor="let c of classes">
+          <td>{{c.idClass}}</td><td>{{c.name}}</td><td>{{c.dayOfWeek}}</td><td>{{c.classTime}}</td>
+          <td><button class="btn-del" (click)="deleteClass(c.idClass)">Eliminar</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <div *ngIf="activeTab === 'sessions'" class="table-wrapper">
+      <table>
+        <tr><th>ID Sesión</th><th>Día</th><th>Hora</th><th>Estado</th><th>Acciones</th></tr>
+        <tr *ngFor="let s of sessions">
+          <td>#{{s.idSession}}</td><td>{{s.dayOfWeek}}</td><td>{{s.startTime}}</td><td>{{s.status}}</td>
+          <td><button class="btn-del" (click)="deleteSession(s.idSession)">Eliminar</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <div *ngIf="activeTab === 'requests'" class="table-wrapper">
+      <table>
+        <tr><th>ID Request</th><th>Cliente ID</th><th>Worker ID</th><th>Fecha</th><th>Estado</th></tr>
+        <tr *ngFor="let r of requests">
+          <td>{{r.idRequest}}</td><td>{{r.idClient}}</td><td>{{r.idWorker}}</td>
+          <td>{{r.requestDate | date}}</td><td>{{r.status}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div *ngIf="activeTab === 'routines'" class="table-wrapper">
+      <table>
+        <tr><th>ID Rutina</th><th>Worker ID</th><th>Nombre</th><th>Descripción</th></tr>
+        <tr *ngFor="let r of routines">
+          <td>{{r.idRoutine}}</td><td>{{r.idWorker}}</td><td>{{r.name}}</td><td>{{r.description}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div *ngIf="activeTab === 'chats'" class="chats-grid">
+      <div class="chat-card" *ngFor="let chat of conversations">
+        <h3>{{chat.title}}</h3>
+        <div class="chat-history">
+          <div class="msg" *ngFor="let m of chat.messages">
+            <strong>{{m.sender}}:</strong> {{m.content}}
+            <small>{{m.createdAt | date:'HH:mm'}}</small>
+          </div>
+          <div *ngIf="chat.messages.length === 0" style="color: #666">Sin mensajes.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>

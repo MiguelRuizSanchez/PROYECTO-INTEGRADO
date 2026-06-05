@@ -1,0 +1,161 @@
+<div class="calendar-container">
+  <header class="calendar-header">
+    <button class="btn-back" routerLink="/dashboard">← VOLVER</button>
+    <div class="month-nav">
+      <button (click)="changeMonth(-1)">‹</button>
+      <h2>{{ monthName | uppercase }}</h2>
+      <button (click)="changeMonth(1)">›</button>
+    </div>
+    <div class="role-indicator">
+      Vista: <span>{{ userRole === 'worker' ? 'Entrenador' : 'Atleta' }}</span>
+    </div>
+  </header>
+
+  <div class="calendar-views-toggle">
+    <button [class.active]="currentView === 'entrenamientos'" (click)="switchView('entrenamientos')">
+       Mis Entrenamientos
+    </button>
+    <button [class.active]="currentView === 'clases'" (click)="switchView('clases')">
+       Clases Colectivas y Horarios
+    </button>
+  </div>
+
+  <div class="calendar-card">
+    <div class="weekdays-grid">
+      <div class="weekday">LUN</div>
+      <div class="weekday">MAR</div>
+      <div class="weekday">MIÉ</div>
+      <div class="weekday">JUE</div>
+      <div class="weekday">VIE</div>
+      <div class="weekday">SÁB</div>
+      <div class="weekday">DOM</div>
+    </div>
+
+    <div class="days-grid">
+      <div *ngFor="let item of calendarDays"
+           class="day-cell"
+           [ngClass]="{'empty': !item.dayNumber, 'today': item.isToday}">
+
+        <span class="day-number" *ngIf="item.dayNumber">{{ item.dayNumber }}</span>
+
+        <div class="day-events" *ngIf="item.dayNumber">
+
+          <ng-container *ngIf="currentView === 'entrenamientos'">
+            <div *ngFor="let s of item.sessions"
+                 class="event-pill"
+                 [ngStyle]="s.hasConflict ? {'border-left': '4px solid #ff4d4d', 'background': 'rgba(255, 77, 77, 0.15)'} : {}"
+                 [routerLink]="userRole === 'worker' ? ['/routine-management', s.idSession || s.IdSession] : ['/training', s.idSession || s.IdSession]">
+              <span class="event-time">{{ s.startTime || s.StartTime }}</span>
+              <span class="event-name">
+                {{ userRole === 'worker' ? (s.clientName || s.ClientName) : (s.workerName || s.WorkerName) }}
+              </span>
+              <strong *ngIf="s.hasConflict" style="color: #ff4d4d; font-size: 0.68rem; display: block; margin-top: 2px;"> SOLAPE</strong>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="currentView === 'clases'">
+            <div *ngFor="let c of item.classes"
+                 class="event-pill class-colective-pill"
+                 [ngStyle]="c.hasConflict ? {'border-left': '4px solid #ff4d4d', 'background': 'rgba(255, 77, 77, 0.15)'} : {}"
+                 style="display: flex; justify-content: space-between; align-items: center; gap: 4px; padding: 4px 8px;">
+
+              <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
+                <span class="event-time class-time-badge" style="font-size: 0.72rem; line-height: 1.1; display: flex; align-items: center; gap: 4px;">
+                  {{ c.classTime || c.ClassTime || c.class_time }}
+                  <strong *ngIf="c.hasConflict" style="color: #ff4d4d; font-size: 0.65rem;"> SOLAPE</strong>
+                </span>
+                <span class="event-name class-title-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.78rem;">
+                  {{ c.className || c.ClassName || c.name }}
+                </span>
+              </div>
+
+              <button *ngIf="userRole === 'client'"
+                      class="btn-cancel-class"
+                      (click)="cancelBooking(c.idBooking || c.IdBooking)"
+                      title="Cancelar esta reserva"
+                      style="background: transparent; border: none; color: #ff4d4d; cursor: pointer; font-size: 0.85rem; padding: 0 4px; font-weight: 900; line-height: 1; transition: 0.2s;"
+                      onmouseover="this.style.color='#ff1a1a'; this.style.transform='scale(1.15)'"
+                      onmouseout="this.style.color='#ff4d4d'; this.style.transform='scale(1)'">
+                ✕
+              </button>
+
+              <button *ngIf="userRole === 'worker'"
+                      class="btn-cancel-class"
+                      (click)="unassignClassFromWorker(c.idClass || c.IdClass || c.id_class, c.bookingDate || c.BookingDate || c.assignment_date)"
+                      title="Renunciar a este turno específico"
+                      style="background: transparent; border: none; color: #ff4d4d; cursor: pointer; font-size: 0.85rem; padding: 0 4px; font-weight: 900; line-height: 1; transition: 0.2s;"
+                      onmouseover="this.style.color='#ff1a1a'; this.style.transform='scale(1.15)'"
+                      onmouseout="this.style.color='#ff4d4d'; this.style.transform='scale(1)'">
+                ✕
+              </button>
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="global-classes-panel" *ngIf="userRole === 'worker' && currentView === 'clases'" style="margin-top: 25px; padding: 20px; background: #1e1e1e; border-radius: 10px; border: 1px solid #333;">
+
+    <h3 style="color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.2rem;">📋 Panel de Gestión de Clases Colectivas</h3>
+    <p style="color: #aaa; font-size: 0.88rem; margin-bottom: 20px;">Catálogo de horarios recurrentes del centro. Presiona el botón para asignarte de forma exclusiva el turno correspondiente a los próximos 7 días:</p>
+
+    <div style="background: #1a1a1a; border: 1px dashed #5afeb2; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+      <h4 style="color: #5afeb2; margin: 0 0 12px 0; font-size: 1rem;"> Crear nueva clase colectiva</h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <input [(ngModel)]="newClass.name" placeholder="Nombre (ej: Zumba)"
+               style="background:#252525; border:1px solid #444; color:#fff; padding:8px; border-radius:4px;" />
+        <select [(ngModel)]="newClass.dayOfWeek"
+                style="background:#252525; border:1px solid #444; color:#fff; padding:8px; border-radius:4px;">
+          <option value="">-- Día de la semana --</option>
+          <option value="Monday">Lunes</option>
+          <option value="Tuesday">Martes</option>
+          <option value="Wednesday">Miércoles</option>
+          <option value="Thursday">Jueves</option>
+          <option value="Friday">Viernes</option>
+          <option value="Saturday">Sábado</option>
+          <option value="Sunday">Domingo</option>
+        </select>
+        <input [(ngModel)]="newClass.classTime" type="time"
+               style="background:#252525; border:1px solid #444; color:#fff; padding:8px; border-radius:4px;" />
+        <input [(ngModel)]="newClass.description" placeholder="Descripción (opcional)"
+               style="background:#252525; border:1px solid #444; color:#fff; padding:8px; border-radius:4px;" />
+      </div>
+      <button (click)="submitNewClass()"
+              style="margin-top:12px; background:#5afeb2; color:#000; border:none; padding:9px 20px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.85rem;"
+              onmouseover="this.style.background='#3ed49a'"
+              onmouseout="this.style.background='#5afeb2'">
+        CREAR CLASE
+      </button>
+    </div>
+
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 15px;">
+      <div *ngFor="let cg of globalClasses"
+           style="background: #252525; border: 1px solid #444; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+        <div>
+          <h4 style="color: #00ff88; margin: 0 0 5px 0; font-size: 1.1rem; font-weight: bold;">{{ cg.className || cg.ClassName || cg.name }}</h4>
+          <p style="color: #ccc; font-size: 0.82rem; margin: 0 0 10px 0;">{{ cg.description || 'Sesión programada en el gimnasio.' }}</p>
+          <div style="font-size: 0.85rem; color: #bbb; display: flex; flex-direction: column; gap: 4px;">
+            <div> Día de la semana: <strong style="color: #fff;">{{ cg.dayOfWeek || cg.DayOfWeek || cg.day_of_week }}</strong></div>
+            <div> Turno: <strong style="color: #fff;">{{ cg.classTime || cg.ClassTime || cg.class_time }}</strong></div>
+          </div>
+        </div>
+        <div style="margin-top: 5px; padding-top: 10px; border-top: 1px solid #333; display: flex; align-items: center; justify-content: flex-end;">
+          <button (click)="assignClassToWorker(cg.idClass || cg.IdClass || cg.id_class, cg.dayOfWeek || cg.DayOfWeek || cg.day_of_week)"
+                  style="background: #00ff88; color: #000; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.82rem; transition: 0.2s;"
+                  onmouseover="this.style.background='#00cc6c'; this.style.transform='scale(1.03)'"
+                  onmouseout="this.style.background='#00ff88'; this.style.transform='scale(1)'">
+            IMPARTIR ESTA SEMANA
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="calendar-footer">
+    <p> Usa las pestañas de arriba para alternar al instante entre tus clases grupales y tus entrenamientos privados.</p>
+  </footer>
+</div>

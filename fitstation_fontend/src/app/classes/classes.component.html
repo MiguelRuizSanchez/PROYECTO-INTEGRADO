@@ -1,0 +1,54 @@
+<div class="clases-container">
+  <header class="header-clases">
+    <button routerLink="/dashboard" class="btn-back">← Volver</button>
+    <h1>Clases Colectivas disponibles</h1>
+    <p>Selecciona tu actividad, elige el horario y escoge una de las fechas disponibles para las próximas 2 semanas.</p>
+  </header>
+
+  <div class="grid-clases" *ngIf="groupedClasses.length > 0">
+    <div class="card-clase" *ngFor="let group of groupedClasses">
+      
+      <div class="card-body">
+        <h2>{{ group.name }}</h2>
+        <p class="desc">{{ group.description }}</p>
+        
+        <div class="select-box" style="margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px;">
+          <label style="font-size: 0.85rem; color: #888; font-weight: 600;"> 1. Elige el horario disponible:</label>
+          <select 
+            [(ngModel)]="selectedSchedules[group.name]"
+            (change)="onScheduleChange(group.name, group)"
+            style="background: #161616; border: 1px solid #333; color: white; padding: 11px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer; transition: 0.2s;"
+            onfocus="this.style.borderColor='#2ecc71'"
+            onblur="this.style.borderColor='#333'"
+          >
+            <option *ngFor="let schedule of group.schedules" [value]="schedule.idClass">
+              {{ schedule.dayOfWeek === 'Monday' ? 'Lunes' : schedule.dayOfWeek === 'Wednesday' ? 'Miércoles' : schedule.dayOfWeek }} a las {{ schedule.classTime }} — Prof: {{ schedule.trainerName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="select-box" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">
+          <label style="font-size: 0.85rem; color: #888; font-weight: 600;"> 2. Selecciona el día para asistir:</label>
+          <select 
+            [(ngModel)]="selectedDates[group.name]"
+            style="background: #161616; border: 1px solid #333; color: white; padding: 11px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer; transition: 0.2s;"
+            onfocus="this.style.borderColor='#2ecc71'"
+            onblur="this.style.borderColor='#333'"
+          >
+            <option *ngFor="let date of getAvailableDates(group)" [value]="date">
+              {{ formatDateToSpanish(date) }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-book" (click)="bookClass(group.name)">
+        RESERVAR PLAZA
+      </button>
+    </div>
+  </div>
+
+  <div class="no-clases" *ngIf="groupedClasses.length === 0">
+    <p>Sincronizando actividades disponibles en FitStation...</p>
+  </div>
+</div>

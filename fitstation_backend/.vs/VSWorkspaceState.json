@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\fitstation_backend",
+    "\\fitstation_backend\\Controllers",
+    "\\fitstation_backend\\Data",
+    "\\fitstation_backend\\DTOs",
+    "\\fitstation_backend\\Models",
+    "\\fitstation_backend\\Properties"
+  ],
+  "SelectedNode": "\\fitstation_backend\\DTOs\\RegisterDto.cs",
+  "PreviewInSolutionExplorer": false
+}

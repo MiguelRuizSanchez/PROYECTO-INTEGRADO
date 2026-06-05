@@ -1,0 +1,323 @@
+.crear-rutina-container {
+  min-height: 100vh;
+  background-color: #000000;
+  color: white;
+  padding: 40px 8%;
+  font-family: 'Scale VF', sans-serif;
+}
+
+.header-crear {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 20px;
+}
+
+.btn-cancel {
+  background: #111;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+.btn-cancel:hover { 
+  border-color: #5afeb2; 
+  color: #5afeb2; 
+}
+
+.card-form {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.card-header {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.step {
+  background: #5afeb2;
+  color: #000000;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+input, select {
+  background: #161616;
+  border: 1px solid #333;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+input:focus, select:focus {
+  border-color: #5afeb2;
+  outline: none;
+}
+
+.grid-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+  gap: 10px;
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.fila-ejercicio {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.btn-add-row {
+  background: #1a1a1a;
+  border: 1px solid #5afeb2;
+  color: #5afeb2;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-remove {
+  background: #222;
+  color: #ff4d4d;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-save-all {
+  background: #5afeb2;
+  color: #000000;
+  border: none;
+  padding: 15px;
+  font-weight: 800;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-save-all:hover {
+  background: #46e098;
+}
+
+.crear-rutina-container {
+  min-height: 100vh;
+  background-color: #000000;
+  color: white;
+  padding: 40px 8%;
+  font-family: 'Scale VF', sans-serif;
+  box-sizing: border-box;
+}
+
+.header-crear {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 20px;
+}
+
+.header-crear .titles h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.header-crear .titles p {
+  color: #666;
+  margin: 5px 0 0;
+  font-size: 0.95rem;
+}
+
+.btn-cancel {
+  background: #111;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover { 
+  border-color: #5afeb2; 
+  color: #5afeb2; 
+  background: #1a1a1a;
+}
+
+.card-form {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.card-header {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.card-header.split {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.step {
+  background: #5afeb2;
+  color: #000000;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+input, select {
+  background: #161616;
+  border: 1px solid #333;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+input:focus, select:focus {
+  border-color: #5afeb2;
+  outline: none;
+  box-shadow: 0 0 5px rgba(90, 254, 178, 0.2);
+}
+
+.input-group {
+  margin-bottom: 15px;
+  flex: 1;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.flex-row {
+  display: flex;
+  gap: 20px;
+}
+
+.ejercicios-grid {
+  margin-top: 15px;
+}
+
+.grid-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+  gap: 10px;
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  padding: 0 5px;
+}
+
+.fila-ejercicio {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.center { text-align: center; }
+
+.btn-add-row {
+  background: #1a1a1a;
+  border: 1px solid #5afeb2;
+  color: #5afeb2;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-add-row:hover {
+  background: #5afeb2;
+  color: #000;
+}
+
+.btn-remove {
+  background: #222;
+  color: #ff4d4d;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.btn-remove:hover {
+  background: #ff4d4d;
+  color: white;
+}
+
+.btn-save-all {
+  background: #5afeb2;
+  color: #000000;
+  border: none;
+  padding: 15px;
+  font-weight: 800;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 20px;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.btn-save-all:hover {
+  background: #46e098;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(90, 254, 178, 0.3);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #444;
+  font-style: italic;
+}
+

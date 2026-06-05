@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'Scale VF'; }
+
+:root {
+  --fs-black: #000000;
+  --fs-green: #5afeb2;
+  --fs-green-hover: #45e098;
+  --bg-panel: #111111;
+  --border-color: #222222;
+  --text-main: #ffffff;
+}
+
+body {
+  background-color: var(--fs-black);
+  color: var(--text-main);
+  font-family: 'Scale VF', system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.btn-fs {
+  background-color: var(--fs-green);
+  color: var(--fs-black);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Scale VF', sans-serif;
+}
+
+.btn-fs:hover {
+  background-color: var(--fs-green-hover);
+  box-shadow: 0 0 15px rgba(90, 254, 178, 0.4);
+  transform: translateY(-2px);
+}
