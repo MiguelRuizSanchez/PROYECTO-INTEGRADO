@@ -285,6 +285,8 @@ CREATE TABLE IF NOT EXISTS `worker_requests` (
   CONSTRAINT `FK_worker_request` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+INSERT INTO users (id_user, name, email, password_hash, role, created_at) VALUES 	(26, 'admin', 'admin@admin', '$2a$11$MH8RWHyxBT5KvW8JkLr37eqUMtw9ToSLIIkjaXLByWm0fKOXLkqB6', 'admin', '2026-06-05 12:36:51');
+
 -- Volcando estructura para disparador fitstation.trg_check_session_date
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
