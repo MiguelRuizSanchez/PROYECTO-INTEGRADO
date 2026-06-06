@@ -36,13 +36,6 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   CONSTRAINT `bookings_ibfk_3` FOREIGN KEY (`id_service`) REFERENCES `services` (`id_service`) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.bookings: ~4 rows (aproximadamente)
-INSERT INTO `bookings` (`id_booking`, `id_client`, `id_class`, `id_service`, `booking_date`, `status`) VALUES
-	(5, 7, 4, NULL, '2026-06-10 00:00:00', 'active'),
-	(6, 8, 4, NULL, '2026-06-10 00:00:00', 'active'),
-	(7, 10, 6, NULL, '2026-06-11 00:00:00', 'active'),
-	(8, 9, 7, NULL, '2026-06-07 00:00:00', 'active');
-
 -- Volcando estructura para tabla fitstation.classes
 CREATE TABLE IF NOT EXISTS `classes` (
   `id_class` int(11) NOT NULL AUTO_INCREMENT,
@@ -55,15 +48,6 @@ CREATE TABLE IF NOT EXISTS `classes` (
   KEY `fk_classes_worker` (`id_worker`),
   CONSTRAINT `fk_classes_worker` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.classes: ~6 rows (aproximadamente)
-INSERT INTO `classes` (`id_class`, `name`, `description`, `id_worker`, `day_of_week`, `class_time`) VALUES
-	(2, 'a', 'a', 7, 'Tuesday', '11:11:00'),
-	(3, 's', 'a', 7, 'Monday', '11:11:00'),
-	(4, '2', '2', 7, 'Wednesday', '22:22:00'),
-	(5, '3', '3', 7, 'Thursday', '03:03:00'),
-	(6, 'dsdasd', '213', 8, 'Thursday', '12:22:00'),
-	(7, 'wae', '3442', 8, 'Sunday', '03:04:00');
 
 -- Volcando estructura para tabla fitstation.clients
 CREATE TABLE IF NOT EXISTS `clients` (
@@ -81,15 +65,6 @@ CREATE TABLE IF NOT EXISTS `clients` (
   UNIQUE KEY `id_user` (`id_user`),
   CONSTRAINT `clients_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.clients: ~6 rows (aproximadamente)
-INSERT INTO `clients` (`id_client`, `id_user`, `goal`, `objectives`, `experience_level`, `modality`, `medical_notes`, `equipment`, `pref_day`, `pref_time`) VALUES
-	(7, 20, '', 'Hipertrofia', 'principiante', 'presencial', '', '', 'Monday', '10:00:00'),
-	(8, 22, '', 'Musculacion', 'principiante', 'presencial', '', '', 'Monday', '10:00:00'),
-	(9, 24, '', 'Musculacion', 'principiante', 'presencial', '', '', 'Monday', '10:00:00'),
-	(10, 25, '', 'Musculacion', 'principiante', 'presencial', '', '', 'Monday', '10:00:00'),
-	(11, 26, '', '', 'principiante', 'presencial', '', '', 'Monday', '10:00:00'),
-	(12, 27, '', 'Hipertrofia', 'principiante', 'presencial', '', '', 'Monday', '10:00:00');
 
 -- Volcando estructura para tabla fitstation.client_routines
 CREATE TABLE IF NOT EXISTS `client_routines` (
@@ -112,11 +87,6 @@ CREATE TABLE IF NOT EXISTS `conversations` (
   PRIMARY KEY (`id_conversation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.conversations: ~3 rows (aproximadamente)
-INSERT INTO `conversations` (`id_conversation`, `created_at`) VALUES
-	(2, '2026-06-05 02:03:46'),
-	(3, '2026-06-05 02:33:51'),
-	(4, '2026-06-05 02:34:02');
 
 -- Volcando estructura para tabla fitstation.conversation_users
 CREATE TABLE IF NOT EXISTS `conversation_users` (
@@ -132,11 +102,6 @@ CREATE TABLE IF NOT EXISTS `conversation_users` (
   CONSTRAINT `fk_cu_conversation` FOREIGN KEY (`id_conversation`) REFERENCES `conversations` (`id_conversation`) ON DELETE CASCADE,
   CONSTRAINT `fk_cu_worker` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.conversation_users: ~2 rows (aproximadamente)
-INSERT INTO `conversation_users` (`id`, `id_conversation`, `id_worker`, `id_client`) VALUES
-	(1, 3, 8, 8),
-	(2, 4, 8, 9);
 
 -- Volcando estructura para tabla fitstation.exercises
 CREATE TABLE IF NOT EXISTS `exercises` (
@@ -210,25 +175,6 @@ CREATE TABLE IF NOT EXISTS `messages` (
   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`id_sender`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla fitstation.messages: ~16 rows (aproximadamente)
-INSERT INTO `messages` (`id_message`, `id_conversation`, `id_sender`, `content`, `created_at`) VALUES
-	(2, 2, 23, 'lkljklj', '2026-06-05 02:03:46'),
-	(3, 3, 23, 'sda', '2026-06-05 02:33:51'),
-	(4, 4, 23, 'sdf', '2026-06-05 02:34:02'),
-	(5, 4, 23, 'vbvc', '2026-06-05 02:34:21'),
-	(6, 4, 24, '324', '2026-06-05 02:37:16'),
-	(7, 4, 24, '45', '2026-06-05 11:26:56'),
-	(8, 4, 24, 'o', '2026-06-05 11:32:45'),
-	(9, 4, 24, 'uio', '2026-06-05 11:33:37'),
-	(10, 4, 23, '78', '2026-06-05 11:33:49'),
-	(11, 4, 23, '98', '2026-06-05 11:34:42'),
-	(12, 3, 23, 'popo', '2026-06-05 11:38:07'),
-	(13, 4, 23, 'opopoç', '2026-06-05 11:38:18'),
-	(14, 4, 23, 'yuyoyuu', '2026-06-05 11:42:53'),
-	(15, 4, 23, 'wer e', '2026-06-05 11:43:01'),
-	(16, 4, 23, 'dddg', '2026-06-05 11:47:18'),
-	(17, 4, 24, '678', '2026-06-05 16:18:32');
-
 -- Volcando estructura para tabla fitstation.routines
 CREATE TABLE IF NOT EXISTS `routines` (
   `id_routine` int(11) NOT NULL AUTO_INCREMENT,
@@ -274,18 +220,6 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   CONSTRAINT `FK_session_request` FOREIGN KEY (`id_request`) REFERENCES `worker_requests` (`id_request`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Volcando datos para la tabla fitstation.sessions: ~9 rows (aproximadamente)
-INSERT INTO `sessions` (`id_session`, `id_request`, `id_client`, `id_worker`, `scheduled_date`, `duration_minutes`, `day_of_week`, `start_time`, `status`) VALUES
-	(10, 8, 7, 7, '2026-06-12 03:27:12', 60, 'Friday', '14:00:00', 'Completed'),
-	(11, 9, 7, 7, '2026-06-12 03:34:23', 60, 'Friday', '10:00:00', 'Scheduled'),
-	(12, 10, 8, 8, '2026-06-12 03:44:27', 60, 'Friday', '09:00:00', 'Completed'),
-	(13, 11, 8, 8, '2026-06-12 03:50:51', 60, 'Friday', '14:00:00', 'Completed'),
-	(14, 12, 8, 8, '2026-06-12 03:57:54', 60, 'Friday', '09:00:00', 'Completed'),
-	(15, 13, 8, 8, '2026-06-12 04:17:20', 60, 'Friday', '10:00:00', 'Scheduled'),
-	(16, 14, 9, 8, '2026-06-12 04:23:04', 60, 'Friday', '10:00:00', 'Completed'),
-	(17, 15, 9, 8, '2026-06-12 17:49:53', 60, 'Friday', '14:00:00', 'Completed'),
-	(18, 16, 9, 8, '2026-06-13 01:45:35', 60, 'Friday', '10:00:00', 'Scheduled');
-
 -- Volcando estructura para tabla fitstation.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id_user` int(11) NOT NULL AUTO_INCREMENT,
@@ -297,18 +231,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.users: ~9 rows (aproximadamente)
-INSERT INTO `users` (`id_user`, `name`, `email`, `password_hash`, `role`, `created_at`) VALUES
-	(19, 'a', 'a@a', '$2a$11$eMllX4IT/Rp5ZKfaXze4.OywgtrXzTXJdkOcSr6STqL6ZRy.fsbUC', 'worker', '2026-06-04 19:04:44'),
-	(20, 'b', 'b@b', '$2a$11$NqELicImG9xWGF.CcWdwE.rllA.qsSeBLhBzsWFXuq0U52TSI6TVO', 'client', '2026-06-04 22:19:50'),
-	(21, '1', '1@1', '$2a$11$hirRaOn1CK0cC7pkE0c5Wu3N3mSxGyTLOlV84iX/BmVmlpAW/o8he', 'worker', '2026-06-05 01:42:06'),
-	(22, '2', '2@2', '$2a$11$lNwQf.jiX9VcFsDTP/rnW.SoTOnjYbm8cDlNjOPeq2YpZVe0Kg6j.', 'client', '2026-06-05 01:42:07'),
-	(23, '3', '3@3', '$2a$11$4UdYkIBTcR2zaoF.inbsROx4BD.DgqHwV/QMAortS6PDiFnrj1LlS', 'worker', '2026-06-05 01:43:18'),
-	(24, '4', '4@4', '$2a$11$6Q4b5HdqK2/NJXAyHRSzx.qNMM7uTrnUrZkUTeKiE7.TLqfIwKAuy', 'client', '2026-06-05 02:22:05'),
-	(25, '6', '6@6', '$2a$11$qUYMQ4jqGMPeh/MYOwVCqOGDtxIvgC69bToI/vvMiM0UGvzm5loSG', 'client', '2026-06-05 11:48:58'),
-	(26, 'admin', 'admin@admin', '$2a$11$MH8RWHyxBT5KvW8JkLr37eqUMtw9ToSLIIkjaXLByWm0fKOXLkqB6', 'admin', '2026-06-05 12:36:51'),
-	(27, '7', '7@7', '$2a$11$LG6n.hAQL2Cqf75PoUNt3ea3.XREwwIW1.WrdupRYlPoMjEbQ/TDG', 'client', '2026-06-05 16:02:09');
 
 -- Volcando estructura para tabla fitstation.workers
 CREATE TABLE IF NOT EXISTS `workers` (
@@ -323,11 +245,6 @@ CREATE TABLE IF NOT EXISTS `workers` (
   UNIQUE KEY `id_user` (`id_user`),
   CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Volcando datos para la tabla fitstation.workers: ~2 rows (aproximadamente)
-INSERT INTO `workers` (`id_worker`, `id_user`, `specialty`, `specialization`, `bio`, `price_per_session`, `max_capacity`) VALUES
-	(7, 19, 'Hipertrofia', 'Hipertrofia', 'a', 5.00, 10),
-	(8, 23, 'Musculacion', 'Musculacion', '', 0.00, 10);
 
 -- Volcando estructura para tabla fitstation.worker_classes
 CREATE TABLE IF NOT EXISTS `worker_classes` (
@@ -352,13 +269,6 @@ CREATE TABLE IF NOT EXISTS `worker_class_assignments` (
   PRIMARY KEY (`id_assignment`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Volcando datos para la tabla fitstation.worker_class_assignments: ~4 rows (aproximadamente)
-INSERT INTO `worker_class_assignments` (`id_assignment`, `id_worker`, `id_class`, `assignment_date`) VALUES
-	(1, 7, 2, '2026-06-09'),
-	(2, 7, 4, '2026-06-10'),
-	(3, 7, 5, '2026-06-11'),
-	(4, 8, 6, '2026-06-11');
-
 -- Volcando estructura para tabla fitstation.worker_requests
 CREATE TABLE IF NOT EXISTS `worker_requests` (
   `id_request` int(11) NOT NULL AUTO_INCREMENT,
@@ -374,18 +284,6 @@ CREATE TABLE IF NOT EXISTS `worker_requests` (
   CONSTRAINT `FK_client_request` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE,
   CONSTRAINT `FK_worker_request` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id_worker`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Volcando datos para la tabla fitstation.worker_requests: ~9 rows (aproximadamente)
-INSERT INTO `worker_requests` (`id_request`, `id_client`, `id_worker`, `request_date`, `status`, `requested_day`, `requested_time`) VALUES
-	(8, 7, 7, '2026-06-05 03:27:08', 'Completed', 'Friday', '14:00:00'),
-	(9, 7, 7, '2026-06-05 03:34:19', 'Accepted', 'Friday', '10:00:00'),
-	(10, 8, 8, '2026-06-05 03:44:22', 'Completed', 'Friday', '09:00:00'),
-	(11, 8, 8, '2026-06-05 03:50:46', 'Completed', 'Friday', '14:00:00'),
-	(12, 8, 8, '2026-06-05 03:57:48', 'Completed', 'Friday', '09:00:00'),
-	(13, 8, 8, '2026-06-05 04:16:44', 'Accepted', 'Friday', '10:00:00'),
-	(14, 9, 8, '2026-06-05 04:22:48', 'Completed', 'Friday', '10:00:00'),
-	(15, 9, 8, '2026-06-05 17:47:32', 'Completed', 'Friday', '14:00:00'),
-	(16, 9, 8, '2026-06-05 17:50:12', 'Accepted', 'Friday', '10:00:00');
 
 -- Volcando estructura para disparador fitstation.trg_check_session_date
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
