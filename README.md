@@ -1,6 +1,6 @@
 1. NOMBRE DEL PROYECTO
    
-   FITSTATION - Aplicacion Web de Gestión de Gimnasios y Entrenamientos
+FITSTATION - Aplicacion Web de Gestión de Gimnasios y Entrenamientos
 --------------------------------------------------------------------------------------------
 2. AUTORES DEL PROYECTO
 
@@ -49,9 +49,7 @@ Infraestructura: Servidor físico con Debian 12, contenedores Docker y automatiz
 
 5. MODELO E/R y RELACIONAL DE LA ACTUAL BD
 
-Modelo E/R:
-
-Modelo Relacional:
+YA HA SIDO PUESTA EN EL APARTADO DE LA MEMORIA.
 
 --------------------------------------------------------------------------------------------
 
@@ -68,9 +66,9 @@ Node.js y pnpm instalado globalmente.
 
   Paso 1: Configurar la Base de Datos
     
-    Abre tu gestor de bases de datos (como HeidiSQL) y conéctate a tu servidor local.
+Abre tu gestor de bases de datos (como HeidiSQL) y conéctate a tu servidor local.
 
-    Crea una base de datos vacía llamada fitstation.
+Crea una base de datos vacía llamada fitstation.
     
     Importa el archivo SQL definitivo que encontrarás en este repositorio en: /fitstation_database/fitstation.sql.
 
@@ -111,6 +109,7 @@ Node.js y pnpm instalado globalmente.
 
 7. TUTORIAL DE USO DE LA APLICACIÓN
 
+YA HA SIDO EXPLICADA EN EL APARTADO DE LA MEMORIA.
 
 --------------------------------------------------------------------------------------------
 
