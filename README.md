@@ -136,5 +136,4 @@ Stack Overflow: (https://stackoverflow.com)
 
 --------------------------------------------------------------------------------------------
 
-9. URL DONDE SE ENCUENTRA DESPEGLADA LA APLICACION (FALTA SUBIR AL SERVER)
 
